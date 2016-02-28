@@ -273,6 +273,13 @@ Examples of middleware include:
 
 ### "hello, world" with Express
 
+Make a new directory for your first Node project:
+
+```
+mkdir express-app
+cd express-app
+```
+
 Express apps start with a ```package.json``` file. You could type it out yourself but there's an easy way. Just enter:
 
 ```
