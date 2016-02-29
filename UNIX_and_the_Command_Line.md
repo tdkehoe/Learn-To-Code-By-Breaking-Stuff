@@ -212,7 +212,7 @@ Let's move into the ```playground``` directory.
 cd playground
 ```
 
-```cd``` means "change directory". Note that you could type
+The commnd ```cd``` means "change directory". Note that you could type
 
 ```
 cd play
@@ -230,23 +230,23 @@ Two dots means "parent directory". One dot means "current directory".
 
 #### touch
 
-```touch <filename>``` creates a file.
+The command ```touch <filename>``` creates a file.
 
 #### cat and more
 
-```cat <filename>``` displays a file's contents. ```cat``` is short for _concatenate_ or to join end to end. I learned this as what sailors did to make a long rope, they concatenated several short ropes together.
+The command ```cat <filename>``` displays a file's contents. ```cat``` is short for _concatenate_ or to join end to end. I learned this as what sailors did to make a long rope, they concatenated several short ropes together.
 
-```more <filename>``` is preferred as it displays the file one page (screen) at a time. You click the spacebar to view the next page.
+The command ```more <filename>``` is preferred as it displays the file one page (screen) at a time. You click the spacebar to view the next page.
 
-```cat > <filename>``` opens or creates a file and then you can type into the file. ```control c``` ends input and closes the file. I prefer to use Atom for this.
+The command ```cat > <filename>``` opens or creates a file and then you can type into the file. ```control c``` ends input and closes the file. I prefer to use Atom for this.
 
 #### cp
 
-```cp <filename1> <filename2>``` copies a file. I prefer to do this in the GUI.
+The command ```cp <filename1> <filename2>``` copies a file. I prefer to do this in the GUI.
 
 #### mv
 
-```mv <filename1> <filename2>``` renames (moves) a file. I prefer to do this in the GUI.
+The command ```mv <filename1> <filename2>``` renames (moves) a file. I prefer to do this in the GUI.
 
 #### ls
 
@@ -254,7 +254,7 @@ Enter ```ls``` again and you should see your list of files. ```ls``` means "list
 
 Enter ```ls -al```. This lists all files including hidden files. Hidden files start with ```.```
 
-```ls -l``` displays more (or _long) info about the files in a directory, including permissions.
+The command ```ls -l``` displays more (or _long_) info about the files in a directory, including permissions.
 
 #### mkdir
 
@@ -266,7 +266,7 @@ mkdir <directoryname>
 
 #### rm
 
-```rm``` removes files and directories. Unlike the GUI, in which you delete folders and files to the Trash folder, the CLI doesn't have a trash folder or an ```undelete``` command. If you remove a file or directory it's gone. You may want to delete files and folders from the GUI into the Trash folder to be safe.
+The command ```rm``` removes files and directories. Unlike the GUI, in which you delete folders and files to the Trash folder, the CLI doesn't have a trash folder or an ```undelete``` command. If you remove a file or directory it's gone. You may want to delete files and folders from the GUI into the Trash folder to be safe.
 
 To remove a file enter
 
@@ -294,22 +294,30 @@ Similarly using wildcards with ```rm``` is asking for trouble, e.g., ```rm *.*``
 
 A path is the unique location of a file or directory in an operating system.
 
-Paths can start with ```/``` or no slash. Note that UNIX uses slashes but Windows uses backslashes ```\```.
+Paths can start with:
 
-* A path starting with a single slash ```/``` is an _absolute path_, i.e., it starts from the root directory.
-* A path starting without a slash is an _absolute path_. It starts in the directory you are in now.
+* Nothing, e.g., ```directory/subdirectory/file.html```.  This is a _relative path_. It starts in the directory you're in now.
+* A slash, e.g., ```/directory/subdirectory/file.html```. This is an _absolute path_, i.e., it starts from the root directory.
+* Dot-slash, e.g., ```./directory/subdirectory/file.html```. This is also a _relative path_ starting form the directory you're in now. It's the same as no slash but I recommend using the dot-slash as it's more clear to read.
+* Double-dot-slash, e.g., ```../directory/subdirectory/file.html```. This is another _relative path_, starting from the parent directory.
 
-If you get an error message that a resource can't be found, e.g., a jpeg image isn't appearing on your webpage, check if the filename starts with a slash.
+Note that UNIX uses slashes ```/``` but Windows uses backslashes ```\```.
 
-A double-slash doesn't mean anything and is interpreted as a single slash. However, in certain systems a pathname that begins with a double-slash can be interpreted to do something. In the Mac OS X a double-slash means nothing. If you're reading documentation for another version of UNIX, e.g., LINUX, you might see a path starting with a double-slash.
+If you get an error message that a resource can't be found, e.g., a jpeg image isn't appearing on your webpage, check if the filename starts with a slash, etc.
 
-A path can start with ```..```. This means "start from one directory higher". For example, suppose I have two directories, ```front-end``` and ```back-end```. I have a jpeg in ```back-end``` and my JavaScript app is in ```front-end```:
+A double-slash doesn't mean anything and is interpreted as a single slash. However, in certain systems a pathname that begins with a double-slash can be interpreted to do something. In the Mac OS X a double-slash means nothing. If you're reading documentation for another version of UNIX you might see a path starting with a double-slash.
+
+> Does a double slash mean something in LINUX?
+
+Let's look at an example of a double-dot-slash. Suppose I have two directories, ```front-end``` and ```back-end```. I have a jpeg in ```back-end``` and my JavaScript app is in ```front-end```:
 
 ![Terminal](/Users/TDK/playground/LearnCoding/media/directories.png)
 
 For my JavaScript app to call my jpeg I would use this path:
 
-```../back-end/picture.jpg```
+```
+../back-end/picture.jpg
+```
 
 #### Find Your Path
 
