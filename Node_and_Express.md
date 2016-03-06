@@ -290,7 +290,7 @@ npm init
 
 This will ask you some questions and create a ```package.json``` file. If you make a mistake or leave out something just edit ```package.json``` in your text editor (e.g., Atom).
 
-You will be prompted you with suggestions for the name and version number of your app. Hit <return> to accept these, or enter your own specifications.
+You will be prompted with suggestions for the name and version number of your app. Key ```return``` to accept these, or enter your own specifications.
 
 When you finish open ```package.json``` in your text editor. It should look something like this:
 
@@ -384,7 +384,7 @@ app.get('/', function(request, response){
 
 Open your browser to ```localhost:3000``` and you should see this:
 
-![Atom HTML](/Users/TDK/playground/LearnCoding/media/helloworld-express.png)
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/helloworld-express.png)
 
 Let's try to break this. You change "hello, world" to another message. Refresh your browser and you should see your new message.
 
@@ -400,7 +400,7 @@ app.get('/about', function(request, response){
 
 Point your browser to ```http://localhost:3000/about``` and you should see:
 
-![Atom HTML](/Users/TDK/playground/LearnCoding/media/about.png)
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/about.png)
 
 Let's add some links between the two pages:
 
@@ -452,7 +452,7 @@ A view includes HTML but it might be part of a webpage, such as the body, header
 
 Look up the documentation for ```[app.set](http://expressjs.com/en/api.html)``` :
 
-![Atom HTML](/Users/TDK/playground/LearnCoding/media/app.set.png)
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/app.set.png)
 
 The documentation then lists fourteen properties of the app object whose values you can set with ```app.set```.
 
@@ -640,7 +640,7 @@ Your ```home.hbs``` file should look like this:
 
 Refresh your browser and your website should have a nice home page:
 
-![Atom HTML](/Users/TDK/playground/LearnCoding/media/catpicture.png)
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/catpicture.png)
 
 ##### Router
 
