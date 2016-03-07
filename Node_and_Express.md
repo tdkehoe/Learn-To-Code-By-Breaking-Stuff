@@ -1189,6 +1189,98 @@ A [ReSTful](https://en.wikipedia.org/wiki/Representational_state_transfer) app h
 
 > [Create, Read, Update, Destroy](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) (CRUD) and ReSTful are the same thing. CRUD apps have four routes because the NEW and EDIT routes aren't counted, and the INDEX and SHOW routes are counted together.
 
+## Deploying Your Back End To Heroku
+
+Your web app is running on your computer. Do you want your finished app to be available for your friends (and potential employers) to use? We'll deploy your app to a free cloud hosting service.
+
+Many free cloud hosting services are available, including:
+
+* Heroku
+* Digital Ocean
+* IBM Bluemix
+* Firebase
+
+### Environmental Variables
+
+We'll secure sensitive data such as passwords to an _environmental variables_ file. The only security we'll implement will be for accessing the MongoDB database.
+
+Install the Node module ```dotenv```:
+
+```
+npm install dotenv --save
+```
+
+In ```routes.js``` inject the dependency:
+
+```javascript
+require('dotenv').load();
+```
+
+No variable is needed to create an object for dotenv.
+
+Now create a new file in your project folder called ```.env```.
+
+```
+touch .env
+```
+
+Put this line in the file:
+
+```javascript
+MONGOLAB_URI=localhost/movies
+```
+
+*IMPORTANT:* Your ```.env``` file is only secure if it exists only on your computer, i.e., you don't upload it to Heroku. Put ```.env``` in your ```.gitignore``` file.
+
+Change database access in ```routes.js``` to
+
+```javascript
+var db = mongo(process.env.MONGOLAB_URI);
+```
+
+### Open a Heroku Account
+
+Go to [Heroku](https://www.heroku.com/) and open a free account.
+
+Download and install the [Heroku Toolbelt](https://toolbelt.heroku.com/).
+
+Go to your Heroku dashboard and look for a ```+``` in the upper right corner. Click the plus sign and choose ```Create new app```. Enter a name for your app or let Heroku give you a name.
+
+### heroku create
+
+From your CLI run
+
+```
+heroku create
+heroku addons:create mongolab
+```
+
+If you haven't created a Git repository for this project then create one now. If you already created a Git repository for this project then ignore this command.
+
+```
+git init
+```
+
+
+Now add your Heroku app to your Git repository:
+
+```
+heroku git:remote -a <Heroku app name>
+```
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
 #### The Back End Is Finished!
 
 This might seem like a lot of work to write nine lines of code in ```app.js``` and 51 lines of code in ```routes.js```. The Angular front end is easier and more fun.
