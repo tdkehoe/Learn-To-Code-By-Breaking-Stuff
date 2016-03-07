@@ -848,6 +848,8 @@ The order of middleware matters. The router is usually at the bottom of the stac
 
 Almost every Node Express server includes a database. A database changes a _static_ website into a _dynamic_ website that can interact with users.
 
+> Modern static websites interact with users too by using front-end frameworks such as Angular and using cloud databases.
+
 Node and Express work with a variety of databases. The first decision when choosing a database is whether to use an SQL database such as PostgresSQL or MySQL vs. using a NoSQL database such as MongoDB.
 
 Structured Query Language (SQL) is a functional language for addressing a _relational_ database. A relational database consists of tables. Tables are two-dimensional with rows and columns, like a spreadsheet. For example there might be a table for users (with names, addresses, etc.), a table for products (with prices, descriptions, pictures, etc.), and a table for orders. The orders include both a username ID and a product ID, e.g., customer #8765 ordered product #ABC-123. Your code can then assemble an invoice for the order that looks up the customer's name and address, the price of the product, etc.
@@ -875,67 +877,318 @@ We'll go with NoSQL. The most popular NoSQL database is MongoDB.
 
 #### Monk and Mongoose
 
-Express has three Node modules for connecting to MongoDB:
+To connect a MongoDB database to a Node/Express server you use a Node module. There are two or three Node modules for this:
 
-* Monk, which is simple and good for beginners.
-* MongoDB's Node.js driver, which is simple, good for beginners, and the same code also runs with Mongoose if your project grows.
-* Mongoose, which is the most sophisticated and not recommended for beginners.
+* MongoDB makes the official [Node.js MongoDB Driver](https://docs.mongodb.org/ecosystem/drivers/node-js/). It can be used on its own but is usually used with the object mapping library Mongoose. We'll learn Mongoose later, as this is how MongoDB websites are built in production, but Mongoose adds complexity to a web app.
+* Monk is a lightweight, easy to use Node module that makes MongoDB easier to connect with.
 
 ##### Monk
 
-We'll use Monk because I know it. We connect the database from ```routes.js```, not from ```app.js```.
+We'll begin with [Monk](https://github.com/Automattic/monk) to reduce complexity. Monk runs on top of the Node module [MongoSkin](https://github.com/kissjs/node-mongoskin). The MongoSkin documentation in helpful.
 
-
-
-
-
-
-
-
-
-
-
-##### MongoDB Driver
-
-The ```mongodb``` driver depends on four other Node modules:
-
-* ```mongodb-core``` provides "basic management of MongoDB topology connections, CRUD operations, and authentication."
-* ```bson```, short for Binary JSON, provides binary encoded serialization of JSON objects.
-* ```kerberos``` is a computer network authentication protocol, named after the three-headed dog that guarded Hades in Greek mythology.
-* ```node-gyp``` compiles native add-on modules for Node.js.
-
-Install them together:
+Install monk:
 
 ```
-npm install mongodb mongodb-core bson kerberos node-gyp --save
+npm install monk --save
 ```
 
-Check that they've installed:
+There's currently [a bug in MongoSkin](https://github.com/Automattic/monk/issues/91) that makes Monk not run. Work around the bug by installing an old version of the MongoDB Node.js Driver:
 
 ```
-cat package.json
+npm install mongodb@1.4.4 --save
 ```
 
-Your ```package.json``` should include these dependencies:
+We connect the database from our routes, which are in ```routes.js```.
+
+Add this code:
 
 ```javascript
-"dependencies": {
-  "bson": "^0.4.21",
-  "express": "*",
-  "hbs": "*",
-  "kerberos": "0.0.18",
-  "mongodb": "^2.1.7",
-  "mongodb-core": "^1.3.2",
-  "node-gyp": "^3.3.0"
-},
+var mongo = require('monk');
+var db = mongo('localhost/myProject');
+var MyProject = db.get('myProject');
 ```
 
-Download and install [MongoDB](https://www.mongodb.org/).
+If you prefer to save a line you can instead use this code:
 
+```javascript
+var db = require('monk')('localhost/myProject');
+var MyProject = db.get('myProject');
+```
 
+The first line creates an object called ```mongo```, which depends on the *monk* Node module. This is the connection to the MongoDB database.
 
+The second line creates an object based on the ```mongo``` connection and connects it to the server.
 
+The third line creates an object that uses the ```get``` function to connect to the collection in the database.
 
+##### Routes with Monk
 
+Replace the two Express routes with five CRUD routes:
 
-SQL is by far the most popular database for large companies but such companies usually don't use Node and Express for their servers. They usually use Java, PHP, Ruby, or other languages with an Apache or Microsoft server.
+```javascript
+router.get('/movies/', function(request, response) { // INDEX
+  Movies.find({}, function(error, movies) {
+    if (error) {
+      response.send(error);
+    }
+    response.status(200).json(movies);
+  })
+});
+
+router.post('/movies/', function(request, response) { // CREATE
+  Movies.insert(request.body, function(error, movie) {
+    if (error) {
+      response.send(error);
+    }
+    response.status(201).json(movie)
+  })
+});
+
+router.get('/movies/:id', function(request, response) { // SHOW
+  Movies.findOne({_id: request.params.id}, function(error, movie){
+    if (error) {
+      response.send(error);
+    }
+    response.status(200).json(movie);
+  })
+});
+
+router.put('/movies/:id', function(request, response) { // UPDATE
+  Movies.findAndModify({_id: request.params.id}, request.body, function(error, movie){
+    if (error) {
+      throw error;
+    }
+    response.json(request.body);
+  })
+});
+
+router.delete('/movies/:id', function(request, response) { // DESTROY
+  Movies.remove({_id: request.params.id}, function(error, movie){
+    if (error) {
+      throw error;
+    }
+    response.status(204).json(movie);
+  })
+})
+```
+
+Your "hello world" Node-Express app will no longer work.
+
+Let's examine the ```INDEX``` route more carefully:
+
+```javascript
+router.get('/movies/', function(request, response) { // INDEX
+  Movies.find({}, function(error, movies) {
+    if (error) {
+      response.send(error);
+    }
+    response.status(200).json(movies);
+  })
+});
+```
+
+The first line uses the ```router``` object with its function for the ```GET``` HTTP request. The argument is the route, i.e., when a ```GET``` request comes in from the ```/movies/``` route this function executes. The callback function creates the ```request``` and ```response``` bodies.
+
+The second line uses the ```movies``` object that represents the database connection. The ```find({})``` function is a MongoDB command that returns all records in the database. Its callback function takes two arguments representing, respectively, the database returning an error and the database returning a dataset containing all of the records.
+
+The next three lines tell the server what to do if the database returns an error: the server sends the error to the client.
+
+The sixth line tells the server what to do if the database returns the dataset: the server sends the client an HTTP response with the status code of ```200``` ("OK") in the header and the dataset in the body in the JSON object format.
+
+The ```CREATE``` route changes the ```GET``` request to a ```POST``` request, uses the MongoDB ```insert()``` command instead of the ```find()``` command, and returns the ```201``` ("Created") response indicating that a new resource has been created.
+
+The ```SHOW``` route is similar to the ```INDEX``` route but has the record's ID in the URL, uses the MongoDB ```findOne()``` command to return a single record, and returns the ```200``` ("OK") standard response for successful HTTP requests.
+
+The ```UPDATE``` route responds to a ```PUT``` request and uses the MongoDB ```findAndModify()``` command.
+
+The ```DESTROY``` route responds to a ```DELETE``` request, uses the MongoDB ```remove()``` command, and returns the ```204``` ("No Content") code indicating that the data is gone.
+
+Your complete ```routes.js``` file should look like this:
+
+```javascript
+var express = require('express');
+var router = express.Router(); // Router with a capital 'R' is a mini-application
+
+var mongo = require('monk');
+var db = mongo('localhost/movies');
+// var db = require('monk')('localhost/movies');
+var Movies = db.get('movies');
+
+router.get('/movies/', function(request, response) { // INDEX
+  Movies.find({}, function(error, movies) {
+    if (error) {
+      response.send(error);
+    }
+    response.status(200).json(movies);
+  })
+});
+
+router.post('/movies/', function(request, response) { // CREATE
+  Movies.insert(request.body, function(error, movie) {
+    if (error) {
+      response.send(error);
+    }
+    response.status(201).json(movie)
+  })
+});
+
+router.get('/movies/:id', function(request, response) { // SHOW
+  Movies.findOne({_id: request.params.id}, function(error, movie){
+    if (error) {
+      response.send(error);
+    }
+    response.status(200).json(movie);
+  })
+});
+
+router.put('/movies/:id', function(request, response) { // UPDATE
+  Movies.findAndModify({_id: request.params.id}, request.body, function(error, movie){
+    if (error) {
+      throw error;
+    }
+    response.json(request.body);
+  })
+});
+
+router.delete('/movies/:id', function(request, response) { // DESTROY
+  Movies.remove({_id: request.params.id}, function(error, movie){
+    if (error) {
+      throw error;
+    }
+    response.status(204).json(movie);
+  })
+})
+
+module.exports = router;
+```
+
+##### Postman
+
+Install the [Postman](https://www.getpostman.com/) app in your Chrome browser or on your Mac. Postman is used to test APIs.
+
+Start the MongoDB database:
+
+```
+mongod
+```
+
+##### Get All Records (INDEX)
+
+In Postman, send a ```GET``` request to ```localhost:3000/myProject```. Click the blue ```Send``` button. The response you receive should be an empty array:
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/postman_get.png)
+
+> If you get an empty object ```{}``` check if you started MongoDB with ```mongod```.
+
+> If you get ```Cannot GET /movies``` then something is wrong with your routes. Postman is saying that it can't find the route ```/movies/```.
+
+##### Add a Record To the Database (CREATE)
+
+Now we'll add a record to the database.
+
+In Postman, change ```GET``` to ```POST```. The URL should stay as ```localhost:3000/movies```.
+
+Click the ```Body``` tab. Then click the radio button ```x-www-form-urlencoded```. You'll now see a form for entering a key and a value. Enter some values (leave out the colons):
+
+```
+movieName: Plan 9 from Outer Space
+movieDirector: Ed Wood
+movieYear: 1959
+movieSummary: Extraterrestrials in a flying saucer raise zombies to stop Earthlings from making a doomsday weapon that could destroy the universe.
+movieRating: -5
+```
+
+Click the blue ```Send``` button.
+
+That didn't work:
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/postman_form-data.png)
+
+A record was saved in the database with an ID number, but your key-value pair didn't make it to the database. What's missing is a middleware module called ```body-parser```:
+
+```
+npm install body-parser --save
+```
+
+In ```app.js``` add this line near the top:
+
+```javascript
+var bodyParser = require('body-parser');
+```
+
+and put these lines at the top of the middleware stack:
+
+```javascript
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+```
+
+The first line enables reading a key-value pair in the body of a ```POST``` request. The second line enables reading the body of ```POST``` request in the form of a JSON object.
+
+You can comment out ```command /``` or delete the line setting the view-engine to Handlebars. We won't be using Handlebars with our Angular front end. You can also comment out or delete the middleware for serving static files.
+
+Your ```app.js``` should look like this:
+
+```javascript
+// Dependencies
+var express = require('express'); // connects Express
+var app = express(); // create Express application object
+var bodyParser = require('body-parser'); // connects body-parser
+var routes = require('./routes/routes.js'); // connects routes.js
+
+// Middleware stack
+app.use(bodyParser.urlencoded({ extended: true })); // enables reading the body of a POST request
+app.use(bodyParser.json()); // enables reading a JSON object in the body of POST request
+app.use('/', routes); // middleware to serve routes
+
+// Server
+app.listen(3000); // starts server
+console.log("Woot! Server started on localhost:3000; press Ctrl-C to terminate.");
+```
+
+Now send another ```POST``` request. Remember to click the radio button for ```x-www-form-urlencoded```. You should see:
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/postman_post.png)
+
+Send another ```GET``` request:
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/postman_get2.png)
+
+You should see the first record, without values, and your second record, with values.
+
+##### Show One Record (SHOW)
+
+Send another ```GET``` request but put the ID of the record at the end of the URL, e.g., ```localhost:3000/myProject/56dcb9d0d1e06a4e116c34b0```:
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/postman_show.png)
+
+This request returns one record from the database.
+
+##### Update a Record (UPDATE)
+
+Send a ```PUT``` request with the same URL as the ```SHOW``` request. Click open the ```Body``` tab, click the radio button for ```x-www-form-urlencoded```. Change a key and the value, for example, change "Ed Wood" to "Ed Wood, Jr." Click the blue ```SEND``` button:
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/postman_update.png)
+
+##### Delete a Record (DESTROY)
+
+Send another ```GET``` request. That record with the empty values is annoying. Let's delete it. Send a ```DELETE``` request with the ID in the URL.
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/postman_delete.png)
+
+Do another ```GET``` request. Your targeted record should be gone.
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/postman_delete2.png)
+
+#### ReSTful Routes
+
+A [ReSTful](https://en.wikipedia.org/wiki/Representational_state_transfer) app has seven routes. We've tested five: INDEX, CREATE, SHOW, UPDATE, DELETE. The two other routes are:
+
+* NEW. This route delivers a form for the user to enter a new record. The route doesn't access the database. When the users clicks ```SUBMIT``` to submit the record the ```CREATE``` route is called.
+* EDIT. This route delivers a form for the user to edit an existing record. The route doesn't access the database. When the users clicks ```SUBMIT``` to submit the record the ```UPDATE``` route is called. The ```EDIT``` route is identical to the ```SHOW``` route.
+
+> [Create, Read, Update, Destroy](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) (CRUD) and ReSTful are the same thing. CRUD apps have four routes because the NEW and EDIT routes aren't counted, and the INDEX and SHOW routes are counted together.
+
+#### The Back End Is Finished!
+
+This might seem like a lot of work to write nine lines of code in ```app.js``` and 51 lines of code in ```routes.js```. The Angular front end is easier and more fun.
