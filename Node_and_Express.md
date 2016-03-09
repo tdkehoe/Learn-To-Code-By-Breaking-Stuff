@@ -1,6 +1,10 @@
+Add setting up GitHub repo, reminders to save.
+
 #Node and Express
 
 Node is a JavaScript _server_. Express is a _framework_ that extends Node and makes it easier to use. Along with a database, usually MongoDB, Node and Express form the _back end_ of a website. MongoDB, Express, and Node are three-quarters of the _MEAN stack_ for building complete web apps. (The fourth part is Angular to build the _front end_ or _client_ of the web app.)
+
+> This tutorial has two types of code. You'll write JavaScript in files ending with ```.js```. JavaScript will be syntax-highlighted (color-coded) in this tutorial. The other code will be commands you enter in the terminal's command-line interface (CLI). These are not syntax-highlighted. The convention is to indicate CLI coding by starting with a dollar sign ```$```. You copy or type the command without the ```$```. To avoid this confusion I'm leaving off the ```$```. Let me know if you prefer the standard presentation with the ```$```!
 
 ## How the World Wide Web Works (and why you should use WordPress)
 
@@ -24,9 +28,17 @@ For example, AirBnB doesn't own hotels. It doesn't provide beds or change the sh
 
 ## How Node is Different From Apache
 
+In the 1990s I handcoded my website. I wrote webpages in HTML. I uploaded my webpages to an Apache server. I put in links between my webpages. The user clicked the links and the server delivered the webpages.
+
+In 1999 I built a website using a new language called Personal Home Page (PHP) that connected to a MySQL database. I still wrote my webpages in HTML but there were bits of the webpages that were pulled from the database. The user still clicked on links and the Apache server delivered webpages.
+
+Web apps are different now. We're going to build two web apps, a _back end_ and then a _front end_. When a user visits your website, a server delivers the HTML _views_ to your browser, where Angular assembles the views into webpages. As the user clicks or hovers or enters data in forms, Angular rearranges the views instantly, without calling the server again. This is the front end.
+
+Angular also requests data from the database on the back end. This will be a different server. This server only delivers data. This is called _separation of concerns_, in which the views are completely separate from the data (often called the _model_), and the views and the data are integrated by a _controller_, which in this case is Angular. Together these are called _Model-View-Controller_ (MVC).
+
 There are several differences between Node and Apache:
 
-* I never wrote _routes_ with Apache servers. I wrote HTML and uploaded webpages to the server. My webpages had links, you'd click a link and the server sent you a new page. With Node you have to write routes. When users click a URL, the router tells the server what _view_ to send to the client.
+* Modern web apps use _routes_. Front-end routes in Angular translate user clicks into rearrangements of the views. Back-end routes translate user clicks in the views into database queries. Routing will be most of the code we write for the back end. When I first learned routing I couldn't understand why this complexity was a step forward over old-school webpages on Apache servers. When you see all the components working together you'll see why the MEAN stack is the modern way to build a website.
 * Apache is _synchronous_, Node is _asynchronous_. _Synchronous_ means that your browser sends an HTTP request to the server, and then your browser sits there until it gets the HTTP response back from the server. _Asynchronous_ means that your browser sends an HTTP request to the server, then JavaScript does other stuff while it's waiting for the HTTP response from the server. For example, your pizza driver might go through a tunnel and lose GPS and cellphone coverage. Instead of the website freezing on your browser you can click to view promotions, etc.
 * I never set up my own Apache server but I've heard that it's non-trivial. Setting up a Node server is very easy. You'll soon be creating and destroying servers with reckless abandon.
 * Web apps are written in JavaScript and expect data to come from the database through an API using JSON objects. An _Application Programming Interface_ (API) is how two computer programs, in this case a front-end app running in a browser and a back-end app accessing a database on a server, talk to each other. _JavaScript Object Notation_ (JSON) is a standard way to format data as nested arrays and objects, i.e., group related data into collections. Node and MongoDB understand JSON objects. Other back-end languages and databases require translating JSON objects. This isn't always simple, and bugs can creep into complex data.
@@ -764,8 +776,8 @@ Open ```app.js```. Do two steps:
 4. Add two lines:
 
 ```javascript
-var routes = require('./routes/routes.js');
-app.use('/', routes);
+var movies = require('./routes/routes.js');
+app.use('/movies', movies);
 ```
 
 The first line uses the keyword ```require```. This hooks up ```routes.js```.
@@ -775,10 +787,10 @@ The first line uses the keyword ```require```. This hooks up ```routes.js```.
 The second line is saying whenever a path with a slash in it, i.e., any path, is called, call in the ```routes.js```. The two lines could be written as one line:
 
 ```javascript
-app.use('/', require('./routes/routes'));
+app.use('/movies', require('./routes/routes'));
 ```
 
-> In a ReST app it's correct to include the name of the app in the URL. This is a line where we put the app's name. Our app doesn't have a name but if it were named 'cats' our code would be ```app.use('/cats', routes);```
+> In a ReST app it's correct to include the name of the app in the URL. This is a line where we put the app's name. We'll call our app ```movies``` so we code ```app.use('/movies'...``` instead of ```app.use('/'...```
 
 5. Delete or comment out the routes in ```app.js```. Your ```app.js``` file should look like:
 
@@ -786,8 +798,8 @@ app.use('/', require('./routes/routes'));
 var express = require('express');
 var app = express();
 
-var routes = require('./routes/routes');
-app.use('/', routes);
+var movies = require('./routes/routes');
+app.use('/movies', movies);
 
 app.set('view engine', 'hbs');
 
@@ -1139,7 +1151,7 @@ var routes = require('./routes/routes.js'); // connects routes.js
 // Middleware stack
 app.use(bodyParser.urlencoded({ extended: true })); // enables reading the body of a POST request
 app.use(bodyParser.json()); // enables reading a JSON object in the body of POST request
-app.use('/', routes); // middleware to serve routes
+app.use('/movies', routes); // middleware to serve routes
 
 // Server
 app.listen(3000); // starts server
@@ -1202,15 +1214,54 @@ Many free cloud hosting services are available, including:
 
 ### Environmental Variables
 
-We'll secure sensitive data such as passwords to an _environmental variables_ file. The only security we'll implement will be for accessing the MongoDB database.
+When we run our app locally we specify values that affect processes such as the server's port number. But Heroku sets these values itself so needs _variables_ instead of _constants_.
 
-Install the Node module ```dotenv```:
+> In college my housemate Bob told me that his project was going well with the variables but he was having a lot of trouble with the constants. I then went to the computer lab and ran into our friend Constance. I repeated what Bob had said, and Constance angrily told me what she thought of Bob.
+
+These values are called _environmental variables_. Our app has two processes that need to be set with environmental variables:
+
+* The server port.
+* The path that MongoDB queries follow.
+
+You don't need to set values in Heroku for either variable.
+
+In ```app.js``` change the server line to:
+
+```javascript
+app.listen(process.env.PORT || 3000); // starts server
+```
+The ```||``` means _or_, or more precisely, use the left value but if that doesn't work use the right value. On Heroku it'll use Heroku's ```process.env.PORT``` variable. Locally your app will use the ```process.env.PORT``` variable if you specify this in a new file called ```.env```, or your app will open on ```localhost:3000```.
+
+Change the MongoDB database access in ```routes.js``` to
+
+```javascript
+var db = mongo(process.env.MONGOLAB_URI || 'localhost/movies');
+```
+
+Again, Heroku will set its own MongoDB access path. Locally your app will either use the URI you set in ```.env``` or use ```'localhost/movies'```.
+
+Optionally you can create a new file ```.env``` and put these lines in it:
+
+```javascript
+MONGOLAB_URI=localhost/movies
+PORT=3000;
+```
+
+When you make apps with security features you'll put passwords into ```.env```.
+
+*IMPORTANT:* Your ```.env``` file is only secure if it exists only on your computer, i.e., you don't upload it to Heroku. Put ```.env``` in your ```.gitignore``` file. When you need to upload passwords to Heroku you'll use a command similar to this:
+
+```
+heroku config:set password swordfish
+```
+
+This should come as no surprise, but we need to install a Node module to read environmental variables. Install the Node module ```dotenv```:
 
 ```
 npm install dotenv --save
 ```
 
-In ```routes.js``` inject the dependency:
+Inject the dependency into both ```app.js``` and ```routes.js```:
 
 ```javascript
 require('dotenv').load();
@@ -1218,69 +1269,108 @@ require('dotenv').load();
 
 No variable is needed to create an object for dotenv.
 
-Now create a new file in your project folder called ```.env```.
-
-```
-touch .env
-```
-
-Put this line in the file:
-
-```javascript
-MONGOLAB_URI=localhost/movies
-```
-
-*IMPORTANT:* Your ```.env``` file is only secure if it exists only on your computer, i.e., you don't upload it to Heroku. Put ```.env``` in your ```.gitignore``` file.
-
-Change database access in ```routes.js``` to
-
-```javascript
-var db = mongo(process.env.MONGOLAB_URI);
-```
-
 ### Open a Heroku Account
 
 Go to [Heroku](https://www.heroku.com/) and open a free account.
 
 Download and install the [Heroku Toolbelt](https://toolbelt.heroku.com/).
 
-Go to your Heroku dashboard and look for a ```+``` in the upper right corner. Click the plus sign and choose ```Create new app```. Enter a name for your app or let Heroku give you a name.
+### git init
+
+Heroku uses Git to upload files. This is easy but can be confusing to set up if you've already initialized a GitHub repository for your project.
+
+Look if your project already has a local Git repository. The CLI prompt will say ```git:(master)```:
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/heroku_create.png)
+
+If your project has a local Git repository, check where the root directory of the local Git repository is:
+
+```
+git rev-parse --show-toplevel
+```
+
+If your local Git repository is your project's root directory you're good to go. But if your project's root directory is a subdirectory of your local Git repository you can't deploy to Heroku. Move your project to a new directory and initialize a new local Git repository.
+
+If you have a local Git repository, check where the remote Git repository is:
+
+```
+git remote -v
+```
+
+or
+
+```
+grv
+```
+
+There are several possibilities:
+
+* Your project doesn't have a local Git repository. You'll need to initialize a new Git repository.
+* Your project has a local Git repository but doesn't have a remote Git repository. You're ready to run ```heroku create```.
+* Your project has a local Git repository and a remote GitHub repository. You're ready to run ```heroku create```.
+* Your project has a local Git repository and a remote Heroku repository. You're ready to upload files.
+* Your project has a local Git repository and both a remote GitHub repository and a remote Heroku repository. You're ready to upload files.
+
+If your project doesn't have a local Git repository, initialize a local Git repository and commit files to it:
+
+```
+git init
+git add .
+git commit -m "Initial commit."
+```
 
 ### heroku create
 
-From your CLI run
+If your project has a local Git repository but doesn't have a remote Git repository, or has a GitHub remote repository, add the remote Heroku repository from your project directory:
 
 ```
 heroku create
 heroku addons:create mongolab
+heroku buildpacks:set heroku/nodejs
 ```
 
-If you haven't created a Git repository for this project then create one now. If you already created a Git repository for this project then ignore this command.
+You should get back two URLs:
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/heroku_create.png)
+
+The first URL is where your app is deployed. The second URL is the Heroku Git remote for your project.
+
+Check again where the remote Git repository is:
 
 ```
-git init
+git remote -v
 ```
 
+If you see the Heroku Git remote URL then you can go to the next step.
 
-Now add your Heroku app to your Git repository:
-
-```
-heroku git:remote -a <Heroku app name>
-```
-
-
+If you see no remote URL, or you see only your GitHub remote repository, add your Heroku remote repository as the origin:
 
 ```
+git remote add heroku https://git.heroku.com/awesome-app-12345.git
+```
 
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/heroku_2remotes.png)
 
+If you make a mistake you can remove the Heroku remote repository:
 
+```
+git remote rm heroku
+```
 
+### Upload To Heroku
 
+Upload your project to Heroku:
 
+```
+git push heroku master
+```
 
+### Test Heroku With Postman
 
+Open Postman and use the first Heroku URL. It should end with ```herokuapp.com/```. Don't use the second URL that starts with ```https://git.heroku.com/```. Paste the URL into Postman and add ```/movies```. You should be able to make ```GET``` requests, ```POST``` requests, etc. (Your Heroku database will be empty so you'll need to add some records. It's a different database than your local database.)
 
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/heroku_post.png)
 
 #### The Back End Is Finished!
 
-This might seem like a lot of work to write nine lines of code in ```app.js``` and 51 lines of code in ```routes.js```. The Angular front end is easier and more fun.
+That was a lot of work to write ten lines of code in ```app.js``` and fifty lines of code in ```routes.js```! The Angular front end is easier and more fun.
