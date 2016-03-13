@@ -622,16 +622,14 @@ Note the new Angular service ```$routeParams```. We use this in line 3 when we a
 
 In ```show.html``` replace the code with this code:
 
-```js
-<table>
-<tr><td>Movie Name:</td><td>{{movie.movieName}}</td></tr>
-<tr><td>Who To Blame:</td><td>{{movie.moviePerson}}</td></tr>
-<tr><td>Year:</td><td>{{movie.movieYear}}</td></tr>
-<tr><td>Summary:</td><td>{{movie.movieSummary}}</td></tr>
-<tr><td>Poster:</td><td><img class="moviePoster" ng-src="{{movie.moviePoster}}"></td></tr>
-<tr><td>Rating:</td><td>{{movie.movieRating}}</td></tr>
-<tr><td><a href="/#/movies/{{movie._id}}/edit"><button>Edit Movie</button></a></td></tr>
-</table>
+```html
+Movie Name: {{movie.movieName}}<br />
+Who To Blame: {{movie.moviePerson}}<br />
+Year: {{movie.movieYear}}<br />
+Summary: {{movie.movieSummary}}<br />
+Poster: <img class="moviePoster" ng-src="{{movie.moviePoster}}"><br />
+Rating: {{movie.movieRating}}<br />
+<a href="/#/movies/{{movie._id}}/edit"><button>Edit Movie</button></a><br />
 ```
 
 In ```home.html``` add an anchor link so that the user can click a movie name and go to the show page for that movie. Change the line:
@@ -798,20 +796,7 @@ app.controller('HomeController', ['$scope', '$http', '$route', function($scope, 
 
 The service ```$route``` "is used for deep-linking URLs to controllers and views (HTML partials)." I'm not sure what this means but it reloads pages.
 
-Also add the ```Delete Movie``` button to the ```SHOW``` and ```EDIT``` views and controllers. In ```show.html```:
-
-```html
-<table>
-<tr><td>Movie Name:</td><td>{{movie.movieName}}</td></tr>
-<tr><td>Who To Blame:</td><td>{{movie.moviePerson}}</td></tr>
-<tr><td>Year:</td><td>{{movie.movieYear}}</td></tr>
-<tr><td>Summary:</td><td>{{movie.movieSummary}}</td></tr>
-<tr><td>Poster:</td><td><img class="jobPicture" ng-src="{{movie.moviePoster}}"></td></tr>
-<tr><td>Rating:</td><td>{{movie.movieRating}}</td></tr>
-<tr><td><a href="/#/movies/{{movie._id}}/edit"><button>Edit Movie</button></a></td></tr>
-<tr><td><button ng-click="deleteMovie(movie)">Delete Movie</button></td></tr>
-</table>
-```
+Also add the ```Delete Movie``` button to the ```EDIT``` view and controller.
 
 In ```edit.html```:
 
@@ -1141,15 +1126,13 @@ Then wrap the comments ```div``` with this ```div```:
 The full ```show.html``` should look like this:
 
 ```html
-<table>
-<tr><td>Movie Name:</td><td>{{movie.movieName}}</td></tr>
-<tr><td>Who To Blame:</td><td>{{movie.moviePerson}}</td></tr>
-<tr><td>Year:</td><td>{{movie.movieYear}}</td></tr>
-<tr><td>Summary:</td><td>{{movie.movieSummary}}</td></tr>
-<tr><td>Poster:</td><td><img class="moviePoster" ng-src="{{movie.moviePoster}}"></td></tr>
-<tr><td>Rating:</td><td>{{movie.movieRating}}</td></tr>
-<tr><td><a href="/#/movies/{{movie._id}}/edit"><button>Edit Movie</button></a></td></tr>
-</table>
+Movie Name: {{movie.movieName}}<br />
+Who To Blame: {{movie.moviePerson}}<br />
+Year: {{movie.movieYear}}<br />
+Summary: {{movie.movieSummary}}<br />
+Poster: <img class="moviePoster" ng-src="{{movie.moviePoster}}"><br />
+Rating: {{movie.movieRating}}<br />
+<a href="/#/movies/{{movie._id}}/edit"><button>Edit Movie</button></a><br />
 
 <span ng-click="showComments = !showComments">
 <ng-pluralize count="movie.comments.length"
@@ -1749,3 +1732,192 @@ To style the form elements we could make a table to line up the labels and input
 ```
 
 ![Atom HTML](/Users/TDK/playground/BreakingStuff/media/new_bootstrap_form.png)
+
+Let's change "Enter" to "Add" for consistency.
+
+The ```Add Movie``` button needs styling. Bootstrap [uses colors semantically](http://getbootstrap.com/css/#buttons-options) to style buttons. To be consistent with the ```INDEX``` page we'll use ```Danger``` red again. Add ```btn btn-danger``` to the button's class. ```new.html``` should now look like:
+
+```html
+<h2>Add a New Movie</h2>
+
+<form class="form-horizontal" ng-submit="addMovie()" name="newMovie">
+
+  <div class="form-group">
+    <label for="movieName" class="col-sm-2 control-label">Movie: </label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="movieName" ng-model="movie.movieName" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="moviePerson" class="col-sm-2 control-label">Who To Blame: </label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="moviePerson" ng-model="movie.moviePerson" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="movieYear" class="col-sm-2 control-label">Year: </label>
+    <div class="col-sm-10">
+      <input type="number" class="form-control" name="movieYear" ng-model="movie.movieYear" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="movieSummary" class="col-sm-2 control-label">Summary: </label>
+    <div class="col-sm-10">
+      <textarea class="form-control" name="movieSummary" ng-model="movie.movieSummary" /></textarea>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="moviePoster" class="col-sm-2 control-label">Poster: </label>
+    <div class="col-sm-10">
+      <input type="url" class="form-control" name="moviePoster" ng-model="movie.moviePoster" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="movieRating" class="col-sm-2 control-label">Rating: </label>
+    <div class="col-sm-10">
+      <select class="form-control" name="movieRating" ng-model="movie.movieRating">
+        <option value="-1">-1</option>
+        <option value="-2">-2</option>
+        <option value="-3">-3</option>
+        <option value="-4">-4</option>
+        <option value="-5">-5</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="movieSubmit" class="col-sm-2 control-label"></label>
+    <div class="col-sm-10">
+      <input type="submit" class="form-control btn btn-danger" value="Add Movie"></input>
+    </div>
+  </div>
+
+</form>
+
+<a ng-href="/#/movies"><p class="homeLink">Return to index route</p></a>
+```
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/new_red_button.png)
+
+Users will need instructions for adding the movie poster. Let's use a _tooltip_. Add ```data-toggle="tooltip" data-placement="top" title="Tooltip on top"``` to the movie poster input field. It should look like:
+
+```html
+<input type="url" class="form-control" name="moviePoster" ng-model="movie.moviePoster" data-toggle="tooltip" data-placement="top" title="Tooltip on top"/>
+```
+
+The three attributes mean:
+
+* ```data-toggle="tooltip"``` sets up the tooltip.
+* ```data-placement="top"``` places the tooltip above the field.
+* ```title="Tooltip on top"``` is the contents of the tooltip.
+
+Hover your mouse over the movie poster input field. After two seconds you should see a small gray box appear with the text "Tooltip on top". (I see the tooltip below the field, not above it.)
+
+Let's change the instructions to: "Find your movie's poster on the Internet (Wikipedia is good). Then right-click on the poster and choose Copy Image Address. Paste the URL in this field."
+
+Let's add some more tooltips:
+
+* In the "Movie" field: ```data-toggle="tooltip" data-placement="top" title="Wikipedia is a good source of movie info."```
+* In the "Who To Blame" field: ```data-toggle="tooltip" data-placement="top" title="Could be the director, actor, producer, etc."```
+
+The ```Return to index route``` looks like unpolished. Let's make the ```<h1>``` heading the return path. In ```index.html``` change ```<h1>CRUDiest Movies Database</h1>``` to
+
+```html
+<a ng-href="/#/movies"><h1>CRUDiest Movies Database</h1></a>
+```
+
+Then remove the link from the views pages. ```new.html``` should now look like:
+
+```html
+<h2>Add a New Movie</h2>
+
+<form class="form-horizontal" ng-submit="addMovie()" name="newMovie">
+
+  <div class="form-group">
+    <label for="movieName" class="col-sm-2 control-label">Movie: </label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="movieName" ng-model="movie.movieName" ```data-toggle="tooltip" data-placement="top" title="Wikipedia is a good source of movie info."```/>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="moviePerson" class="col-sm-2 control-label">Who To Blame: </label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="moviePerson" ng-model="movie.moviePerson" data-toggle="tooltip" data-placement="top" title="Could be the director, actor, producer, etc."/>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="movieYear" class="col-sm-2 control-label">Year: </label>
+    <div class="col-sm-10">
+      <input type="number" class="form-control" name="movieYear" ng-model="movie.movieYear" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="movieSummary" class="col-sm-2 control-label">Summary: </label>
+    <div class="col-sm-10">
+      <textarea class="form-control" name="movieSummary" ng-model="movie.movieSummary" /></textarea>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="moviePoster" class="col-sm-2 control-label">Poster: </label>
+    <div class="col-sm-10">
+      <input type="url" class="form-control" name="moviePoster" ng-model="movie.moviePoster" data-toggle="tooltip" data-placement="top" title="Find your movie's poster on the Internet (Wikipedia is good). Then right-click on the poster and choose Copy Image Address. Paste the URL in this field."/>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="movieRating" class="col-sm-2 control-label">Rating: </label>
+    <div class="col-sm-10">
+      <select class="form-control" name="movieRating" ng-model="movie.movieRating">
+        <option value="-1">-1</option>
+        <option value="-2">-2</option>
+        <option value="-3">-3</option>
+        <option value="-4">-4</option>
+        <option value="-5">-5</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="movieSubmit" class="col-sm-2 control-label"></label>
+    <div class="col-sm-10">
+      <input type="submit" class="form-control btn btn-danger" value="Add Movie" ></input>
+    </div>
+  </div>
+
+</form>
+```
+
+I preferred the ```<h1>``` heading when it was black. Let's set that in ```style.css```:
+
+```css
+h1 {
+  font-family: Nixie One, sans-serif;
+  text-shadow: 4px 4px 4px #aaa;
+  color: black;
+}
+```
+
+The finished ```NEW``` page should look like:
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/new_red_button.png)
+
+Save your work to your GitHub repository:
+
+```
+git add .
+git commit -m "Angular DESTROY route working!"
+git push origin master
+```
+
+### SHOW Page Styling
+
+Let's use two columns in the ```SHOW``` page, for small, medium, and large screens. The left column will have the movie info and comments and the right column will be the movie poster, i.e., the poster will take up the right half of the screen. On extra-small screens we'll put the info above the poster, and the comments below the poster.
