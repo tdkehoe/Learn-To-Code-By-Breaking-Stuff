@@ -111,7 +111,7 @@ Markdown preview slows down Atom. You may not want to have a preview pane open w
 
 ## Save on Focus Lost
 
-When you're coding you will switch between your code and the browser as often as my dog pees on fire hydrants. If you want to become a nervous wreck, do ```File > Save All``` or ```shift ⌘ S``` every time you switch to view the browser. If you want to tear your hair out, fix a bug, forget to save all, or do ```⌘ s``` with the wrong file highlighted (i.e., save the wrong file), switch to the browser and see your bug still there. Then spend half an hour trying to figure out why your bug fix didn't work, before you realize that you didn't save your changes before viewing the browser.
+When you're coding you will switch between your code and the browser as often as my dog pees on fire hydrants. If you want to become a nervous wreck, do ```File > Save All``` or ```shift ⌘ S``` every time you switch to view the browser. If you want to tear your hair out, then fix a bug and forget to save all, or do ```⌘ s``` with the wrong file highlighted (i.e., save the wrong file), switch to the browser and see your bug still there. Then spend half an hour trying to figure out why your bug fix didn't work, before you realize that you didn't save your changes before viewing the browser.
 
 To be a happy coder, set _save on focus lost_. Open ```Atom > Preferences``` and look for a Core Package called ```autosave```. Enable this package.
 
@@ -124,6 +124,10 @@ When we get into the JavaScript chapter we'll use _linting_. This highlights typ
 I've mentioned Core and Community Packages several times. These are in ```Atom > Preferences```. Adding or enabling packages is how you add functionality to Atom. 77 core packages are included in Atom but you might have to enable them or adjust settings. Community packages have to be added using ```Atom > Preferences > Install```. [Instructions](https://atom.io/docs/v1.5.3/using-atom-atom-packages) are on Atom website. A [list of packages](https://atom.io/packages) (3,662!) is also on the Atom website.
 
 Some community packages can crash Atom so disable or delete community packages that you're not using.
+
+### Auto-Indent
+
+I like the ```auto-indent``` package. I can key ```shift-⌘-I``` and it indents my code correctly.
 
 ## Themes
 

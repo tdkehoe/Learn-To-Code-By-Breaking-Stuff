@@ -546,7 +546,7 @@ Line 3 sends a ```GET``` request to the server. Line 4 takes the response (which
 Open ```home.html``` and replace the code with this code:
 
 ```html
-<div ng-repeat="movie in movies">
+<div ng-repeat="movie in movies" class="movieIndex">
 <span>{{movie.movieName}}</span><br />
 <span>{{movie.moviePerson}}</span><br />
 <span>{{movie.movieYear}}</span><br />
@@ -564,6 +564,25 @@ Open your browser to ```http://127.0.0.1:8080/#/``` and you should see all your 
 Line 1 uses the Angular directive ```ng-repeat```. This binds to the array (JSON object) ```$scope.movies``` that was created in ```HomeController.js```. ```movie``` refers to each element (object) in the array. ```movieName``` etc. are the properties of the objects. Angular then just spins out the data however you set it up.
 
 Line 6 is a little different. We're specifying that we want an image, and using the Angular directive ```ng-src```. The data is a URL for the image.
+
+### Add More Movies
+
+Add some more of your least favorite movies. If you've never seen a bad movie you find a [List of films considered the worst
+](https://en.wikipedia.org/wiki/List_of_films_considered_the_worst) on Wikipedia.
+
+It's annoying that the movie posters are different sizes. Open ```css.styles``` and add this code:
+
+```css
+.movieIndex {
+  display: inline-block;;
+}
+
+.moviePoster {
+  height: 400px;
+}
+```
+
+We already created classes for ```movieIndex``` and ```moviePoster``` in ```home.html```. In the stylesheet ```inline-block``` makes the ```div``` elements line up in rows instead of following each other down the page in a vertical column. We've set the height of all of the movie posters at 400 pixels.
 
 Save your work to your GitHub repository:
 
@@ -609,7 +628,7 @@ In ```show.html``` replace the code with this code:
 <tr><td>Who To Blame:</td><td>{{movie.moviePerson}}</td></tr>
 <tr><td>Year:</td><td>{{movie.movieYear}}</td></tr>
 <tr><td>Summary:</td><td>{{movie.movieSummary}}</td></tr>
-<tr><td>Poster:</td><td><img class="jobPicture" ng-src="{{movie.moviePoster}}"></td></tr>
+<tr><td>Poster:</td><td><img class="moviePoster" ng-src="{{movie.moviePoster}}"></td></tr>
 <tr><td>Rating:</td><td>{{movie.movieRating}}</td></tr>
 <tr><td><a href="/#/movies/{{movie._id}}/edit"><button>Edit Movie</button></a></td></tr>
 </table>
@@ -682,25 +701,25 @@ In ```edit.html``` replace the code with this code:
 
 ```html
 <form ng-submit="updateMovie()">
-  <label for="editMovie">Edit Movie: </label>
-    <input type="text" name="editMovie" ng-model="movie.movieName"></label><br>
-  <label for="editPerson">Edit Who To Blame: </label>
-    <input type="text" name="editOwner" ng-model="movie.moviePerson"></label><br>
-  <label for="editYear">Edit Year: </label>
-    <input type="number" name="editYear" ng-model="movie.movieYear"></label><br>
-  <label for="editSummary">Edit Summary: </label>
-    <input type="text" name="editSummary" ng-model="movie.movieSummary"></label><br>
-  <label for="editPoster">Edit Poster: </label>
-    <input type="text" name="editPoster" ng-model="movie.moviePoster"></label><br>
-  <label for="editRating">Edit Rating: </label>
-    <select name="editRating" ng-model="movie.movieRating">
-      <option value="-1">-1</option>
-      <option value="-2">-2</option>
-      <option value="-3">-3</option>
-      <option value="-4">-4</option>
-      <option value="-5">-5</option>
-    </select><br />
-  <input type="submit" value="Update Movie"></input>
+<label for="editMovie">Edit Movie: </label>
+<input type="text" name="editMovie" ng-model="movie.movieName"></label><br>
+<label for="editPerson">Edit Who To Blame: </label>
+<input type="text" name="editOwner" ng-model="movie.moviePerson"></label><br>
+<label for="editYear">Edit Year: </label>
+<input type="number" name="editYear" ng-model="movie.movieYear"></label><br>
+<label for="editSummary">Edit Summary: </label>
+<input type="text" name="editSummary" ng-model="movie.movieSummary"></label><br>
+<label for="editPoster">Edit Poster: </label>
+<input type="text" name="editPoster" ng-model="movie.moviePoster"></label><br>
+<label for="editRating">Edit Rating: </label>
+<select name="editRating" ng-model="movie.movieRating">
+<option value="-1">-1</option>
+<option value="-2">-2</option>
+<option value="-3">-3</option>
+<option value="-4">-4</option>
+<option value="-5">-5</option>
+</select><br />
+<input type="submit" value="Update Movie"></input>
 </form>
 ```
 
@@ -728,14 +747,14 @@ The button executes this method:
 
 ```js
 $scope.deleteMovie = function(movie) { // DESTROY
-    console.log("Deleting movie.");
-    $http.delete('http://localhost:3000/movies/movies/' + movie._id).then(function(response){
-      console.log("Movie deleted.");
-      $route.reload();
-    }, function(response) {
-      console.log("Error, failed to reload page.");
-    });
-  };
+  console.log("Deleting movie.");
+  $http.delete('http://localhost:3000/movies/movies/' + movie._id).then(function(response){
+    console.log("Movie deleted.");
+    $route.reload();
+  }, function(response) {
+    console.log("Error, failed to reload page.");
+  });
+};
 ```
 
 Let's add the button to ```home.html```:
@@ -743,14 +762,14 @@ Let's add the button to ```home.html```:
 ```html
 <a href="/#/movies/new"><button>Add a new movie</button></a>
 
-<div ng-repeat="movie in movies">
-    <a ng-href="/#/movies/{{movie._id}}"><span>{{movie.movieName}}</span></a><br />
-    <span>{{movie.moviePerson}}</span><br />
-    <span>{{movie.movieYear}}</span><br />
-    <span>{{movie.movieSummary}}</span><br />
-    <span><img class="jobPicture" ng-src="{{movie.moviePoster}}"></span><br />
-    <span>{{movie.movieRating}}</span><br />
-    <button ng-click="deleteMovie(movie)">Delete Movie</button><br />
+<div ng-repeat="movie in movies"  class="movieIndex">
+<a ng-href="/#/movies/{{movie._id}}"><span>{{movie.movieName}}</span></a><br />
+<span>{{movie.moviePerson}}</span><br />
+<span>{{movie.movieYear}}</span><br />
+<span>{{movie.movieSummary}}</span><br />
+<span><img class="moviePoster" ng-src="{{movie.moviePoster}}"></span><br />
+<span>{{movie.movieRating}}</span><br />
+<button ng-click="deleteMovie(movie)">Delete Movie</button><br />
 </div>
 ```
 
@@ -779,6 +798,114 @@ app.controller('HomeController', ['$scope', '$http', '$route', function($scope, 
 
 The service ```$route``` "is used for deep-linking URLs to controllers and views (HTML partials)." I'm not sure what this means but it reloads pages.
 
+Also add the ```Delete Movie``` button to the ```SHOW``` and ```EDIT``` views and controllers. In ```show.html```:
+
+```html
+<table>
+<tr><td>Movie Name:</td><td>{{movie.movieName}}</td></tr>
+<tr><td>Who To Blame:</td><td>{{movie.moviePerson}}</td></tr>
+<tr><td>Year:</td><td>{{movie.movieYear}}</td></tr>
+<tr><td>Summary:</td><td>{{movie.movieSummary}}</td></tr>
+<tr><td>Poster:</td><td><img class="jobPicture" ng-src="{{movie.moviePoster}}"></td></tr>
+<tr><td>Rating:</td><td>{{movie.movieRating}}</td></tr>
+<tr><td><a href="/#/movies/{{movie._id}}/edit"><button>Edit Movie</button></a></td></tr>
+<tr><td><button ng-click="deleteMovie(movie)">Delete Movie</button></td></tr>
+</table>
+```
+
+In ```edit.html```:
+
+```html
+<form ng-submit="updateMovie()">
+<label for="editMovie">Edit Movie: </label>
+<input type="text" name="editMovie" ng-model="movie.movieName"></label><br>
+<label for="editPerson">Edit Who To Blame: </label>
+<input type="text" name="editOwner" ng-model="movie.moviePerson"></label><br>
+<label for="editYear">Edit Year: </label>
+<input type="number" name="editYear" ng-model="movie.movieYear"></label><br>
+<label for="editSummary">Edit Summary: </label>
+<input type="text" name="editSummary" ng-model="movie.movieSummary"></label><br>
+<label for="editPoster">Edit Poster: </label>
+<input type="text" name="editPoster" ng-model="movie.moviePoster"></label><br>
+<label for="editRating">Edit Rating: </label>
+<select name="editRating" ng-model="movie.movieRating">
+<option value="-1">-1</option>
+<option value="-2">-2</option>
+<option value="-3">-3</option>
+<option value="-4">-4</option>
+<option value="-5">-5</option>
+</select><br />
+<input type="submit" value="Update Movie"></input>
+</form>
+
+<button ng-click="deleteMovie(movie)">Delete Movie</button>
+```
+
+In ```show.controller```:
+
+```js
+app.controller('ShowController', ['$scope', '$http', '$routeParams', '$location', function($scope, $http, $routeParams, $location) {
+  console.log("Show controller.");
+  $http.get('http://localhost:3000/movies/movies/' + $routeParams.id).then(function(response) { // SHOW
+    $scope.movie = response.data;
+    console.log($scope.movie);
+  }, function(response) {
+    console.log("Error, no data returned.");
+  });
+  $scope.deleteMovie = function(movie) { // DESTROY
+    console.log("Deleting movie.");
+    $http.delete('http://localhost:3000/movies/movies/' + movie._id).then(function(response){
+      console.log("Movie deleted.");
+      $route.reload();
+    }, function(response) {
+      console.log("Failed to reload page.");
+    });
+  };
+}]);
+```
+
+In ```EditController.js```:
+
+```js
+app.controller('EditController', ["$scope", '$http', '$routeParams', '$location', function($scope, $http, $routeParams, $location){
+  console.log("Edit controller");
+  $http.get('http://localhost:3000/movies/movies/' + $routeParams.id + '/edit/').then(function(response) { // EDIT
+    $scope.movie = response.data;
+    console.log(response.data);
+  }, function(response) {
+    console.log("Error, no data returned.");
+  });
+
+  $scope.updateMovie = function(movie) {
+    console.log("Updating movie.");
+    var movie = {
+      movieName:  $scope.movie.movieName,
+      moviePerson: $scope.movie.moviePerson,
+      movieYear: $scope.movie.movieYear,
+      movieSummary: $scope.movie.movieSummary,
+      moviePoster: $scope.movie.moviePoster,
+      movieRating: $scope.movie.movieRating
+    }
+    console.log($routeParams.id);
+    $http.put('http://localhost:3000/movies/movies/' + $routeParams.id, movie).then(function(response) { // UPDATE
+      $location.path( "/movies" );
+      console.log("Movie updated.");
+    }, function(response) {
+      console.log("Error, no data returned.");
+    });
+  };
+  $scope.deleteMovie = function(movie) { // DESTROY
+    console.log("Deleting movie.");
+    $http.delete('http://localhost:3000/movies/movies/' + movie._id).then(function(response){
+      console.log("Movie deleted.");
+      $route.reload();
+    }, function(response) {
+      console.log("Failed to reload page.");
+    });
+  };
+}]);
+```
+
 Save your work to your GitHub repository:
 
 ```
@@ -797,9 +924,9 @@ We'll let users add and read comments only in the ```SHOW``` page. Open ```show.
 
 ```html
 <form ng-submit="newComment(movie)">
-  <input type="text" name="commentText" ng-model="movie.newComment.commentText">
-  <input type="text" name="commentAuthor" ng-model="movie.newComment.commentAuthor">
-  <input type="submit" value="Submit Comment"></input>
+<input type="text" name="commentText" ng-model="movie.newComment.commentText">
+<input type="text" name="commentAuthor" ng-model="movie.newComment.commentAuthor">
+<input type="submit" value="Submit Comment"></input>
 </form>
 ```
 
@@ -886,10 +1013,10 @@ To display comments, add this code to ```show.html```:
 
 ```html
 <div ng-repeat="comment in movie.comments">
-  <span>{{comment.commentText}}</span>
-  <span>--{{comment.commentAuthor}}</span>
-  <span>{{comment.commentTimestamp | date:'medium'}}</span>
-  <br />
+<span>{{comment.commentText}}</span>
+<span>--{{comment.commentAuthor}}</span>
+<span>{{comment.commentTimestamp | date:'medium'}}</span>
+<br />
 </div>
 ```
 
@@ -901,7 +1028,7 @@ To delete a comment, add this code to ```show.html```:
 
 ```html
 <form ng-submit="deleteComment(movie, comment)">
-  <input type="submit" value="Delete Comment" />
+<input type="submit" value="Delete Comment" />
 </form>
 ```
 
@@ -911,13 +1038,13 @@ Put the code in the ```div``` for displaying comments:
 
 ```html
 <div ng-repeat="comment in movie.comments">
-  <span>{{comment.commentText}}</span>
-  <span>--{{comment.commentAuthor}}</span>
-  <span>{{comment.commentTimestamp | date:'medium'}}</span>
-  <form ng-submit="deleteComment(movie, comment)">
-    <input type="submit" value="Delete Comment" />
-  </form>
-  <br />
+<span>{{comment.commentText}}</span>
+<span>--{{comment.commentAuthor}}</span>
+<span>{{comment.commentTimestamp | date:'medium'}}</span>
+<form ng-submit="deleteComment(movie, comment)">
+<input type="submit" value="Delete Comment" />
+</form>
+<br />
 </div>
 ```
 
@@ -985,12 +1112,12 @@ What if users don't want to see comments? In ```show.html``` add this code:
 
 ```html
 <span ng-click="showComments = !showComments">
-  <ng-pluralize count="movie.comments.length"
-  when="{'0': '',
-  'one': '1 comment',
-  'other': '{} comments',
-  'NaN': ''}">
-  </ng-pluralize><br>
+<ng-pluralize count="movie.comments.length"
+when="{'0': '',
+'one': '1 comment',
+'other': '{} comments',
+'NaN': ''}">
+</ng-pluralize><br>
 </span>
 ```
 
@@ -1015,43 +1142,554 @@ The full ```show.html``` should look like this:
 
 ```html
 <table>
-  <tr><td>Movie Name:</td><td>{{movie.movieName}}</td></tr>
-  <tr><td>Who To Blame:</td><td>{{movie.moviePerson}}</td></tr>
-  <tr><td>Year:</td><td>{{movie.movieYear}}</td></tr>
-  <tr><td>Summary:</td><td>{{movie.movieSummary}}</td></tr>
-  <tr><td>Poster:</td><td><img class="jobPicture" ng-src="{{movie.moviePoster}}"></td></tr>
-  <tr><td>Rating:</td><td>{{movie.movieRating}}</td></tr>
-  <tr><td><a href="/#/movies/{{movie._id}}/edit"><button>Edit Movie</button></a></td></tr>
+<tr><td>Movie Name:</td><td>{{movie.movieName}}</td></tr>
+<tr><td>Who To Blame:</td><td>{{movie.moviePerson}}</td></tr>
+<tr><td>Year:</td><td>{{movie.movieYear}}</td></tr>
+<tr><td>Summary:</td><td>{{movie.movieSummary}}</td></tr>
+<tr><td>Poster:</td><td><img class="moviePoster" ng-src="{{movie.moviePoster}}"></td></tr>
+<tr><td>Rating:</td><td>{{movie.movieRating}}</td></tr>
+<tr><td><a href="/#/movies/{{movie._id}}/edit"><button>Edit Movie</button></a></td></tr>
 </table>
 
 <span ng-click="showComments = !showComments">
-  <ng-pluralize count="movie.comments.length"
-  when="{'0': '',
-  'one': '1 comment',
-  'other': '{} comments',
-  'NaN': ''}">
+<ng-pluralize count="movie.comments.length"
+when="{'0': '',
+'one': '1 comment',
+'other': '{} comments',
+'NaN': ''}">
 </ng-pluralize><br>
 </span>
 
 <div ng-show="showComments">
-  <div ng-repeat="comment in movie.comments">
-    <span>{{comment.commentText}}</span>
-    <span>--{{comment.commentAuthor}}</span>
-    <span>{{comment.commentTimestamp | date:'medium'}}</span>
-    <form ng-submit="deleteComment(movie, comment)">
-      <input type="submit" value="Delete Comment" />
-    </form>
-    <br />
-  </div>
+<div ng-repeat="comment in movie.comments">
+<span>{{comment.commentText}}</span>
+<span>--{{comment.commentAuthor}}</span>
+<span>{{comment.commentTimestamp | date:'medium'}}</span>
+<form ng-submit="deleteComment(movie, comment)">
+<input type="submit" value="Delete Comment" />
+</form>
+<br />
+</div>
 </div>
 
 <form ng-submit="newComment(movie)">
-  <input type="text" name="commentText" ng-model="movie.newComment.commentText">
-  <input type="text" name="commentAuthor" ng-model="movie.newComment.commentAuthor">
-  <input type="submit" value="Submit Comment"></input>
+<input type="text" name="commentText" ng-model="movie.newComment.commentText">
+<input type="text" name="commentAuthor" ng-model="movie.newComment.commentAuthor">
+<input type="submit" value="Submit Comment"></input>
 </form>
 ```
 
 Now users can click on the number of comments to make the comments show or hide.
 
-The Angular directive
+The Angular directive ```ng-show``` shows the contents of a ```<div>``` (division) if the value its variable is true. If the value is false then the contents and hidden. There's another Angular directive ```ng-hide``` that does the opposite.
+
+### Dislikes
+
+We'll let users click to dislike a movie.
+
+In ```show.html``` add code to display likes in the view:
+
+```html
+<span>Likes: {{movie.likes}}</span>
+<form ng-submit="upLike(movie)">
+<input type="submit" value="Up"<</input>
+</form>
+<form ng-submit="downLike(movie)">
+<input type="submit" value="Down"<</input>
+</form>
+```
+
+In ```NewController.js``` add ```likes``` to the ```movie``` object:
+
+```js
+var movie = {
+  movieName:  $scope.movie.movieName,
+  moviePerson: $scope.movie.moviePerson,
+  movieYear: $scope.movie.movieYear,
+  movieSummary: $scope.movie.movieSummary,
+  moviePoster: $scope.movie.moviePoster,
+  movieRating: $scope.movie.movieRating,
+  likes: 0
+}
+```
+
+In ```ShowController.js``` add methods for liking and disliking:
+
+```js
+$scope.upLike = function(movie) {
+  console.log("Liked!");
+  var likes = movie.likes || 0;
+  movie.likes += 1;
+  $http.put('http://localhost:3000/movies/movies/' + movie._id, movie).then(function(response) { // UPDATE
+    console.log("Upliked.");
+  }, function(response) {
+    console.log("Error, like not counted.");
+  });
+}
+$scope.downLike = function(movie) {
+  console.log("Disliked!");
+  var likes = movie.likes || 0;
+  movie.likes -= 1;
+  $http.put('http://localhost:3000/movies/movies/' + movie._id, movie).then(function(response) { // UPDATE
+    console.log("Downliked.");
+  }, function(response) {
+    console.log("Error, dislike not counted.");
+  });
+}
+```
+
+This code is similar to the comments. The variable ```likes``` is set to its previous value, or if there is now previous value then it's set to zero.
+
+The comparator ```+= 1``` means "increment" or add one to the previous value. Similarly ```-= 1``` decrements by one.
+
+Your ```ShowController.js``` should now look like this:
+
+```js
+app.controller('ShowController', ['$scope', '$http', '$routeParams', '$location', function($scope, $http, $routeParams, $location) {
+  console.log("Show controller.");
+  $http.get('http://localhost:3000/movies/movies/' + $routeParams.id).then(function(response) { // SHOW
+    $scope.movie = response.data;
+    console.log($scope.movie);
+  }, function(response) {
+    console.log("Error, no data returned.");
+  });
+  $scope.newComment = function(movie) { // full record is passed from the view
+    var comment = {
+      commentText: movie.newComment.commentText,
+      commentAuthor: movie.newComment.commentAuthor,
+      commentTimestamp: Date.now(),
+    };
+    var comments = movie.comments || [];
+    comments.push(comment); // push comment to local $scope
+    movie.newComment.commentAuthor = null; // needed to prevent autofilling fields
+    movie.newComment.commentText = null; // needed to prevent autofilling fields
+    movie.comments = comments; // saves new comment locally
+    $http.put('http://localhost:3000/movies/movies/' + movie._id, movie).then(function(response) { // UPDATE
+      console.log("Comment added.");
+    }, function(response) {
+      console.log("Error, failed to add comment.");
+    });
+  };
+  $scope.deleteComment = function(movie, comment) {
+    console.log("Deleting comment.")
+    var index = movie.comments.indexOf(comment); // find the index of the comment in the array of comments
+    movie.comments.splice(index, 1); // removes the comment from the array
+    $http.put('http://localhost:3000/movies/movies/' + movie._id, movie).then(function(response) { // UPDATE
+      console.log("Comment deleted.");
+    }, function(response) {
+      console.log("Error, comment not deleted.");
+    });
+  };
+  $scope.upLike = function(movie) {
+    console.log("Liked!");
+    var likes = movie.likes || 0;
+    movie.likes += 1;
+    $http.put('http://localhost:3000/movies/movies/' + movie._id, movie).then(function(response) { // UPDATE
+      console.log("Upliked.");
+    }, function(response) {
+      console.log("Error, like not counted.");
+    });
+  }
+  $scope.downLike = function(movie) {
+    console.log("Disliked!");
+    var likes = movie.likes || 0;
+    movie.likes -= 1;
+    $http.put('http://localhost:3000/movies/movies/' + movie._id, movie).then(function(response) { // UPDATE
+      console.log("Downliked.");
+    }, function(response) {
+      console.log("Error, dislike not counted.");
+    });
+  }
+}]);
+```
+
+### Homepage Link
+
+Every page should have a link to the homepage. You can put this into every template (except ```home.html```):
+
+```html
+<a ng-href="/#/movies"><p class="homeLink">Return to index route</p></a>
+```
+
+Note that we use the Angular directive ```ng-href``` instead of the HTML element ```href```. We've also included a class so we can style these links.
+
+That's all the functions! Now we can work on the styling.
+
+## Styling
+
+There are three popular frameworks for styling:
+
+* Bootstrap, made by Twitter, is by far the most popular. It's easy for beginners. Thousands of themes are available, and if you find one you like it's easy to insert your content and have a pro-looking websites in hours. But if you want to change part of a theme things get messy fast. Advanced designers complain that Bootstrap websites tend to look alike.
+* Angular Material, made by Google, uses cards instead of components. Material doesn't use JavaScript. Material is popular with designers for its color aesthetics and consistency of styling.
+* ZURB Foundation is _mobile first_. You design for small screens first and then do larger screens later. ZURB Foundation is popular wth designers who don't want the restrictions or look that Bootstrap sites often have.
+
+We'll use Bootstrap.
+
+### Bootstrap
+
+Bootstrap provides three types of features:
+
+* CSS positioning, e.g., putting parts of your website on the left, right, middle, or in the header, footer, sidebar, etc. This is what Bootstrap is famous for. At Galvanize we spent a long week, difficult learning CSS positioning without Bootstrap. I looked for books and articles about CSS positioning but couldn't find any. The reason is that everyone uses a framework for CSS positioning. Bootstrap also helps style forms, buttons, etc.
+* Components such as dropdown menus, nav bars, and button groups. Plus, glyphicons, progress bars, breadcrumbs, etc.
+* JavaScript plugins such as transitions, tooltips, popovers, accordion collapses, scrollspies, prompts and alerts, a carousel, more dropdown menus, etc. JavaScript plugins might not work on mobile devices or all browsers. Bootstrap's JavaScript requires jQuery.
+
+We'll load Bootstrap via CDN.
+
+> You can also install Bootstrap using ```npm install```.
+
+Put this code in the ```<HEAD>``` section of your ```index.html```:
+
+```html
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+```
+
+Also put these two lines of code below ```<meta charset="utf-8">```:
+
+```html
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+```
+
+The first line enables your web app to work with old versions of Microsoft's Internet Explorer (IE).
+
+The second line enables _responsive design_, i.e., your app will miniaturize itself on mobile devices with _touch zooming_.
+
+Your ```index.html``` should look like this:
+
+```html
+<!DOCTYPE html>
+<html lang="en" ng-app="CRUDiestMoviesApp">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular-route.js"></script>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="css/style.css">
+<title>CRUDiest Movies Database</title>
+</head>
+<body>
+
+<h1>CRUDiest Movies Database</h1>
+
+<ng-view>
+
+<script type="text/javascript" src="app.js"></script>
+<script type="text/javascript" src="javascript/routes/routes.js"></script>
+<script type="text/javascript" src="javascript/controllers/EditController.js"></script>
+<script type="text/javascript" src="javascript/controllers/HomeController.js"></script>
+<script type="text/javascript" src="javascript/controllers/NewController.js"></script>
+<script type="text/javascript" src="javascript/controllers/ShowController.js"></script>
+
+</body>
+</html>
+```
+
+### Grid System
+
+Let's simplify the ```home.html``` view to just the ```moviePoster```:
+
+```html
+<a href="/#/movies/new"><button>Add a new movie</button></a>
+
+<div ng-repeat="movie in movies"  class="movieIndex">
+<a ng-href="/#/movies/{{movie._id}}">
+<span><img class="moviePoster" ng-src="{{movie.moviePoster}}"></span>
+</a><br />
+</div>
+```
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_row.png)
+
+Bootstrap uses a system of rows and columns, all inside a container. Put in the rows first, then put columns in the rows. Everything in Bootstrap is a ```<div>``` (division).
+
+Add the container to ```index.html```, then make the header a row:
+
+```html
+<div class="container">
+<div class="row">
+<h1>CRUDiest Movies Database</h1>
+</div>
+<ng-view>
+</div>
+```
+
+Add a row to ```home.html```. No container is needed as this view displays inside the ```index.html``` container.
+
+```html
+<div class="row">
+<a href="/#/movies/new"><button>Add new movie</button></a>
+
+<div ng-repeat="movie in movies" class="movieIndex">
+<a ng-href="/#/movies/{{movie._id}}">
+<span><img class="moviePoster" ng-src="{{movie.moviePoster}}"></span>
+</a><br />
+</div>
+</div>
+```
+
+### Colophon
+
+Let's make a narrow column on the left that will describe your app's technical features. We'll name it semantically as ```colophon``` instead of ```leftColumn``` because we might move it somewhere else later. A [colophon](https://en.wikipedia.org/wiki/Colophon_(publishing)) is "a brief statement containing information about the publication of a book such as the place of publication, the publisher, and the date of publication." Magazines that emphasize design, e.g., _Wired_, include a colophon in the back of each issue discussing the design of the issue.
+
+```html
+<div class="row">
+
+  <div class="colophon col-sm-2 col-md-2 col-lg-2">
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  </div>
+
+  <div class="col-sm-2 col-md-10 col-lg-10">
+    <a href="/#/movies/new"><button>Add new movie</button></a>
+
+    <div ng-repeat="movie in movies" class="movieIndex">
+      <a ng-href="/#/movies/{{movie._id}}">
+        <span><img class="moviePoster" ng-src="{{movie.moviePoster}}"></span>
+      </a><br />
+    </div>
+  </div>
+
+</div>
+```
+
+The narrow left column was created with ```<div class="techSummary col-sm-2 col-md-2 col-lg-2">```. The wide right column was created with ```<div class="col-sm-2 col-md-10 col-lg-10">```. Bootstrap's grid is twelve columns wide. The narrow left column is two Bootstrap columns wide. The wide right column is ten Bootstrap columns wide. The columns in a row must total twelve.
+
+Bootstrap has _four tiers grids classes_ for responsive design:
+
+* ```col-xs-``` is for extra-small screens, e.g., mobile devices.
+* ```col-sm-``` is for small screens, with a container width of 750 pixels.
+* ```col-md-``` is for medium screens, e.g., 13" laptops, with a container width of 970 pixels.
+* ```col-lg-``` is for large screens, e.g., 15" laptops, with a container width of 1170 pixels.
+
+Bootstrap won't allow your app to take up the full width of the screen on even a 15" monitor. You can make a ```xl``` container width but it's not standard. This is arguably a feature, not a bug, as websites that are largely text are hard to read if they're too wide. A visual website such as Google Maps, on the other hand, should be able to take up the full width of the screen.
+
+Note that ```<div class="techSummary col-sm-2 col-md-2 col-lg-2">``` leaves out extra-small screens. Resize your browser window and you'll see the colophon move above the movie posters.
+
+The "greek" text is inserted by typing ```lorem``` and then ```TAB```.
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_lorem.png)
+
+Let's add some styling. In ```style.css```, give the ```colophon``` column a black background and white text:
+
+```css
+.colophon {
+  background-color: black;
+  color: white;
+}
+```
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_black_bg.png)
+
+The black background is only extending as far as the text. I want it to fill the column vertically. E-mail me if you can figure out how to do this.
+
+### ```Add new movie``` button
+
+The ```Add a new movie``` button is in an annoying position. Let's give it its own row.
+
+```html
+<div class="row">
+
+  <div class="techSummary col-md-2 col-lg-2">
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  </div>
+
+  <div class="col-md-10 col-lg-10">
+    <div class="addNewMovie row">
+      <a href="/#/movies/new"><button>Add new movie</button></a>
+    </div>
+
+    <div class="row">
+      <div ng-repeat="movie in movies" class="movieIndex">
+        <a ng-href="/#/movies/{{movie._id}}">
+          <span><img class="moviePoster" ng-src="{{movie.moviePoster}}"></span>
+        </a><br />
+      </div>
+    </div>
+  </div>
+
+</div>
+```
+
+Let's style the ```addNewMovie``` button. Bootstrap includes button styling. Buttons in Bootstrap are color-coded semantically. Let's go with ```danger```, as adding a bad movie could be dangerous. In ```home.html```:
+
+```html
+<a href="/#/movies/new"><button type="button" class="btn btn-danger">Add new movie</button></a>
+```
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_danger.png)
+
+Let's make the button as wide as the column.
+
+
+```html
+<button type="button" class="btn btn-danger btn-block">
+```
+
+Adding the class ```btn-block``` creates a block-level button, i.e., it spans the width of the parent ```div```. The parent ```div``` is ten columns wide.
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_button_block.png)
+
+### Responsively Sizing the Movie Posters
+
+It's annoying that the block-level button extends to the right past the movie posters. Let's set width of movie posters to fit four on a row on a large screen, three on a row on a medium screen, and two on a row on a small screen:
+
+```css
+.movieIndex {
+  display: inline-block;
+}
+
+.col-sm-10 .moviePoster {
+  height: auto;
+  width: 50%;
+}
+
+.col-md-10 .moviePoster {
+  height: auto;
+  width: 33%;
+}
+
+.col-lg-10 .moviePoster {
+  height: auto;
+  width: 25%;
+}
+```
+
+We'll use ```width``` instead of ```max-width``` because we want smaller posters to expand as well as larger posters to shrink to the same size.
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_poster_widths.png)
+
+That's not what I expected!
+
+In the Chrome browser, open the Developer Tools ```option-⌘-J```. Right-click on a movie poster.
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_responsive_styles.png)
+
+Resize the browser window. In every browser size the width is 25%. Note what's missing: ```display: inline-block``` isn't inherited from ```.movieIndex```.
+
+
+
+
+Let's inspect the width of the button and set the width of the movie posters to change so that on a large screen there are four posters and on a medium screen there are three posters in each row.
+
+In the Chrome browser, key ```option-⌘-J``` to open the Developer Tools. Right-click on the red button and select ```Inspect``` from the pop-up menu. In the ```Styles``` pane scroll down to the sizing box:
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_sizing_box.png)
+
+The sizing box says that the red button is 949 pixels wide. Now resize the screen and note when the button changes sizes. It's 782 pixels wide in a medium screen, then 724 pixels in a small screen, then in the extra-small screen it continuously resizes between 724 pixels and 374 pixels.
+
+In the 949-pixel width, four movie posters would be about 237 pixels wide each.
+
+Let's change ```style.css```:
+
+```css
+.moviePoster {
+  /*height: 400px;*/
+  max-width: 237px;
+}
+```
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_237.png)
+
+Close but not perfect. Let's change that to 239 pixels:
+
+```css
+.moviePoster {
+  /*height: 400px;*/
+  max-width: 239px;
+}
+```
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_239.png)
+
+That looks good but when we resize the browser window the medium size, the three movies don't fit the red button. This doesn't work:
+
+```css
+.col-sm-10 .moviePoster {
+  height: auto;
+  max-width: 50%;
+}
+
+.col-md-10 .moviePoster {
+  height: auto;
+  max-width: 33%;
+}
+
+.col-lg-10 .moviePoster {
+  height: auto;
+  max-width: 25%;
+}
+```
+
+### Typography
+
+Let's add a leading paragraph. In ```home.html```:
+
+```html
+<div class="techSummary col-sm-2 col-md-2 col-lg-2">
+<p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+</div>
+```
+
+Making a paragraph ```class="lead"``` makes the paragraph stand out:
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_lead.png)
+
+We can justify the text:
+
+```html
+<div class="techSummary col-sm-2 col-md-2 col-lg-2">
+<p class="lead text-justify">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+<p class="text-justify">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+</div>
+```
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_lead.png)
+
+Let's not justify the leading paragraph!
+
+#### Fonts
+
+[Google](https://www.google.com/fonts) has a wide variety of fonts available for free. You add the fonts as stylesheets in the ```<HEAD>``` section of ```index.html```.
+
+```html
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Nixie+One">
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Source+Sans+Pro">
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Expletus+Sans">
+```
+Now in ```styles.css``` change ```h1```:
+
+```css
+h1 {
+  font-family: Nixie One, sans-serif;
+  text-shadow: 4px 4px 4px #aaa
+}
+```
+
+We've styled ```h1``` headings for the "Nixie One" font. If that font isn't available then it defaults to a sans-serif font. We've also add a text shadow. ```text-shadow``` has two required arguments and two optional arguments. The first two arguments are the ```offset-x``` and ```offset-y```, in this case putting the shadows 4 pixels below and to the right of the text. The third, optional, argument is the ```blur-radius```, again 4 pixels. The fourth, optional, argument is the color, in this case light gray.
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_nixie_one.png)
+
+The ```INDEX``` page looks pretty good. We'll move on to the ```SHOW``` page.

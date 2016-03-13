@@ -965,6 +965,15 @@ router.get('/movies/:id', function(request, response) { // SHOW
   })
 });
 
+router.get('/movies/:id/edit', function(request, response) { // EDIT
+  Movies.findOne({_id: request.params.id}, function(error, movie){
+    if (error) {
+      response.send(error);
+    }
+    response.status(200).json(movie);
+  })
+});
+
 router.put('/movies/:id', function(request, response) { // UPDATE
   Movies.findAndModify({_id: request.params.id}, request.body, function(error, movie){
     if (error) {
@@ -1010,6 +1019,8 @@ The sixth line tells the server what to do if the database returns the dataset: 
 The ```CREATE``` route changes the ```GET``` request to a ```POST``` request, uses the MongoDB ```insert()``` command instead of the ```find()``` command, and returns the ```201``` ("Created") response indicating that a new resource has been created.
 
 The ```SHOW``` route is similar to the ```INDEX``` route but has the record's ID in the URL, uses the MongoDB ```findOne()``` command to return a single record, and returns the ```200``` ("OK") standard response for successful HTTP requests.
+
+The ```EDIT``` route is identical to the ```SHOW``` route except for the URL.
 
 The ```UPDATE``` route responds to a ```PUT``` request and uses the MongoDB ```findAndModify()``` command.
 

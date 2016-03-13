@@ -106,11 +106,15 @@ brew pin <softwarepackage>
 
 ## Node and Node Package Manager (npm)
 
-Node is the JavaScript server or back-end.
+Node is the JavaScript server or back-end. Even if you don't use Node as a server you'll need the Node Package Manager (npm) to install software.
 
 To install Node go to [Nodejs.org] (https://nodejs.org/).
 
 Node Package Manager (npm) is included in Node.
+
+Test if Node is installed: ```node -v```
+
+If you get an ```EACCES``` ("Error: Access") error when installing Node modules then [fix npm permissions](https://docs.npmjs.com/getting-started/fixing-npm-permissions).
 
 ## Bower
 
