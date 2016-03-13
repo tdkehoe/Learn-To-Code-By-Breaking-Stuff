@@ -1366,42 +1366,42 @@ Your ```index.html``` should look like this:
 ```html
 <!DOCTYPE html>
 <html lang="en" ng-app="CRUDiestMoviesApp">
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular-route.js"></script>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular-route.js"></script>
 
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
-<!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
 
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
-<link rel="stylesheet" href="css/style.css">
-<title>CRUDiest Movies Database</title>
-</head>
-<body>
+    <link rel="stylesheet" href="css/style.css">
+    <title>CRUDiest Movies Database</title>
+  </head>
+  <body>
 
-<h1>CRUDiest Movies Database</h1>
+    <h1>CRUDiest Movies Database</h1>
 
-<ng-view>
+    <ng-view>
 
-<script type="text/javascript" src="app.js"></script>
-<script type="text/javascript" src="javascript/routes/routes.js"></script>
-<script type="text/javascript" src="javascript/controllers/EditController.js"></script>
-<script type="text/javascript" src="javascript/controllers/HomeController.js"></script>
-<script type="text/javascript" src="javascript/controllers/NewController.js"></script>
-<script type="text/javascript" src="javascript/controllers/ShowController.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+    <script type="text/javascript" src="javascript/routes/routes.js"></script>
+    <script type="text/javascript" src="javascript/controllers/EditController.js"></script>
+    <script type="text/javascript" src="javascript/controllers/HomeController.js"></script>
+    <script type="text/javascript" src="javascript/controllers/NewController.js"></script>
+    <script type="text/javascript" src="javascript/controllers/ShowController.js"></script>
 
-</body>
+  </body>
 </html>
 ```
 
@@ -1410,27 +1410,23 @@ Your ```index.html``` should look like this:
 Let's simplify the ```home.html``` view to just the ```moviePoster```:
 
 ```html
-<a href="/#/movies/new"><button>Add a new movie</button></a>
-
-<div ng-repeat="movie in movies"  class="movieIndex">
-<a ng-href="/#/movies/{{movie._id}}">
-<span><img class="moviePoster" ng-src="{{movie.moviePoster}}"></span>
-</a><br />
+<div ng-repeat="movie in movies" class="movieIndex">
+  <a ng-href="/#/movies/{{movie._id}}"><img class="moviePoster" ng-src="{{movie.moviePoster}}"></a>
 </div>
 ```
 
 ![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_row.png)
 
-Bootstrap uses a system of rows and columns, all inside a container. Put in the rows first, then put columns in the rows. Everything in Bootstrap is a ```<div>``` (division).
+Bootstrap uses a system of rows and columns, all inside a container. Put in the rows first, then put columns in the rows. Rows and columns are ```<div>``` (divisions).
 
 Add the container to ```index.html```, then make the header a row:
 
 ```html
 <div class="container">
-<div class="row">
-<h1>CRUDiest Movies Database</h1>
-</div>
-<ng-view>
+  <div class="row">
+    <h1>CRUDiest Movies Database</h1>
+  </div>
+  <ng-view />
 </div>
 ```
 
@@ -1438,13 +1434,9 @@ Add a row to ```home.html```. No container is needed as this view displays insid
 
 ```html
 <div class="row">
-<a href="/#/movies/new"><button>Add new movie</button></a>
-
-<div ng-repeat="movie in movies" class="movieIndex">
-<a ng-href="/#/movies/{{movie._id}}">
-<span><img class="moviePoster" ng-src="{{movie.moviePoster}}"></span>
-</a><br />
-</div>
+  <div ng-repeat="movie in movies" class="movieIndex">
+    <a ng-href="/#/movies/{{movie._id}}"><img class="moviePoster" ng-src="{{movie.moviePoster}}"></a>
+  </div>
 </div>
 ```
 
@@ -1463,33 +1455,31 @@ Let's make a narrow column on the left that will describe your app's technical f
     <a href="/#/movies/new"><button>Add new movie</button></a>
 
     <div ng-repeat="movie in movies" class="movieIndex">
-      <a ng-href="/#/movies/{{movie._id}}">
-        <span><img class="moviePoster" ng-src="{{movie.moviePoster}}"></span>
-      </a><br />
+      <a ng-href="/#/movies/{{movie._id}}"><img class="moviePoster" ng-src="{{movie.moviePoster}}"></a>
     </div>
   </div>
 
 </div>
 ```
 
-The narrow left column was created with ```<div class="techSummary col-sm-2 col-md-2 col-lg-2">```. The wide right column was created with ```<div class="col-sm-2 col-md-10 col-lg-10">```. Bootstrap's grid is twelve columns wide. The narrow left column is two Bootstrap columns wide. The wide right column is ten Bootstrap columns wide. The columns in a row must total twelve.
+The narrow left column was created with ```<div class="colophon col-sm-2 col-md-2 col-lg-2">```. The wide right column was created with ```<div class="col-sm-2 col-md-10 col-lg-10">```. Bootstrap's grid is twelve columns wide. The narrow left column is two Bootstrap columns wide. The wide right column is ten Bootstrap columns wide. The columns in a row must total twelve.
 
 Bootstrap has _four tiers grids classes_ for responsive design:
 
 * ```col-xs-``` is for extra-small screens, e.g., mobile devices.
-* ```col-sm-``` is for small screens, with a container width of 750 pixels.
-* ```col-md-``` is for medium screens, e.g., 13" laptops, with a container width of 970 pixels.
-* ```col-lg-``` is for large screens, e.g., 15" laptops, with a container width of 1170 pixels.
+* ```col-sm-``` is for small screens, e.g., the iPad, with a container width of 750 pixels.
+* ```col-md-``` is for medium screens, e.g., 13" laptops, with a container width of 970 pixels to fit 13" screens 1024 pixels wide.
+* ```col-lg-``` is for large screens, e.g., 15" laptops, with a container width of 1170 pixels to fit 15" screens 1280 pixels wide.
 
 Bootstrap won't allow your app to take up the full width of the screen on even a 15" monitor. You can make a ```xl``` container width but it's not standard. This is arguably a feature, not a bug, as websites that are largely text are hard to read if they're too wide. A visual website such as Google Maps, on the other hand, should be able to take up the full width of the screen.
 
-Note that ```<div class="techSummary col-sm-2 col-md-2 col-lg-2">``` leaves out extra-small screens. Resize your browser window and you'll see the colophon move above the movie posters.
+Note that ```<div class="colophon col-sm-2 col-md-2 col-lg-2">``` leaves out extra-small screens. Resize your browser window and you'll see the colophon move above the movie posters.
 
 The "greek" text is inserted by typing ```lorem``` and then ```TAB```.
 
 ![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_lorem.png)
 
-Let's add some styling. In ```style.css```, give the ```colophon``` column a black background and white text:
+Let's add styling. In ```style.css```, give the ```colophon``` column a black background and white text:
 
 ```css
 .colophon {
@@ -1509,7 +1499,7 @@ The ```Add a new movie``` button is in an annoying position. Let's give it its o
 ```html
 <div class="row">
 
-  <div class="techSummary col-md-2 col-lg-2">
+  <div class="colophone col-md-2 col-lg-2">
     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
   </div>
 
@@ -1520,9 +1510,7 @@ The ```Add a new movie``` button is in an annoying position. Let's give it its o
 
     <div class="row">
       <div ng-repeat="movie in movies" class="movieIndex">
-        <a ng-href="/#/movies/{{movie._id}}">
-          <span><img class="moviePoster" ng-src="{{movie.moviePoster}}"></span>
-        </a><br />
+        <a ng-href="/#/movies/{{movie._id}}"><img class="moviePoster" ng-src="{{movie.moviePoster}}"></a>
       </div>
     </div>
   </div>
@@ -1551,94 +1539,86 @@ Adding the class ```btn-block``` creates a block-level button, i.e., it spans th
 
 ### Responsively Sizing the Movie Posters
 
-It's annoying that the block-level button extends to the right past the movie posters. Let's set width of movie posters to fit four on a row on a large screen, three on a row on a medium screen, and two on a row on a small screen:
+It's annoying that the block-level button extends to the right past the movie posters. Let's set the width of movie posters to fit five on a row on a large screen, four on a row on a medium screen, three on a row on a small screen, and two movie posters on an extra-small screen. In ```home.html```:
+
+```html
+<div class="row">
+
+  <div class="colophon col-sm-2 col-md-2 col-lg-2">
+    <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+    <p class="text-justify">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  </div>
+
+  <div class="col-sm-10 col-md-10 col-lg-10">
+    <div class="addNewMovie row">
+      <a href="/#/movies/new"><button type="button" class="btn btn-danger btn-block">Add new movie</button></a>
+    </div>
+
+    <div class="row visible-xs-block">
+      <div ng-repeat="movie in movies" class="movieIndex">
+        <a ng-href="/#/movies/{{movie._id}}"><img class="extraSmallMoviePoster" ng-src="{{movie.moviePoster}}"></a>
+      </div>
+    </div>
+
+    <div class="row visible-sm-block">
+      <div ng-repeat="movie in movies" class="movieIndex">
+        <a ng-href="/#/movies/{{movie._id}}"><img class="smallMoviePoster" ng-src="{{movie.moviePoster}}"></a>
+      </div>
+    </div>
+
+    <div class="row visible-md-block">
+      <div ng-repeat="movie in movies" class="movieIndex">
+        <a ng-href="/#/movies/{{movie._id}}"><img class="mediumMoviePoster" ng-src="{{movie.moviePoster}}"></a>
+      </div>
+    </div>
+
+    <div class="row visible-lg-block">
+      <div ng-repeat="movie in movies" class="movieIndex">
+        <a ng-href="/#/movies/{{movie._id}}"><img class="largeMoviePoster" ng-src="{{movie.moviePoster}}"></a>
+      </div>
+    </div>
+
+  </div>
+</div>
+```
+
+We've replaced one code block for class ```moviePoster``` with four code blocks, one each for the classes ```extraSmallMoviePoster```, ```smallMoviePoster```, ```mediumMoviePoster```, ```largeMoviePoster```. The only difference between the code blocks other than the class names is the first line, e.g., ```<div class="row visible-xs-block">```. This code makes the first code block visible with extra-small screens and not visible with larger screens. These are Bootstrap classes.
+
+In ```style.css```:
 
 ```css
 .movieIndex {
-  display: inline-block;
+  display: inline;
 }
 
-.col-sm-10 .moviePoster {
-  height: auto;
-  width: 50%;
+.extraSmallMoviePoster {
+  width: 49%;
 }
 
-.col-md-10 .moviePoster {
-  height: auto;
+.smallMoviePoster {
   width: 33%;
 }
 
-.col-lg-10 .moviePoster {
-  height: auto;
-  width: 25%;
+.mediumMoviePoster {
+  width: 24.5%;
+}
+
+.largeMoviePoster {
+  width: 19.5%;
+}
+
+.colophon {
+  background-color: black;
+  color: white;
 }
 ```
 
-We'll use ```width``` instead of ```max-width``` because we want smaller posters to expand as well as larger posters to shrink to the same size.
+We use ```width``` instead of ```max-width``` because we want smaller posters to expand as well as larger posters to shrink to the same size.
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_poster_widths.png)
+The class ```movieIndex``` sets up how the movie posters are displayed. ```display: inline``` means the movies line up in rows. If we change that to ```display: block``` we get only one movie poster per row. This is based on the difference between words and paragraphs. We write words next to each other, but we write paragraphs below each other.
 
-That's not what I expected!
-
-In the Chrome browser, open the Developer Tools ```option-⌘-J```. Right-click on a movie poster.
-
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_responsive_styles.png)
-
-Resize the browser window. In every browser size the width is 25%. Note what's missing: ```display: inline-block``` isn't inherited from ```.movieIndex```.
-
-
-
-
-Let's inspect the width of the button and set the width of the movie posters to change so that on a large screen there are four posters and on a medium screen there are three posters in each row.
-
-In the Chrome browser, key ```option-⌘-J``` to open the Developer Tools. Right-click on the red button and select ```Inspect``` from the pop-up menu. In the ```Styles``` pane scroll down to the sizing box:
-
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_sizing_box.png)
-
-The sizing box says that the red button is 949 pixels wide. Now resize the screen and note when the button changes sizes. It's 782 pixels wide in a medium screen, then 724 pixels in a small screen, then in the extra-small screen it continuously resizes between 724 pixels and 374 pixels.
-
-In the 949-pixel width, four movie posters would be about 237 pixels wide each.
-
-Let's change ```style.css```:
-
-```css
-.moviePoster {
-  /*height: 400px;*/
-  max-width: 237px;
-}
-```
-
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_237.png)
-
-Close but not perfect. Let's change that to 239 pixels:
-
-```css
-.moviePoster {
-  /*height: 400px;*/
-  max-width: 239px;
-}
-```
-
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_239.png)
-
-That looks good but when we resize the browser window the medium size, the three movies don't fit the red button. This doesn't work:
-
-```css
-.col-sm-10 .moviePoster {
-  height: auto;
-  max-width: 50%;
-}
-
-.col-md-10 .moviePoster {
-  height: auto;
-  max-width: 33%;
-}
-
-.col-lg-10 .moviePoster {
-  height: auto;
-  max-width: 25%;
-}
-```
+We now have four classes of movie posters for the four screen sizes. The extra-small screens display one movie poster per row, the small screens display two movie posters per row, etc. We don't use 50%, 33%, 25%, and 20% because the images have a little padding.
 
 ### Typography
 
@@ -1692,4 +1672,80 @@ We've styled ```h1``` headings for the "Nixie One" font. If that font isn't avai
 
 ![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_nixie_one.png)
 
-The ```INDEX``` page looks pretty good. We'll move on to the ```SHOW``` page.
+The ```INDEX``` page looks pretty good. We'll move on to the ```NEW``` page.
+
+### NEW Page Styling
+
+To style the form elements we could make a table to line up the labels and input fields, then add classes and use CSS to style everything. Or we could use Bootstrap's [horizontal form](http://getbootstrap.com/css/#forms-horizontal) styling. In ```new.html```:
+
+1. Add ```class="form-horizontal"``` to the ```<form>``` tag.
+2. Wrap each ```<label><input>``` element with ```<div class="form-group">```.
+3. Next add the twelve columns. We'll use two columns for the labels and ten columns for the forms, to match the ```<INDEX>``` page. We'll also add the class ```control-label``` to the labels.
+4. Before the ```Add Movie``` submit button we'll put in a label with no text in the first two columns.
+
+```html
+<h2>Enter a New Movie</h2>
+
+<form class="form-horizontal" ng-submit="addMovie()" name="newMovie">
+
+  <div class="form-group">
+    <label for="movieName" class="col-sm-2 control-label">Movie: </label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="movieName" ng-model="movie.movieName" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="moviePerson" class="col-sm-2 control-label">Who To Blame: </label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="moviePerson" ng-model="movie.moviePerson" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="movieYear" class="col-sm-2 control-label">Year: </label>
+    <div class="col-sm-10">
+      <input type="number" class="form-control" name="movieYear" ng-model="movie.movieYear" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="movieSummary" class="col-sm-2 control-label">Summary: </label>
+    <div class="col-sm-10">
+      <textarea class="form-control" name="movieSummary" ng-model="movie.movieSummary" /></textarea>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="moviePoster" class="col-sm-2 control-label">Poster: </label>
+    <div class="col-sm-10">
+      <input type="url" class="form-control" name="moviePoster" ng-model="movie.moviePoster" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="movieRating" class="col-sm-2 control-label">Rating: </label>
+    <div class="col-sm-10">
+      <select class="form-control" name="movieRating" ng-model="movie.movieRating">
+        <option value="-1">-1</option>
+        <option value="-2">-2</option>
+        <option value="-3">-3</option>
+        <option value="-4">-4</option>
+        <option value="-5">-5</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="form-group">
+      <label for="movieSubmit" class="col-sm-2 control-label"></label>
+    <div class="col-sm-10">
+      <input type="submit" class="form-control" value="Add Movie"></input>
+    </div>
+  </div>
+
+</form>
+
+<a ng-href="/#/movies"><p class="homeLink">Return to index route</p></a>
+```
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/new_bootstrap_form.png)
