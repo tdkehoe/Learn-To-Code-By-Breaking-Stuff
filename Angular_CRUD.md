@@ -1921,3 +1921,372 @@ git push origin master
 ### SHOW Page Styling
 
 Let's use two columns in the ```SHOW``` page, for small, medium, and large screens. The left column will have the movie info and comments and the right column will be the movie poster, i.e., the poster will take up the right half of the screen. On extra-small screens we'll put the info above the poster, and the comments below the poster.
+
+Wrap ```show.html``` in a row:
+
+```html
+<div class="row">
+  ...
+</div>
+```
+
+Make two columns:
+
+```html
+<div class="col-sm-6 col-md-6 col-lg-6">
+</div>
+
+<div class="col-sm-6 col-md-6 col-lg-6">
+</div>
+```
+
+Put everything in the left column. Then move the movie poster to the right column.
+
+Your ```show.html``` should look like this:
+
+```html
+<div class="row">
+
+  <div class="col-sm-6 col-md-6 col-lg-6">
+    Movie Name: {{movie.movieName}}<br />
+    Who To Blame: {{movie.moviePerson}}<br />
+    Year: {{movie.movieYear}}<br />
+    Summary: {{movie.movieSummary}}<br />
+
+    Rating: {{movie.movieRating}}<br />
+    <a href="/#/movies/{{movie._id}}/edit"><button>Edit Movie</button></a><br />
+
+    <span>Likes: {{movie.likes}}</span>
+    <form ng-submit="upLike(movie)">
+      <input type="submit" value="Up"<</input>
+    </form>
+    <form ng-submit="downLike(movie)">
+      <input type="submit" value="Down"<</input>
+    </form>
+
+    <span ng-click="showComments = !showComments">
+      <ng-pluralize count="movie.comments.length"
+      when="{'0': '',
+      'one': '1 comment',
+      'other': '{} comments',
+      'NaN': ''}">
+    </ng-pluralize><br />
+    </span>
+
+    <div ng-show="showComments">
+      <div ng-repeat="comment in movie.comments">
+        <span>{{comment.commentText}}</span>
+        <span>--{{comment.commentAuthor}}</span>
+        <span>{{comment.commentTimestamp | date:'medium'}}</span>
+        <form ng-submit="deleteComment(movie, comment)">
+          <input type="submit" value="Delete Comment" />
+        </form>
+        <br />
+      </div>
+    </div>
+
+    <form ng-submit="newComment(movie)">
+      <input type="text" name="commentText" ng-model="movie.newComment.commentText">
+      <input type="text" name="commentAuthor" ng-model="movie.newComment.commentAuthor">
+      <input type="submit" value="Submit Comment"></input>
+    </form>
+  </div>
+
+  <div class="col-sm-6 col-md-6 col-lg-6">
+    Poster: <img class="moviePoster" ng-src="{{movie.moviePoster}}"><br />
+  </div>
+
+</div>
+```
+
+We can remove the ```Poster: ``` label.
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_two_columns.png)
+
+We need to set a ```max-width``` for the movie poster in ```style.css```:
+
+```css
+.moviePoster {
+  max-width: 100%;
+}
+```
+
+### Tables
+
+We'll format the movie info in a table. Tables begin with the ```<table>``` tag.
+
+```html
+<table>
+  ...
+</table>
+```
+
+Each row in a table is marked with a _table row_ tag:
+
+```html
+<table>
+  <tr>
+    ...
+  </tr>
+</table>
+```
+
+Each cell in a table row is marked with a _table data_ tag:
+
+```html
+<table>
+  <tr>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+```
+
+We'll add semantic classes to the tags:
+
+```html
+<table>
+  <tr>
+    <td class="tableLabel"></td>
+    <td class="tableData"></td>
+  </tr>
+</table>
+```
+
+Put the five fields of the record into a table:
+
+```html
+<table>
+  <tr>
+    <td class="tableLabel">Movie Name:</td>
+    <td class="tableData">{{movie.movieName}}</td>
+  </tr>
+  <tr>
+    <td class="tableLabel">Who To Blame:</td>
+    <td class="tableData">{{movie.moviePerson}}</td>
+  </tr>
+  <tr>
+    <td class="tableLabel">Year:</td>
+    <td class="tableData">{{movie.movieYear}}</td>
+  </tr>
+  <tr>
+    <td class="tableLabel">Summary:</td>
+    <td class="tableData">{{movie.movieSummary}}</td>
+  </tr>
+  <tr>
+    <td class="tableLabel">Rating:</td>
+    <td class="tableData">{{movie.movieRating}}</td>
+  </tr>
+</table>
+```
+
+Your ```show.html``` should look like this:
+
+```html
+<div class="row">
+
+  <div class="col-sm-6 col-md-6 col-lg-6">
+
+    <table>
+      <tr>
+        <td class="tableLabel">Movie Name:</td>
+        <td class="tableData">{{movie.movieName}}</td>
+      </tr>
+      <tr>
+        <td class="tableLabel">Who To Blame:</td>
+        <td class="tableData">{{movie.moviePerson}}</td>
+      </tr>
+      <tr>
+        <td class="tableLabel">Year:</td>
+        <td class="tableData">{{movie.movieYear}}</td>
+      </tr>
+      <tr>
+        <td class="tableLabel">Summary:</td>
+        <td class="tableData">{{movie.movieSummary}}</td>
+      </tr>
+      <tr>
+        <td class="tableLabel">Rating:</td>
+        <td class="tableData">{{movie.movieRating}}</td>
+      </tr>
+    </table>
+
+    <a href="/#/movies/{{movie._id}}/edit"><button>Edit Movie</button></a><br />
+
+    <span>Likes: {{movie.likes}}</span>
+    <form ng-submit="upLike(movie)">
+      <input type="submit" value="Up"<</input>
+    </form>
+    <form ng-submit="downLike(movie)">
+      <input type="submit" value="Down"<</input>
+    </form>
+
+    <span ng-click="showComments = !showComments">
+      <ng-pluralize count="movie.comments.length"
+      when="{'0': '',
+      'one': '1 comment',
+      'other': '{} comments',
+      'NaN': ''}">
+    </ng-pluralize><br />
+    </span>
+
+    <div ng-show="showComments">
+      <div ng-repeat="comment in movie.comments">
+        <span>{{comment.commentText}}</span>
+        <span>--{{comment.commentAuthor}}</span>
+        <span>{{comment.commentTimestamp | date:'medium'}}</span>
+        <form ng-submit="deleteComment(movie, comment)">
+          <input type="submit" value="Delete Comment" />
+        </form>
+        <br />
+      </div>
+    </div>
+
+    <form ng-submit="newComment(movie)">
+      <input type="text" name="commentText" ng-model="movie.newComment.commentText">
+      <input type="text" name="commentAuthor" ng-model="movie.newComment.commentAuthor">
+      <input type="submit" value="Submit Comment"></input>
+    </form>
+  </div>
+
+  <div class="col-sm-6 col-md-6 col-lg-6">
+    <img class="moviePoster" ng-src="{{movie.moviePoster}}"><br />
+  </div>
+
+</div>
+```
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_table.png)
+
+Bootstrap has [table styling](http://getbootstrap.com/css/#tables). All you do is add ```class="table"``` to your ```<table>``` tag:
+
+```html
+<table class="table">
+```
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_bootstrap_table.png)
+
+It's nothing fancy but it looks fine.
+
+The ```Edit Movie``` button needs styling. Looking at the Bootstrap [semantic colors](http://getbootstrap.com/css/#buttons-options), let's go with the dark blue "Primary" style. Add ```btn btn-primary``` to the button's class. Also add ```btn-block``` to make it full-column-width:
+
+```html
+<button type="button" class="btn btn-primary btn-block">Edit Movie</button>
+```
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_blue_button.png)
+
+### Dislikes
+
+Now we'll style the ```Like``` and (more important!) ```Dislike``` buttons. We'll use Bootstrap's [glyphicons](http://getbootstrap.com/components/#glyphicons).
+
+We'll pretend to be Roger Ebert and use "thumbs up" and "thumbs down" glyphicons. In ```show.html``` replace:
+
+```html
+<input type="submit" value="Up"<</input>
+```
+
+with
+
+```html
+<button type="submit" class="btn btn-success btn-lg">
+  <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+</button>
+```
+
+and replace
+
+```html
+<input type="submit" value="Down"<</input>
+```
+
+with
+
+```html
+<button type="submit" class="btn btn-danger btn-lg">
+  <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+</button>
+```
+
+Glyphicons don't work with ```<input>``` tags so we have to use a ```<button>``` tag. The button gets three classes:
+
+* ```btn``` tells Bootstrap that it's a button.
+* ```btn-success``` and ```btn-danger``` are the semantically colored classes we've used on other buttons.
+* ```btn-lg``` makes the glyphicon bigger. We could make these even bigger using CSS.
+
+The next line is the glyphicon. Glyphicons are always in a ```<span>``` tag. Glyphicons always have two classes, called the _base class_ and the _individual icon class_. The base class identifies that it's a glyphicon. The individual icon class specifies which glyphicon you want.
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_glyphicons.png)
+
+Let's put the dislikes number to the left of the buttons. Wrap this section in a row, then add two equal columns:
+
+```html
+<div class="row">
+  <div class="col-sm-6 col-md-6 col-lg-6">
+  </div>
+  <div class="col-sm-6 col-md-6 col-lg-6">
+  </div>
+</div>
+```
+
+Put the code into the columns:
+
+```html
+<div class="row">
+  <div class="col-sm-6 col-md-6 col-lg-6">
+    <span>Likes: {{movie.likes}}</span>
+  </div>
+  <div class="col-sm-6 col-md-6 col-lg-6">
+    <form ng-submit="upLike(movie)">
+      <button type="submit" class="btn btn-success btn-lg">
+        <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+      </button>
+    </form>
+    <form ng-submit="downLike(movie)">
+      <button type="submit" class="btn btn-danger btn-lg">
+        <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+      </button>
+    </form>
+  </div>
+</div>
+```
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_dislikes_columns.png)
+
+Let's remove the ```Likes: ```, add class for styling the number, and make the number bigger and aligned right:
+
+```html
+<div class="likes col-sm-6 col-md-6 col-lg-6">
+  <span>{{movie.likes}}</span>
+</div>
+```
+
+```css
+.likes {
+  font-size: 48pt;
+  text-align: right;
+}
+```
+
+The class ```likes``` has to go in the ```<div>```, not in the ```<span>```, to align right.
+
+Save your work to your GitHub repository:
+
+```
+git add .
+git commit -m "SHOW dislikes styled."
+git push origin master
+```
+
+### Comments Styling
+
+The comments need styling:
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_dislikes_columns.png)
+
+The author's name should be on a new line, and right aligned.
+
+We'll style the ```Delete Comment``` with a yellow warning style, block-wide to match the other buttons.
+
+The form will match the styling of the ```NEW``` form.
+
+We'll start by wrapping the code in a new row. We might not use columns but a new row will identify the code block when someone reads the code.
