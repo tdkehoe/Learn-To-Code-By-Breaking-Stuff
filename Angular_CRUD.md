@@ -1920,7 +1920,7 @@ git push origin master
 
 ### SHOW Page Styling
 
-Let's use two columns in the ```SHOW``` page, for small, medium, and large screens. The left column will have the movie info and comments and the right column will be the movie poster, i.e., the poster will take up the right half of the screen. On extra-small screens we'll put the info above the poster, and the comments below the poster.
+Let's use two columns in the ```SHOW``` page, for small, medium, and large screens. The left column will have the movie info and comments and the right column will be the movie poster, i.e., the poster will take up the right half of the screen.
 
 Wrap ```show.html``` in a row:
 
@@ -2463,3 +2463,49 @@ git add .
 git commit -m "SHOW comment form finished."
 git push origin master
 ```
+
+## EDIT Styling
+
+We'll style the ```EDIT``` view to match the ```NEW``` view.
+
+At the top add ```<h2>Edit a Movie</h2>```.
+
+To ```<form>``` add ```class="form-horizontal"```
+
+Wrap each label-input pair in ```<div class="form-group">...</div>```.
+
+Move the ```Delete Movie``` button inside the form for consistent styling.
+
+Set up two columns with ```class="col-sm-2 control-label">``` inside the labels and wrapping ```<div class="col-sm-10">...</div>``` around the inputs. Remove the line breaks ```<br>```.
+
+Add ```class="form-control"``` to each input.
+
+Add empty labels in front of the two buttons:
+
+```html
+<label for="updateMovie" class="col-sm-2 control-label"></label>
+...
+<label for="deleteMovie" class="col-sm-2 control-label"></label>
+```
+
+Add semantic colors to the buttons.
+
+```html
+<input type="submit" class="form-control btn btn-primary" value="Update Movie"></input>
+...
+<button ng-click="deleteMovie(movie)" class="form-control btn btn-warning">Delete Movie</button>
+```
+
+Note that ```<input>``` and ```<button>``` resulted in identical buttons.
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/edit_finished.png)
+
+Save your work to your GitHub repository:
+
+```
+git add .
+git commit -m "EDIT form finished."
+git push origin master
+```
+
+## Deploy To Heroku
