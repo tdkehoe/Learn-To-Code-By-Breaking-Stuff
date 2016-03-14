@@ -2221,9 +2221,9 @@ Let's put the dislikes number to the left of the buttons. Wrap this section in a
 
 ```html
 <div class="row">
-  <div class="col-sm-6 col-md-6 col-lg-6">
+  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
   </div>
-  <div class="col-sm-6 col-md-6 col-lg-6">
+  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
   </div>
 </div>
 ```
@@ -2283,6 +2283,16 @@ The comments need styling:
 
 ![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_dislikes_columns.png)
 
+First wrap the comments in a column:
+
+```html
+<div class="row">
+  <div class="col-sm-12 col-md-12 col-lg-12">
+  <span ng-click="showComments = !showComments"
+    ...
+  </div>
+```
+
 The author's name should be on a new line, and right aligned.
 
 We'll style the ```Delete Comment``` with a yellow warning style, block-wide to match the other buttons.
@@ -2290,3 +2300,166 @@ We'll style the ```Delete Comment``` with a yellow warning style, block-wide to 
 The form will match the styling of the ```NEW``` form.
 
 We'll start by wrapping the code in a new row. We might not use columns but a new row will identify the code block when someone reads the code.
+
+Adding a ```<br />``` break puts the author's name on a new line. We'll add classes so we can style the comments.
+
+```html
+<span class="commentText">{{comment.commentText}}</span><br />
+<span class="commentAuthor">--{{comment.commentAuthor}}</span>
+<span class="commentTimestamp">{{comment.commentTimestamp | date:'medium'}}</span>
+```
+
+```css
+.commentAuthor {
+  text-align: right;
+}
+```
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_author_notright.png)
+
+That didn't work. Let's warp divs around each line, and put the classes in the divs:
+
+```html
+<div ng-show="showComments">
+  <div ng-repeat="comment in movie.comments">
+    <span>{{comment.commentText}}</span>
+    <div class="commentAuthor">
+      <span>--{{comment.commentAuthor}} </span>
+      <span>{{comment.commentTimestamp | date:'medium'}}</span>
+    </div>
+  </div>
+  <div>
+    <form ng-submit="deleteComment(movie, comment)">
+      <input type="submit" value="Delete Comment" />
+    </form>
+    <br />
+  </div>
+</div>
+```
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_author_right.png)
+
+Let's clean up the punctuation on the author's name. Let's also get rid of the time and just display the date by changing the filter to ```mediumDate```. Then we'll change the author's name to italics.
+
+```html
+<div class="commentAuthor">
+  <span>&#151;{{comment.commentAuthor}}, </span>
+  <span>{{comment.commentTimestamp | date:'mediumDate'}}</span>
+</div>
+```
+
+```css
+.commentAuthor {
+  text-align: right;
+  font-style: italic;
+}
+```
+
+The HTML character entity ```&#151;``` is the _em dash_.
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_author_italics.png)
+
+Let's style the ```Delete Comment``` button.
+
+```html
+<div ng-show="showComments">
+  <div ng-repeat="comment in movie.comments">
+    <span>{{comment.commentText}}</span>
+    <div class="commentAuthor">
+      <span>&#151;{{comment.commentAuthor}}, </span>
+      <span>{{comment.commentTimestamp | date:'mediumDate'}}</span>
+    </div>
+    <form ng-submit="deleteComment(movie, comment)">
+      <button type="submit" class="btn btn-warning btn-block">Delete Comment</button>
+    </form>
+    <br />
+  </div>
+</div>
+```
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_delete_comments.png)
+
+Let's add a ```<hr />``` horizontal rule between ```3 comments``` and the comments:
+
+```html
+<div ng-show="showComments">
+  <hr />
+  <div ng-repeat="comment in movie.comments">
+    <span>{{comment.commentText}}</span>
+    <div class="commentAuthor">
+      <span>&#151;{{comment.commentAuthor}}, </span>
+      <span>{{comment.commentTimestamp | date:'mediumDate'}}</span>
+    </div>
+    <form ng-submit="deleteComment(movie, comment)">
+      <button type="submit" class="btn btn-warning btn-block">Delete Comment</button>
+    </form>
+    <br />
+  </div>
+</div>
+```
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_comments_hr.png)
+
+Users might need a tooltip telling them to click on ```3 comments``` to show the comments.
+
+```html
+<span ng-click="showComments = !showComments" data-toggle="tooltip" data-placement="top" title="Click to show or hide comments.">
+```
+
+Save your work to your GitHub repository:
+
+```
+git add .
+git commit -m "SHOW comments styled."
+git push origin master
+```
+
+### Submit Comment Styling
+
+We'll style the ```Submit Comment``` form like the ```NEW``` form.
+
+Add ```class="form-horizontal"``` to the ```<form>``` tag.
+
+Wrap each label-input pair in a ```<div class="form-group">```. Add labels too!
+
+Add ```class="form-control"``` to each ```<input>``` tag.
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_comment_form.png)
+
+Pretty good, but the form is wider than the rest of the components in the column. We'll wrap the comment form in a single column:
+
+```html
+<div class="col-sm-12 col-md-12 col-lg-12">
+  ...
+</div>
+```
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_comform_1column.png)
+
+Let's style the ```Submit Comment``` button.
+
+```html
+<button type="submit" class="form-control btn btn-danger btn-block">Submit Comment</input>
+```
+
+Let's style ```3 comments``` to match ```Your Comment```. Add ```class="showComments"``` to ```<span ng-click="showComments = !showComments"...```. Then:
+
+```css
+.showComments {
+  font-weight: bold;
+}
+```
+
+Let's capitalize ```3 Comments``` to match ```Your Comments```.
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_finished.png)
+
+Looks good!
+
+Save your work to your GitHub repository:
+
+```
+git add .
+git commit -m "SHOW comment form finished."
+git push origin master
+```
