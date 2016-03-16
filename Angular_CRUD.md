@@ -134,7 +134,7 @@ From the ```angular-app``` project root directory spin up a server:
 http-server -c-1 -o
 ```
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/angular_test.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/angular_test.png)
 
 You should see your webpage with the header.
 
@@ -1536,7 +1536,7 @@ It's annoying that the block-level button extends to the right past the movie po
   <div class="colophon col-sm-2 col-md-2 col-lg-2">
     <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
 
-    <p class="text-justify">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <p class="text-left">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
   </div>
 
   <div class="col-sm-10 col-md-10 col-lg-10">
@@ -1625,19 +1625,15 @@ Making a paragraph ```class="lead"``` makes the paragraph stand out:
 
 ![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_lead.png)
 
-We can justify the text:
-
 ```html
 <div class="techSummary col-sm-2 col-md-2 col-lg-2">
-<p class="lead text-justify">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+<p class="lead text-left">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
 
-<p class="text-justify">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+<p class="text-left">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 </div>
 ```
 
 ![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_lead.png)
-
-Let's not justify the leading paragraph!
 
 #### Fonts
 
@@ -2687,16 +2683,16 @@ It should work now from the ```firebaseapp.com``` address.
 
 ## Colophon
 
-Lastly, we get to write up what we've accomplished. In ```home.html```:
+Lastly, we get to write up what we've accomplished. In ```index.html```:
 
 ```html
 <div class="colophon col-sm-2 col-md-2 col-lg-2">
   <p class="lead">MEAN stack ReSTful CRUD app with Angular front-end and Bootstrap styling.</p>
 
-  <p class="text-justify">This website is two apps, with separate back and front ends. The back end uses Node, Express, and MongoDB and is deployed on Heroku. The data is served to an API as JSON objects. MongoDB is accessed via the lightweight, schemaless Monk and MongoSkin Node modules.</p>
+  <p class="text-left">This website is two apps, with separate back and front ends. The back end uses Node, Express, and MongoDB and is deployed on Heroku. The data is served to an API as JSON objects. MongoDB is accessed via the lightweight, schemaless Monk and MongoSkin Node modules.</p>
 
-  <p class="text-justify">The front end uses Angular and Bootstrap and is deployed on Firebase. There are four views: INDEX (Home), NEW, SHOW, and EDIT. Comments are an array of objects nested in the movie object. Other features include likes/dislikes. The app is fully responsive. The number of movies displayed per row changes from five in the large view, to four in the medium view, three in the small view, and two on mobile devices.</p>
+  <p class="text-left">The front end uses Angular and Bootstrap and is deployed on Firebase. There are four views: INDEX (Home), NEW, SHOW, and EDIT. Comments are an array of objects nested in the movie object. Other features include likes/dislikes. The app is fully responsive. The number of movies displayed per row changes from five in the large view, to four in the medium view, three in the small view, and two on mobile devices.</p>
 
-  <p class="text-justify">The <a ng-href="https://github.com/tdkehoe/CRUDiest-Movies-Database-Node-back-end">back end code</a> and <a ng-href="https://github.com/tdkehoe/CRUDiest-Movies-Database-Angular-Front-End">front end code</a> are on GitHub. Tutorials to make the <a ng-href="">back end</a> and the <a ng-href="">front end</a> are also on GitHub.
+  <p class="text-left">The <a ng-href="https://github.com/tdkehoe/CRUDiest-Movies-Database-Node-back-end">back end code</a> and <a ng-href="https://github.com/tdkehoe/CRUDiest-Movies-Database-Angular-Front-End">front end code</a> are on GitHub. Tutorials to make the <a ng-href="https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/Node_and_Express.md">back end</a> and the <a ng-href="https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/Angular_CRUD.md">front end</a> are also on GitHub.
 </div>
 ```
