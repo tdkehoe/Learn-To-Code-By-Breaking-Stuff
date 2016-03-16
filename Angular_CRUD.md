@@ -93,16 +93,16 @@ Your ```index.html``` file should now look like this:
 <!DOCTYPE html>
 <html lang="en" ng-app="CRUDiestMovies">
 <head>
-<meta charset="utf-8">
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular-route.js"></script>
-<title>CRUDiest Movies Database</title>
+  <meta charset="utf-8">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular-route.js"></script>
+  <title>CRUDiest Movies Database</title>
 </head>
 <body>
 
-<h1>CRUDiest Movies Database</h1>
+  <h1>CRUDiest Movies Database</h1>
 
-<script type="text/javascript" src="app.js"></script>
+  <script type="text/javascript" src="app.js"></script>
 
 </body>
 </html>
@@ -291,16 +291,16 @@ app.config(function($routeProvider) {
   .when('/movies/new', { // must be above '/:id' otherwise it'll think that the ID is 'new'
   templateUrl: 'javascript/templates/new.html', // NEW
   controller: 'NewController'
-})
-.when('/movies/:id/edit', { // UPDATE
-  templateUrl: 'javascript/templates/edit.html',
-  controller: 'EditController'
-})
-.when('/movies/:id', { // SHOW
-  templateUrl: 'javascript/templates/show.html',
-  controller: 'ShowController'
-})
-.otherwise({ redirectTo: '/movies' });
+  })
+  .when('/movies/:id/edit', { // UPDATE
+    templateUrl: 'javascript/templates/edit.html',
+    controller: 'EditController'
+  })
+  .when('/movies/:id', { // SHOW
+    templateUrl: 'javascript/templates/show.html',
+    controller: 'ShowController'
+  })
+  .otherwise({ redirectTo: '/movies' });
 });
 ```
 
@@ -364,24 +364,24 @@ Your ```index.html``` file should now look like this:
 <!DOCTYPE html>
 <html lang="en" ng-app="CRUDiestMoviesApp">
 <head>
-<meta charset="utf-8">
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular-route.js"></script>
-<link rel="stylesheet" href="css/style.css">
-<title>CRUDiest Movies Database</title>
+  <meta charset="utf-8">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular-route.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <title>CRUDiest Movies Database</title>
 </head>
 <body>
 
-<h1>CRUDiest Movies Database</h1>
+  <h1>CRUDiest Movies Database</h1>
 
-<ng-view>
+  <ng-view>
 
-<script type="text/javascript" src="app.js"></script>
-<script type="text/javascript" src="javascript/routes/routes.js"></script>
-<script type="text/javascript" src="javascript/controllers/EditController.js"></script>
-<script type="text/javascript" src="javascript/controllers/HomeController.js"></script>
-<script type="text/javascript" src="javascript/controllers/NewController.js"></script>
-<script type="text/javascript" src="javascript/controllers/ShowController.js"></script>
+  <script type="text/javascript" src="app.js"></script>
+  <script type="text/javascript" src="javascript/routes/routes.js"></script>
+  <script type="text/javascript" src="javascript/controllers/EditController.js"></script>
+  <script type="text/javascript" src="javascript/controllers/HomeController.js"></script>
+  <script type="text/javascript" src="javascript/controllers/NewController.js"></script>
+  <script type="text/javascript" src="javascript/controllers/ShowController.js"></script>
 
 </body>
 </html>
@@ -433,26 +433,26 @@ Open ```new.html``` and replace the code with this code:
 <h2>Enter a New Movie</h2>
 
 <form ng-submit="addMovie()" name="newMovie">
-<label for="movieName">Movie: </label>
-<input type="text" name="movieName" ng-model="movie.movieName" /><br />
-<label for="moviePerson">Who To Blame: </label>
-<input type="text" name="moviePerson" ng-model="movie.moviePerson" /><br />
-<label for="movieYear">Year: </label>
-<input type="number" name="movieYear" ng-model="movie.movieYear" /><br />
-<label for="movieSummary">Summary: </label>
-<input type="text" name="movieSummary" ng-model="movie.movieSummary" /><br />
-<label for="moviePoster">Poster: </label>
-<input type="url" name="moviePoster" ng-model="movie.moviePoster" /><br />
-<label for="movieRating">Rating:</label>
-<select name="movieRating" ng-model="movie.movieRating">
-<option value="-1">-1</option>
-<option value="-2">-2</option>
-<option value="-3">-3</option>
-<option value="-4">-4</option>
-<option value="-5">-5</option>
-</select><br />
+  <label for="movieName">Movie: </label>
+  <input type="text" name="movieName" ng-model="movie.movieName" /><br />
+  <label for="moviePerson">Who To Blame: </label>
+  <input type="text" name="moviePerson" ng-model="movie.moviePerson" /><br />
+  <label for="movieYear">Year: </label>
+  <input type="number" name="movieYear" ng-model="movie.movieYear" /><br />
+  <label for="movieSummary">Summary: </label>
+  <input type="text" name="movieSummary" ng-model="movie.movieSummary" /><br />
+  <label for="moviePoster">Poster: </label>
+  <input type="url" name="moviePoster" ng-model="movie.moviePoster" /><br />
+  <label for="movieRating">Rating:</label>
+  <select name="movieRating" ng-model="movie.movieRating">
+    <option value="-1">-1</option>
+    <option value="-2">-2</option>
+    <option value="-3">-3</option>
+    <option value="-4">-4</option>
+    <option value="-5">-5</option>
+  </select><br />
 
-<input type="submit" value="Add Movie"></input>
+  <input type="submit" value="Add Movie"></input>
 </form>
 ```
 
@@ -549,13 +549,13 @@ Open ```home.html``` and replace the code with this code:
 
 ```html
 <div ng-repeat="movie in movies" class="movieIndex">
-<span>{{movie.movieName}}</span><br />
-<span>{{movie.moviePerson}}</span><br />
-<span>{{movie.movieYear}}</span><br />
-<span>{{movie.movieSummary}}</span><br />
-<span><img class="moviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieName}}"></span><br />
-<span>{{movie.movieRating}}</span>
-<br />
+  <span>{{movie.movieName}}</span><br />
+  <span>{{movie.moviePerson}}</span><br />
+  <span>{{movie.movieYear}}</span><br />
+  <span>{{movie.movieSummary}}</span><br />
+  <span><img class="moviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieName}}"></span><br />
+  <span>{{movie.movieRating}}</span>
+  <br />
 </div>
 ```
 
@@ -701,25 +701,25 @@ In ```edit.html``` replace the code with this code:
 
 ```html
 <form ng-submit="updateMovie()">
-<label for="editMovie">Edit Movie: </label>
-<input type="text" name="editMovie" ng-model="movie.movieName"></label><br>
-<label for="editPerson">Edit Who To Blame: </label>
-<input type="text" name="editOwner" ng-model="movie.moviePerson"></label><br>
-<label for="editYear">Edit Year: </label>
-<input type="number" name="editYear" ng-model="movie.movieYear"></label><br>
-<label for="editSummary">Edit Summary: </label>
-<input type="text" name="editSummary" ng-model="movie.movieSummary"></label><br>
-<label for="editPoster">Edit Poster: </label>
-<input type="text" name="editPoster" ng-model="movie.moviePoster"></label><br>
-<label for="editRating">Edit Rating: </label>
-<select name="editRating" ng-model="movie.movieRating">
-<option value="-1">-1</option>
-<option value="-2">-2</option>
-<option value="-3">-3</option>
-<option value="-4">-4</option>
-<option value="-5">-5</option>
-</select><br />
-<input type="submit" value="Update Movie"></input>
+  <label for="editMovie">Edit Movie: </label>
+  <input type="text" name="editMovie" ng-model="movie.movieName"></label><br>
+  <label for="editPerson">Edit Who To Blame: </label>
+  <input type="text" name="editOwner" ng-model="movie.moviePerson"></label><br>
+  <label for="editYear">Edit Year: </label>
+  <input type="number" name="editYear" ng-model="movie.movieYear"></label><br>
+  <label for="editSummary">Edit Summary: </label>
+  <input type="text" name="editSummary" ng-model="movie.movieSummary"></label><br>
+  <label for="editPoster">Edit Poster: </label>
+  <input type="text" name="editPoster" ng-model="movie.moviePoster"></label><br>
+  <label for="editRating">Edit Rating: </label>
+  <select name="editRating" ng-model="movie.movieRating">
+    <option value="-1">-1</option>
+    <option value="-2">-2</option>
+    <option value="-3">-3</option>
+    <option value="-4">-4</option>
+    <option value="-5">-5</option>
+  </select><br />
+  <input type="submit" value="Update Movie"></input>
 </form>
 ```
 
@@ -763,13 +763,13 @@ Let's add the button to ```home.html```:
 <a href="/#/movies/new"><button>Add a new movie</button></a>
 
 <div ng-repeat="movie in movies"  class="movieIndex">
-<a ng-href="/#/movies/{{movie._id}}"><span>{{movie.movieName}}</span></a><br />
-<span>{{movie.moviePerson}}</span><br />
-<span>{{movie.movieYear}}</span><br />
-<span>{{movie.movieSummary}}</span><br />
-<span><img class="moviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieName}}"></span><br />
-<span>{{movie.movieRating}}</span><br />
-<button ng-click="deleteMovie(movie)">Delete Movie</button><br />
+  <a ng-href="/#/movies/{{movie._id}}"><span>{{movie.movieName}}</span></a><br />
+  <span>{{movie.moviePerson}}</span><br />
+  <span>{{movie.movieYear}}</span><br />
+  <span>{{movie.movieSummary}}</span><br />
+  <span><img class="moviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieName}}"></span><br />
+  <span>{{movie.movieRating}}</span><br />
+  <button ng-click="deleteMovie(movie)">Delete Movie</button><br />
 </div>
 ```
 
@@ -804,25 +804,25 @@ In ```edit.html```:
 
 ```html
 <form ng-submit="updateMovie()">
-<label for="editMovie">Edit Movie: </label>
-<input type="text" name="editMovie" ng-model="movie.movieName"></label><br>
-<label for="editPerson">Edit Who To Blame: </label>
-<input type="text" name="editOwner" ng-model="movie.moviePerson"></label><br>
-<label for="editYear">Edit Year: </label>
-<input type="number" name="editYear" ng-model="movie.movieYear"></label><br>
-<label for="editSummary">Edit Summary: </label>
-<input type="text" name="editSummary" ng-model="movie.movieSummary"></label><br>
-<label for="editPoster">Edit Poster: </label>
-<input type="text" name="editPoster" ng-model="movie.moviePoster"></label><br>
-<label for="editRating">Edit Rating: </label>
-<select name="editRating" ng-model="movie.movieRating">
-<option value="-1">-1</option>
-<option value="-2">-2</option>
-<option value="-3">-3</option>
-<option value="-4">-4</option>
-<option value="-5">-5</option>
-</select><br />
-<input type="submit" value="Update Movie"></input>
+  <label for="editMovie">Edit Movie: </label>
+  <input type="text" name="editMovie" ng-model="movie.movieName"></label><br>
+  <label for="editPerson">Edit Who To Blame: </label>
+  <input type="text" name="editOwner" ng-model="movie.moviePerson"></label><br>
+  <label for="editYear">Edit Year: </label>
+  <input type="number" name="editYear" ng-model="movie.movieYear"></label><br>
+  <label for="editSummary">Edit Summary: </label>
+  <input type="text" name="editSummary" ng-model="movie.movieSummary"></label><br>
+  <label for="editPoster">Edit Poster: </label>
+  <input type="text" name="editPoster" ng-model="movie.moviePoster"></label><br>
+  <label for="editRating">Edit Rating: </label>
+  <select name="editRating" ng-model="movie.movieRating">
+    <option value="-1">-1</option>
+    <option value="-2">-2</option>
+    <option value="-3">-3</option>
+    <option value="-4">-4</option>
+    <option value="-5">-5</option>
+  </select><br />
+  <input type="submit" value="Update Movie"></input>
 </form>
 
 <button ng-click="deleteMovie(movie)">Delete Movie</button>
@@ -1000,10 +1000,10 @@ To display comments, add this code to ```show.html```:
 
 ```html
 <div ng-repeat="comment in movie.comments">
-<span>{{comment.commentText}}</span>
-<span>--{{comment.commentAuthor}}</span>
-<span>{{comment.commentTimestamp | date:'medium'}}</span>
-<br />
+  <span>{{comment.commentText}}</span>
+  <span>--{{comment.commentAuthor}}</span>
+  <span>{{comment.commentTimestamp | date:'medium'}}</span>
+  <br />
 </div>
 ```
 
@@ -1015,7 +1015,7 @@ To delete a comment, add this code to ```show.html```:
 
 ```html
 <form ng-submit="deleteComment(movie, comment)">
-<input type="submit" value="Delete Comment" />
+  <input type="submit" value="Delete Comment" />
 </form>
 ```
 
@@ -1025,13 +1025,13 @@ Put the code in the ```div``` for displaying comments:
 
 ```html
 <div ng-repeat="comment in movie.comments">
-<span>{{comment.commentText}}</span>
-<span>--{{comment.commentAuthor}}</span>
-<span>{{comment.commentTimestamp | date:'medium'}}</span>
-<form ng-submit="deleteComment(movie, comment)">
-<input type="submit" value="Delete Comment" />
-</form>
-<br />
+  <span>{{comment.commentText}}</span>
+  <span>--{{comment.commentAuthor}}</span>
+  <span>{{comment.commentTimestamp | date:'medium'}}</span>
+  <form ng-submit="deleteComment(movie, comment)">
+    <input type="submit" value="Delete Comment" />
+  </form>
+  <br />
 </div>
 ```
 
@@ -1099,11 +1099,11 @@ What if users don't want to see comments? In ```show.html``` add this code:
 
 ```html
 <span ng-click="showComments = !showComments">
-<ng-pluralize count="movie.comments.length"
-when="{'0': '',
-'one': '1 comment',
-'other': '{} comments',
-'NaN': ''}">
+  <ng-pluralize count="movie.comments.length"
+  when="{'0': '',
+  'one': '1 comment',
+  'other': '{} comments',
+  'NaN': ''}">
 </ng-pluralize><br>
 </span>
 ```
@@ -1121,7 +1121,7 @@ Then wrap the comments ```div``` with this ```div```:
 
 ```html
 <div ng-show="showComments">
-...
+  ...
 </div>
 ```
 
@@ -1137,30 +1137,30 @@ Rating: {{movie.movieRating}}<br />
 <a href="/#/movies/{{movie._id}}/edit"><button>Edit Movie</button></a><br />
 
 <span ng-click="showComments = !showComments">
-<ng-pluralize count="movie.comments.length"
-when="{'0': '',
-'one': '1 comment',
-'other': '{} comments',
-'NaN': ''}">
+  <ng-pluralize count="movie.comments.length"
+  when="{'0': '',
+  'one': '1 comment',
+  'other': '{} comments',
+  'NaN': ''}">
 </ng-pluralize><br>
 </span>
 
 <div ng-show="showComments">
-<div ng-repeat="comment in movie.comments">
-<span>{{comment.commentText}}</span>
-<span>--{{comment.commentAuthor}}</span>
-<span>{{comment.commentTimestamp | date:'medium'}}</span>
-<form ng-submit="deleteComment(movie, comment)">
-<input type="submit" value="Delete Comment" />
-</form>
-<br />
-</div>
+  <div ng-repeat="comment in movie.comments">
+    <span>{{comment.commentText}}</span>
+    <span>--{{comment.commentAuthor}}</span>
+    <span>{{comment.commentTimestamp | date:'medium'}}</span>
+    <form ng-submit="deleteComment(movie, comment)">
+      <input type="submit" value="Delete Comment" />
+    </form>
+    <br />
+  </div>
 </div>
 
 <form ng-submit="newComment(movie)">
-<input type="text" name="commentText" ng-model="movie.newComment.commentText">
-<input type="text" name="commentAuthor" ng-model="movie.newComment.commentAuthor">
-<input type="submit" value="Submit Comment"></input>
+  <input type="text" name="commentText" ng-model="movie.newComment.commentText">
+  <input type="text" name="commentAuthor" ng-model="movie.newComment.commentAuthor">
+  <input type="submit" value="Submit Comment"></input>
 </form>
 ```
 
@@ -1177,10 +1177,10 @@ In ```show.html``` add code to display likes in the view:
 ```html
 <span>Likes: {{movie.movieLikes}}</span>
 <form ng-submit="upLike(movie)">
-<input type="submit" value="Up"</input>
+  <input type="submit" value="Up"</input>
 </form>
 <form ng-submit="downLike(movie)">
-<input type="submit" value="Down"</input>
+  <input type="submit" value="Down"</input>
 </form>
 ```
 
@@ -1627,9 +1627,9 @@ Making a paragraph ```class="lead"``` makes the paragraph stand out:
 
 ```html
 <div class="techSummary col-sm-2 col-md-2 col-lg-2">
-<p class="lead text-left">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+  <p class="lead text-left">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
 
-<p class="text-left">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  <p class="text-left">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 </div>
 ```
 
