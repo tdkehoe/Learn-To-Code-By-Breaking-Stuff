@@ -179,7 +179,7 @@ h1 {
 
 Refresh your browser and check if the stylesheet is hooked up:
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/angular_css_test.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/angular_css_test.png)
 
 Save your work to your GitHub repository:
 
@@ -411,7 +411,7 @@ Refresh your browser and go to:
 * [http://127.0.0.1:8080/#/show](http://127.0.0.1:8080/#/show)
 * [http://127.0.0.1:8080/#/edit](http://127.0.0.1:8080/#/edit)
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/angular_show.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/angular_show.png)
 
 Notice a couple things. First, there's a pound sign or hashtag ```#``` in the URL.
 
@@ -458,7 +458,7 @@ Open ```new.html``` and replace the code with this code:
 
 Refresh your browser to ```http://127.0.0.1:8080/#/new```:
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/new_movie.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/new_movie.png)
 
 We've created a form with six data entry fields plus a submit button.
 
@@ -561,7 +561,7 @@ Open ```home.html``` and replace the code with this code:
 
 Open your browser to ```http://127.0.0.1:8080/#/``` and you should see all your records:
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/movies_index.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/movies_index.png)
 
 Line 1 uses the Angular directive ```ng-repeat```. This binds to the array (JSON object) ```$scope.movies``` that was created in ```HomeController.js```. ```movie``` refers to each element (object) in the array. ```movieName``` etc. are the properties of the objects. Angular then just spins out the data however you set it up.
 
@@ -646,7 +646,7 @@ to
 <a ng-href="/#/movies/{{movie._id}}"><span>{{movie.movieName}}</span></a><br />
 ```
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/movies_show.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/movies_show.png)
 
 Note the record ID in the URL.
 
@@ -1404,7 +1404,7 @@ Let's simplify the ```home.html``` view to just the ```moviePoster```:
 </div>
 ```
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_row.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/bootstrap_row.png)
 
 Bootstrap uses a system of rows and columns, all inside a container. Put in the rows first, then put columns in the rows. Rows and columns are ```<div>``` (divisions).
 
@@ -1466,7 +1466,7 @@ Note that ```<div class="colophon col-sm-2 col-md-2 col-lg-2">``` leaves out ext
 
 The "greek" text is inserted by typing ```lorem``` and then ```TAB```.
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_lorem.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/bootstrap_lorem.png)
 
 Let's add styling. In ```style.css```, give the ```colophon``` column a black background and white text:
 
@@ -1477,7 +1477,7 @@ Let's add styling. In ```style.css```, give the ```colophon``` column a black ba
 }
 ```
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_black_bg.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/bootstrap_black_bg.png)
 
 The black background is only extending as far as the text. I want it to fill the column vertically. E-mail me if you can figure out how to do this.
 
@@ -1513,7 +1513,7 @@ Let's style the ```addNewMovie``` button. Bootstrap includes button styling. But
 <a href="/#/movies/new"><button type="button" class="btn btn-danger">Add new movie</button></a>
 ```
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_danger.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/bootstrap_danger.png)
 
 Let's make the button as wide as the column.
 
@@ -1524,7 +1524,7 @@ Let's make the button as wide as the column.
 
 Adding the class ```btn-block``` creates a block-level button, i.e., it spans the width of the parent ```div```. The parent ```div``` is ten columns wide.
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_button_block.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/bootstrap_button_block.png)
 
 ### Responsively Sizing the Movie Posters
 
@@ -1623,7 +1623,7 @@ Let's add a leading paragraph. In ```home.html```:
 
 Making a paragraph ```class="lead"``` makes the paragraph stand out:
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_lead.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/bootstrap_lead.png)
 
 ```html
 <div class="techSummary col-sm-2 col-md-2 col-lg-2">
@@ -1633,7 +1633,7 @@ Making a paragraph ```class="lead"``` makes the paragraph stand out:
 </div>
 ```
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_lead.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/bootstrap_lead.png)
 
 #### Fonts
 
@@ -1655,7 +1655,7 @@ h1 {
 
 We've styled ```h1``` headings for the "Nixie One" font. If that font isn't available then it defaults to a sans-serif font. We've also add a text shadow. ```text-shadow``` has two required arguments and two optional arguments. The first two arguments are the ```offset-x``` and ```offset-y```, in this case putting the shadows 4 pixels below and to the right of the text. The third, optional, argument is the ```blur-radius```, again 4 pixels. The fourth, optional, argument is the color, in this case light gray.
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/bootstrap_nixie_one.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/bootstrap_nixie_one.png)
 
 The ```INDEX``` page looks pretty good. We'll move on to the ```NEW``` page.
 
@@ -1733,7 +1733,7 @@ To style the form elements we could make a table to line up the labels and input
 <a ng-href="/#/movies"><p class="homeLink">Return to index route</p></a>
 ```
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/new_bootstrap_form.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/new_bootstrap_form.png)
 
 Let's change "Enter" to "Add" for consistency.
 
@@ -1804,7 +1804,7 @@ The ```Add Movie``` button needs styling. Bootstrap [uses colors semantically](h
 <a ng-href="/#/movies"><p class="homeLink">Return to index route</p></a>
 ```
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/new_red_button.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/new_red_button.png)
 
 Users will need instructions for adding the movie poster. Let's use a _tooltip_. Add ```data-toggle="tooltip" data-placement="top" title="Tooltip on top"``` to the movie poster input field. It should look like:
 
@@ -1912,7 +1912,7 @@ h1 {
 
 The finished ```NEW``` page should look like:
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/new_red_button.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/new_red_button.png)
 
 Save your work to your GitHub repository:
 
@@ -2005,7 +2005,7 @@ Your ```show.html``` should look like this:
 
 We can remove the ```Poster: ``` label.
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_two_columns.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/show_two_columns.png)
 
 We need to set a ```max-width``` for the movie poster in ```style.css```:
 
@@ -2159,7 +2159,7 @@ Your ```show.html``` should look like this:
 </div>
 ```
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_table.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/show_table.png)
 
 Bootstrap has [table styling](http://getbootstrap.com/css/#tables). All you do is add ```class="table"``` to your ```<table>``` tag:
 
@@ -2167,7 +2167,7 @@ Bootstrap has [table styling](http://getbootstrap.com/css/#tables). All you do i
 <table class="table">
 ```
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_bootstrap_table.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/show_bootstrap_table.png)
 
 It's nothing fancy but it looks fine.
 
@@ -2177,7 +2177,7 @@ The ```Edit Movie``` button needs styling. Looking at the Bootstrap [semantic co
 <button type="button" class="btn btn-primary btn-block">Edit Movie</button>
 ```
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_blue_button.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/show_blue_button.png)
 
 ### DismovieLikes
 
@@ -2219,7 +2219,7 @@ Glyphicons don't work with ```<input>``` tags so we have to use a ```<button>```
 
 The next line is the glyphicon. Glyphicons are always in a ```<span>``` tag. Glyphicons always have two classes, called the _base class_ and the _individual icon class_. The base class identifies that it's a glyphicon. The individual icon class specifies which glyphicon you want.
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_glyphicons.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/show_glyphicons.png)
 
 Let's put the dismovieLikes number to the left of the buttons. Wrap this section in a row, then add two equal columns:
 
@@ -2254,7 +2254,7 @@ Put the code into the columns:
 </div>
 ```
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_dismovieLikes_columns.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/show_dismovieLikes_columns.png)
 
 Let's remove the ```Likes: ```, add class for styling the number, and make the number bigger and aligned right:
 
@@ -2285,7 +2285,7 @@ git push origin master
 
 The comments need styling:
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_dislikes_columns.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/show_dislikes_columns.png)
 
 First wrap the comments in a column:
 
@@ -2319,7 +2319,7 @@ Adding a ```<br />``` break puts the author's name on a new line. We'll add clas
 }
 ```
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_author_notright.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/show_author_notright.png)
 
 That didn't work. Let's warp divs around each line, and put the classes in the divs:
 
@@ -2341,7 +2341,7 @@ That didn't work. Let's warp divs around each line, and put the classes in the d
 </div>
 ```
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_author_right.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/show_author_right.png)
 
 Let's clean up the punctuation on the author's name. Let's also get rid of the time and just display the date by changing the filter to ```mediumDate```. Then we'll change the author's name to italics.
 
@@ -2361,7 +2361,7 @@ Let's clean up the punctuation on the author's name. Let's also get rid of the t
 
 The HTML character entity ```&#151;``` is the _em dash_.
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_author_italics.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/show_author_italics.png)
 
 Let's style the ```Delete Comment``` button.
 
@@ -2381,7 +2381,7 @@ Let's style the ```Delete Comment``` button.
 </div>
 ```
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_delete_comments.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/show_delete_comments.png)
 
 Let's add a ```<hr />``` horizontal rule between ```3 comments``` and the comments:
 
@@ -2402,7 +2402,7 @@ Let's add a ```<hr />``` horizontal rule between ```3 comments``` and the commen
 </div>
 ```
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_comments_hr.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/show_comments_hr.png)
 
 Users might need a tooltip telling them to click on ```3 comments``` to show the comments.
 
@@ -2428,7 +2428,7 @@ Wrap each label-input pair in a ```<div class="form-group">```. Add labels too!
 
 Add ```class="form-control"``` to each ```<input>``` tag.
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_comment_form.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/show_comment_form.png)
 
 Pretty good, but the form is wider than the rest of the components in the column. We'll wrap the comment form in a single column:
 
@@ -2438,7 +2438,7 @@ Pretty good, but the form is wider than the rest of the components in the column
 </div>
 ```
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_comform_1column.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/show_comform_1column.png)
 
 Let's style the ```Submit Comment``` button.
 
@@ -2456,7 +2456,7 @@ Let's style ```3 comments``` to match ```Your Comment```. Add ```class="showComm
 
 Let's capitalize ```3 Comments``` to match ```Your Comments```.
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_finished.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/show_finished.png)
 
 Looks good!
 
@@ -2502,7 +2502,7 @@ Add semantic colors to the buttons.
 
 Note that ```<input>``` and ```<button>``` resulted in identical buttons.
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/edit_finished.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/edit_finished.png)
 
 Save your work to your GitHub repository:
 
@@ -2529,7 +2529,7 @@ In ```new.html``` add a field for trivia. Let's use a textfield, like the summar
 </div>
 ```
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/new_trivia.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/new_trivia.png)
 
 In ```NewController.js``` add ```movieTrivia: $scope.movie.movieTrivia,```:
 
@@ -2651,13 +2651,13 @@ Go through your four controllers and replace the ```http://localhost:3000/movies
 
 To use Firebase your app should be in a public folder. Your directory structure should look like this:
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/firebase_new_app.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/firebase_new_app.png)
 
 ### Open a Firebase Account and Create a New App
 
 Go to [Firebase](https://www.firebase.com/) and open a free account. In your Dashboard enter an app name and click ```CREATE NEW APP```. Firebase will then assign two URLs:
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/firebase_new_app.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/firebase_new_app.png)
 
 The ```firebaseio.com``` address is for the database, which we won't be using. We've already made a database back end and deployed it to Heroku.
 
