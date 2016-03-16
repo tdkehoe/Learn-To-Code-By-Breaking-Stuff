@@ -956,7 +956,7 @@ router.post('/movies/', function(request, response) { // CREATE
   })
 });
 
-router.get('/movies/:id', function(request, response) { // SHOW
+router.get('/movies/:id/edit', function(request, response) { // EDIT
   Movies.findOne({_id: request.params.id}, function(error, movie){
     if (error) {
       response.send(error);
@@ -965,7 +965,7 @@ router.get('/movies/:id', function(request, response) { // SHOW
   })
 });
 
-router.get('/movies/:id/edit', function(request, response) { // EDIT
+router.get('/movies/:id', function(request, response) { // SHOW
   Movies.findOne({_id: request.params.id}, function(error, movie){
     if (error) {
       response.send(error);
@@ -1018,9 +1018,9 @@ The sixth line tells the server what to do if the database returns the dataset: 
 
 The ```CREATE``` route changes the ```GET``` request to a ```POST``` request, uses the MongoDB ```insert()``` command instead of the ```find()``` command, and returns the ```201``` ("Created") response indicating that a new resource has been created.
 
-The ```SHOW``` route is similar to the ```INDEX``` route but has the record's ID in the URL, uses the MongoDB ```findOne()``` command to return a single record, and returns the ```200``` ("OK") standard response for successful HTTP requests.
+The ```EDIT``` route is similar to the ```INDEX``` route but has the record's ID in the URL, uses the MongoDB ```findOne()``` command to return a single record, and returns the ```200``` ("OK") standard response for successful HTTP requests.
 
-The ```EDIT``` route is identical to the ```SHOW``` route except for the URL.
+The ```SHOW``` route is identical to the ```EDIT``` route except for the URL. The ```SHOW``` route must be below the ```EDIT``` route because the ```SHOW``` catches ```EDIT``` HTTP requests.
 
 The ```UPDATE``` route responds to a ```PUT``` request and uses the MongoDB ```findAndModify()``` command.
 
@@ -1097,7 +1097,7 @@ mongod
 
 ##### Get All Records (INDEX)
 
-In Postman, send a ```GET``` request to ```localhost:3000/myProject```. Click the blue ```Send``` button. The response you receive should be an empty array:
+In Postman, send a ```GET``` request to ```localhost:3000/movies```. Click the blue ```Send``` button. The response you receive should be an empty array:
 
 ![Atom HTML](/Users/TDK/playground/BreakingStuff/media/postman_get.png)
 
@@ -1212,7 +1212,7 @@ A [ReSTful](https://en.wikipedia.org/wiki/Representational_state_transfer) app h
 
 > [Create, Read, Update, Destroy](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) (CRUD) and ReSTful are the same thing. CRUD apps have four routes because the NEW and EDIT routes aren't counted, and the INDEX and SHOW routes are counted together.
 
-## Deploying Your Back End To Heroku
+## Deploying To Heroku
 
 Your web app is running on your computer. Do you want your finished app to be available for your friends (and potential employers) to use? We'll deploy your app to a free cloud hosting service.
 
@@ -1344,7 +1344,7 @@ You should get back two URLs:
 
 ![Atom HTML](/Users/TDK/playground/BreakingStuff/media/heroku_create.png)
 
-The first URL is where your app is deployed. The second URL is the Heroku Git remote for your project.
+The first URL is where your app is deployed. The second URL is the Heroku Git remote for your project. Put these into your README.md file.
 
 Check again where the remote Git repository is:
 

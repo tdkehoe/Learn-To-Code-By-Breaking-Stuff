@@ -6,6 +6,8 @@ Prerequisites: This section assumes that you've completed the section "Building 
 
 ## Directory Structure
 
+### Public Folder
+
 Make a directory called ```angular-app```. Don't make it a subdirectory of a directory with a local Git repository. In the ```angular-app``` directory make two files and a subdirectory with one file:
 
 ```
@@ -512,9 +514,9 @@ Lines 3 through 11 create an object called ```movie``` with six properties, boun
 
 After the ```movie``` object is created, lines 12 through 17 create an HTTP POST request to the specified URL and send the ```movie``` object. ```.then``` is a promise. When the server sends a ```200``` (OK) response we print to the ```console.log``` that the movie was added, and the user is redirected to the home page. If the server returns an error then this is noted in the ```console.log```.
 
-Enter a movie in your form and click ```Submit```. If you have your console open (```control-⌘-J```) you should see ```New controller.``` and then ```Movie added.```. Open Postman and send a ```GET``` request to ```localhost:3000/movies/movies/``` and your movie should be there.
+Enter a movie in your form and click ```Submit```. If you have your console open (```control-⌘-J```) you should see ```New controller.``` and then ```Movie added.```. Open Postman and send a ```GET``` request to ```http://localhost:3000/movies/movies//``` and your movie should be there.
 
-> Why it's ```localhost:3000/movies/movies/``` instead of ```localhost:3000/movies/``` is a mystery I've never figured out! We're including ```movies``` in every URL because this is best practices for ReSTful CRUD apps.
+> Why it's ```http://localhost:3000/movies/movies//``` instead of ```localhost:3000/movies/``` is a mystery I've never figured out! We're including ```movies``` in every URL because this is best practices for ReSTful CRUD apps.
 
 Save your work to your GitHub repository:
 
@@ -551,7 +553,7 @@ Open ```home.html``` and replace the code with this code:
 <span>{{movie.moviePerson}}</span><br />
 <span>{{movie.movieYear}}</span><br />
 <span>{{movie.movieSummary}}</span><br />
-<span><img class="moviePoster" ng-src="{{movie.moviePoster}}"></span><br />
+<span><img class="moviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieName}}"></span><br />
 <span>{{movie.movieRating}}</span>
 <br />
 </div>
@@ -563,11 +565,11 @@ Open your browser to ```http://127.0.0.1:8080/#/``` and you should see all your 
 
 Line 1 uses the Angular directive ```ng-repeat```. This binds to the array (JSON object) ```$scope.movies``` that was created in ```HomeController.js```. ```movie``` refers to each element (object) in the array. ```movieName``` etc. are the properties of the objects. Angular then just spins out the data however you set it up.
 
-Line 6 is a little different. We're specifying that we want an image, and using the Angular directive ```ng-src```. The data is a URL for the image.
+Line 6 is a little different. We're specifying that we want an image, and using the Angular directive ```ng-src```. The data is a URL for the image. If the image isn't available ```alt="{{movie.movieName}}"``` replaces the image with the name of the movie.
 
 ### Add More Movies
 
-Add some more of your least favorite movies. If you've never seen a bad movie you find a [List of films considered the worst
+Add some more of your least favorite movies. If you've never seen a bad movie you can find a [List of films considered the worst
 ](https://en.wikipedia.org/wiki/List_of_films_considered_the_worst) on Wikipedia.
 
 It's annoying that the movie posters are different sizes. Open ```css.styles``` and add this code:
@@ -627,7 +629,7 @@ Movie Name: {{movie.movieName}}<br />
 Who To Blame: {{movie.moviePerson}}<br />
 Year: {{movie.movieYear}}<br />
 Summary: {{movie.movieSummary}}<br />
-Poster: <img class="moviePoster" ng-src="{{movie.moviePoster}}"><br />
+Poster: <img class="moviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieName}}"><br />
 Rating: {{movie.movieRating}}<br />
 <a href="/#/movies/{{movie._id}}/edit"><button>Edit Movie</button></a><br />
 ```
@@ -765,7 +767,7 @@ Let's add the button to ```home.html```:
 <span>{{movie.moviePerson}}</span><br />
 <span>{{movie.movieYear}}</span><br />
 <span>{{movie.movieSummary}}</span><br />
-<span><img class="moviePoster" ng-src="{{movie.moviePoster}}"></span><br />
+<span><img class="moviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieName}}"></span><br />
 <span>{{movie.movieRating}}</span><br />
 <button ng-click="deleteMovie(movie)">Delete Movie</button><br />
 </div>
@@ -1130,7 +1132,7 @@ Movie Name: {{movie.movieName}}<br />
 Who To Blame: {{movie.moviePerson}}<br />
 Year: {{movie.movieYear}}<br />
 Summary: {{movie.movieSummary}}<br />
-Poster: <img class="moviePoster" ng-src="{{movie.moviePoster}}"><br />
+Poster: <img class="moviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieName}}"><br />
 Rating: {{movie.movieRating}}<br />
 <a href="/#/movies/{{movie._id}}/edit"><button>Edit Movie</button></a><br />
 
@@ -1173,12 +1175,12 @@ We'll let users click to dislike a movie.
 In ```show.html``` add code to display likes in the view:
 
 ```html
-<span>Likes: {{movie.likes}}</span>
+<span>Likes: {{movie.movieLikes}}</span>
 <form ng-submit="upLike(movie)">
-<input type="submit" value="Up"<</input>
+<input type="submit" value="Up"</input>
 </form>
 <form ng-submit="downLike(movie)">
-<input type="submit" value="Down"<</input>
+<input type="submit" value="Down"</input>
 </form>
 ```
 
@@ -1192,7 +1194,7 @@ var movie = {
   movieSummary: $scope.movie.movieSummary,
   moviePoster: $scope.movie.moviePoster,
   movieRating: $scope.movie.movieRating,
-  likes: 0
+  movieLikes: 0
 }
 ```
 
@@ -1200,28 +1202,27 @@ In ```ShowController.js``` add methods for liking and disliking:
 
 ```js
 $scope.upLike = function(movie) {
-  console.log("Liked!");
-  var likes = movie.likes || 0;
-  movie.likes += 1;
+  var movieLikes = movie.movieLikes || 0;
+  movie.movieLikes += 1;
   $http.put('http://localhost:3000/movies/movies/' + movie._id, movie).then(function(response) { // UPDATE
     console.log("Upliked.");
   }, function(response) {
     console.log("Error, like not counted.");
   });
-}
+};
+
 $scope.downLike = function(movie) {
-  console.log("Disliked!");
-  var likes = movie.likes || 0;
-  movie.likes -= 1;
+  var movieLikes = movie.movieLikes || 0;
+  movie.movieLikes -= 1;
   $http.put('http://localhost:3000/movies/movies/' + movie._id, movie).then(function(response) { // UPDATE
     console.log("Downliked.");
   }, function(response) {
     console.log("Error, dislike not counted.");
   });
-}
+};
 ```
 
-This code is similar to the comments. The variable ```likes``` is set to its previous value, or if there is now previous value then it's set to zero.
+This code is similar to the comments. The variable ```movieLikes``` is set to its previous value, or if there is no previous value then it's set to zero.
 
 The comparator ```+= 1``` means "increment" or add one to the previous value. Similarly ```-= 1``` decrements by one.
 
@@ -1236,6 +1237,7 @@ app.controller('ShowController', ['$scope', '$http', '$routeParams', '$location'
   }, function(response) {
     console.log("Error, no data returned.");
   });
+
   $scope.newComment = function(movie) { // full record is passed from the view
     var comment = {
       commentText: movie.newComment.commentText,
@@ -1253,6 +1255,7 @@ app.controller('ShowController', ['$scope', '$http', '$routeParams', '$location'
       console.log("Error, failed to add comment.");
     });
   };
+
   $scope.deleteComment = function(movie, comment) {
     console.log("Deleting comment.")
     var index = movie.comments.indexOf(comment); // find the index of the comment in the array of comments
@@ -1263,26 +1266,27 @@ app.controller('ShowController', ['$scope', '$http', '$routeParams', '$location'
       console.log("Error, comment not deleted.");
     });
   };
+
   $scope.upLike = function(movie) {
-    console.log("Liked!");
-    var likes = movie.likes || 0;
-    movie.likes += 1;
+    var movieLikes = movie.movieLikes || 0;
+    movie.movieLikes += 1;
     $http.put('http://localhost:3000/movies/movies/' + movie._id, movie).then(function(response) { // UPDATE
       console.log("Upliked.");
     }, function(response) {
       console.log("Error, like not counted.");
     });
-  }
+  };
+
   $scope.downLike = function(movie) {
-    console.log("Disliked!");
-    var likes = movie.likes || 0;
-    movie.likes -= 1;
+    var movieLikes = movie.movieLikes || 0;
+    movie.movieLikes -= 1;
     $http.put('http://localhost:3000/movies/movies/' + movie._id, movie).then(function(response) { // UPDATE
       console.log("Downliked.");
     }, function(response) {
       console.log("Error, dislike not counted.");
     });
-  }
+  };
+
 }]);
 ```
 
@@ -1300,11 +1304,13 @@ That's all the functions! Now we can work on the styling.
 
 ## Styling
 
-There are three popular frameworks for styling:
+Style frameworks make styling easier, provide useful components, and provide consistency in your styling.
 
-* Bootstrap, made by Twitter, is by far the most popular. It's easy for beginners. Thousands of themes are available, and if you find one you like it's easy to insert your content and have a pro-looking websites in hours. But if you want to change part of a theme things get messy fast. Advanced designers complain that Bootstrap websites tend to look alike.
+There are three popular styling frameworks:
+
+* Bootstrap, made by Twitter, is by far the most popular. It's easy for beginners. Thousands of themes are available, and if you find one you like it's easy to insert your content and have a designer-looking website in hours. But if you want to change part of a theme things get messy fast. Advanced designers complain that Bootstrap websites tend to look alike, but the positive side of this is that users are used to Bootstrap websites so know what to do.
 * Angular Material, made by Google, uses cards instead of components. Material doesn't use JavaScript. Material is popular with designers for its color aesthetics and consistency of styling.
-* ZURB Foundation is _mobile first_. You design for small screens first and then do larger screens later. ZURB Foundation is popular wth designers who don't want the restrictions or look that Bootstrap sites often have.
+* ZURB Foundation is _mobile first_. You design for small screens first and then do larger screens later. ZURB Foundation is popular with designers who don't want the restrictions or look that Bootstrap sites often have.
 
 We'll use Bootstrap.
 
@@ -1394,7 +1400,7 @@ Let's simplify the ```home.html``` view to just the ```moviePoster```:
 
 ```html
 <div ng-repeat="movie in movies" class="movieIndex">
-  <a ng-href="/#/movies/{{movie._id}}"><img class="moviePoster" ng-src="{{movie.moviePoster}}"></a>
+  <a ng-href="/#/movies/{{movie._id}}"><img class="moviePoster" ng-src="{{movie.moviePoster}}"  alt="{{movie.movieName}}"></a>
 </div>
 ```
 
@@ -1418,7 +1424,7 @@ Add a row to ```home.html```. No container is needed as this view displays insid
 ```html
 <div class="row">
   <div ng-repeat="movie in movies" class="movieIndex">
-    <a ng-href="/#/movies/{{movie._id}}"><img class="moviePoster" ng-src="{{movie.moviePoster}}"></a>
+    <a ng-href="/#/movies/{{movie._id}}"><img class="moviePoster" ng-src="{{movie.moviePoster}}"  alt="{{movie.movieName}}"></a>
   </div>
 </div>
 ```
@@ -1438,7 +1444,7 @@ Let's make a narrow column on the left that will describe your app's technical f
     <a href="/#/movies/new"><button>Add new movie</button></a>
 
     <div ng-repeat="movie in movies" class="movieIndex">
-      <a ng-href="/#/movies/{{movie._id}}"><img class="moviePoster" ng-src="{{movie.moviePoster}}"></a>
+      <a ng-href="/#/movies/{{movie._id}}"><img class="moviePoster" ng-src="{{movie.moviePoster}}"  alt="{{movie.movieName}}"></a>
     </div>
   </div>
 
@@ -1493,7 +1499,7 @@ The ```Add a new movie``` button is in an annoying position. Let's give it its o
 
     <div class="row">
       <div ng-repeat="movie in movies" class="movieIndex">
-        <a ng-href="/#/movies/{{movie._id}}"><img class="moviePoster" ng-src="{{movie.moviePoster}}"></a>
+        <a ng-href="/#/movies/{{movie._id}}"><img class="moviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieName}}"></a>
       </div>
     </div>
   </div>
@@ -1540,25 +1546,25 @@ It's annoying that the block-level button extends to the right past the movie po
 
     <div class="row visible-xs-block">
       <div ng-repeat="movie in movies" class="movieIndex">
-        <a ng-href="/#/movies/{{movie._id}}"><img class="extraSmallMoviePoster" ng-src="{{movie.moviePoster}}"></a>
+        <a ng-href="/#/movies/{{movie._id}}"><img class="extraSmallMoviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieName}}"></a>
       </div>
     </div>
 
     <div class="row visible-sm-block">
       <div ng-repeat="movie in movies" class="movieIndex">
-        <a ng-href="/#/movies/{{movie._id}}"><img class="smallMoviePoster" ng-src="{{movie.moviePoster}}"></a>
+        <a ng-href="/#/movies/{{movie._id}}"><img class="smallMoviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieName}}"></a>
       </div>
     </div>
 
     <div class="row visible-md-block">
       <div ng-repeat="movie in movies" class="movieIndex">
-        <a ng-href="/#/movies/{{movie._id}}"><img class="mediumMoviePoster" ng-src="{{movie.moviePoster}}"></a>
+        <a ng-href="/#/movies/{{movie._id}}"><img class="mediumMoviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieName}}"></a>
       </div>
     </div>
 
     <div class="row visible-lg-block">
       <div ng-repeat="movie in movies" class="movieIndex">
-        <a ng-href="/#/movies/{{movie._id}}"><img class="largeMoviePoster" ng-src="{{movie.moviePoster}}"></a>
+        <a ng-href="/#/movies/{{movie._id}}"><img class="largeMoviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieName}}"></a>
       </div>
     </div>
 
@@ -1825,6 +1831,8 @@ Let's add some more tooltips:
 * In the "Movie" field: ```data-toggle="tooltip" data-placement="top" title="Wikipedia is a good source of movie info."```
 * In the "Who To Blame" field: ```data-toggle="tooltip" data-placement="top" title="Could be the director, actor, producer, etc."```
 
+Let's add validation to our form. We'll only require one field, the movie name. Put ```required``` at the end of the ```movieName``` input. It's standard to put a red asterisk after the label for required fields. You can make a red asterisk with ```<span style="color: red">*</span>```. IMHO no one is going to forget to enter the movie name, and if they do they'll get a prompt, so the red asterisk just clutters our clean design.
+
 The ```Return to index route``` looks like unpolished. Let's make the ```<h1>``` heading the return path. In ```index.html``` change ```<h1>CRUDiest Movies Database</h1>``` to
 
 ```html
@@ -1841,7 +1849,7 @@ Then remove the link from the views pages. ```new.html``` should now look like:
   <div class="form-group">
     <label for="movieName" class="col-sm-2 control-label">Movie: </label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" name="movieName" ng-model="movie.movieName" ```data-toggle="tooltip" data-placement="top" title="Wikipedia is a good source of movie info."```/>
+      <input type="text" class="form-control" name="movieName" ng-model="movie.movieName" data-toggle="tooltip" data-placement="top" title="Wikipedia is a good source of movie info." required/>
     </div>
   </div>
 
@@ -1956,12 +1964,12 @@ Your ```show.html``` should look like this:
     Rating: {{movie.movieRating}}<br />
     <a href="/#/movies/{{movie._id}}/edit"><button>Edit Movie</button></a><br />
 
-    <span>Likes: {{movie.likes}}</span>
+    <span>Likes: {{movie.movieLikes}}</span>
     <form ng-submit="upLike(movie)">
-      <input type="submit" value="Up"<</input>
+      <input type="submit" value="Up"</input>
     </form>
     <form ng-submit="downLike(movie)">
-      <input type="submit" value="Down"<</input>
+      <input type="submit" value="Down"</input>
     </form>
 
     <span ng-click="showComments = !showComments">
@@ -1993,7 +2001,7 @@ Your ```show.html``` should look like this:
   </div>
 
   <div class="col-sm-6 col-md-6 col-lg-6">
-    Poster: <img class="moviePoster" ng-src="{{movie.moviePoster}}"><br />
+    Poster: <img class="moviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieName}}"><br />
   </div>
 
 </div>
@@ -2112,12 +2120,12 @@ Your ```show.html``` should look like this:
 
     <a href="/#/movies/{{movie._id}}/edit"><button>Edit Movie</button></a><br />
 
-    <span>Likes: {{movie.likes}}</span>
+    <span>Likes: {{movie.movieLikes}}</span>
     <form ng-submit="upLike(movie)">
-      <input type="submit" value="Up"<</input>
+      <input type="submit" value="Up"</input>
     </form>
     <form ng-submit="downLike(movie)">
-      <input type="submit" value="Down"<</input>
+      <input type="submit" value="Down"</input>
     </form>
 
     <span ng-click="showComments = !showComments">
@@ -2149,7 +2157,7 @@ Your ```show.html``` should look like this:
   </div>
 
   <div class="col-sm-6 col-md-6 col-lg-6">
-    <img class="moviePoster" ng-src="{{movie.moviePoster}}"><br />
+    <img class="moviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieName}}"><br />
   </div>
 
 </div>
@@ -2175,14 +2183,14 @@ The ```Edit Movie``` button needs styling. Looking at the Bootstrap [semantic co
 
 ![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_blue_button.png)
 
-### Dislikes
+### DismovieLikes
 
 Now we'll style the ```Like``` and (more important!) ```Dislike``` buttons. We'll use Bootstrap's [glyphicons](http://getbootstrap.com/components/#glyphicons).
 
 We'll pretend to be Roger Ebert and use "thumbs up" and "thumbs down" glyphicons. In ```show.html``` replace:
 
 ```html
-<input type="submit" value="Up"<</input>
+<input type="submit" value="Up"</input>
 ```
 
 with
@@ -2196,7 +2204,7 @@ with
 and replace
 
 ```html
-<input type="submit" value="Down"<</input>
+<input type="submit" value="Down"</input>
 ```
 
 with
@@ -2217,7 +2225,7 @@ The next line is the glyphicon. Glyphicons are always in a ```<span>``` tag. Gly
 
 ![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_glyphicons.png)
 
-Let's put the dislikes number to the left of the buttons. Wrap this section in a row, then add two equal columns:
+Let's put the dismovieLikes number to the left of the buttons. Wrap this section in a row, then add two equal columns:
 
 ```html
 <div class="row">
@@ -2233,7 +2241,7 @@ Put the code into the columns:
 ```html
 <div class="row">
   <div class="col-sm-6 col-md-6 col-lg-6">
-    <span>Likes: {{movie.likes}}</span>
+    <span>Likes: {{movie.movieLikes}}</span>
   </div>
   <div class="col-sm-6 col-md-6 col-lg-6">
     <form ng-submit="upLike(movie)">
@@ -2250,13 +2258,13 @@ Put the code into the columns:
 </div>
 ```
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_dislikes_columns.png)
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/show_dismovieLikes_columns.png)
 
 Let's remove the ```Likes: ```, add class for styling the number, and make the number bigger and aligned right:
 
 ```html
-<div class="likes col-sm-6 col-md-6 col-lg-6">
-  <span>{{movie.likes}}</span>
+<div class="movieLikes col-sm-6 col-md-6 col-lg-6">
+  <span>{{movie.movieLikes}}</span>
 </div>
 ```
 
@@ -2508,4 +2516,187 @@ git commit -m "EDIT form finished."
 git push origin master
 ```
 
-## Deploy To Heroku
+## Add a Movie Trivia Field
+
+How about adding a trivia field? Everybody likes movie trivia!
+
+MongoDB is a _schemaless_ database so we don't need to do anything on the back end. _Schema_ are rules for data a database will accept. Whatever you send MongoDB it will save it. In contrast, if we were using SQL as the database we'd have to write back end code to accept a new field.
+
+In ```new.html``` add a field for trivia. Let's use a textfield, like the summary:
+
+```html
+<div class="form-group">
+  <label for="movieTrivia" class="col-sm-2 control-label">Trivia: </label>
+  <div class="col-sm-10">
+    <textarea class="form-control" name="movieTrivia" ng-model="movie.movieTrivia" /></textarea>
+  </div>
+</div>
+```
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/new_trivia.png)
+
+In ```NewController.js``` add ```movieTrivia: $scope.movie.movieTrivia,```:
+
+```js
+app.controller('NewController', ['$scope', '$http', '$location', function($scope, $http, $location) {
+  console.log("New controller.");
+  $scope.addMovie = function(movie){
+    var movie = {
+      movieName:  $scope.movie.movieName,
+      moviePerson: $scope.movie.moviePerson,
+      movieYear: $scope.movie.movieYear,
+      movieSummary: $scope.movie.movieSummary,
+      movieTrivia: $scope.movie.movieTrivia,
+      moviePoster: $scope.movie.moviePoster,
+      movieRating: $scope.movie.movieRating,
+      movieLikes: 0
+    }
+    $http.post('http://localhost:3000/movies/movies/', movie).then(function(response) { // NEW
+      console.log("Movie added.");
+      $location.path( "/movies/" );
+    }, function(response) {
+      console.log("Error, no movie added.");
+    });
+  }
+}]);
+```
+
+In ```show.html``` add a table row for trivia.
+
+```html
+<tr>
+  <td class="tableLabel">Trivia:</td>
+  <td class="tableData">{{movie.movieTrivia}}</td>
+</tr>
+```
+
+
+In ```edit.html``` add a field for trivia:
+
+```html
+<div class="form-group">
+  <label for="editTrivia" class="col-sm-2 control-label">Edit Trivia: </label>
+  <div class="col-sm-10">
+    <input type="text" class="form-control" name="editTrivia" ng-model="movie.movieTrivia"></label>
+  </div>
+</div>
+```
+
+In ```EditController.js``` add ```movieTrivia: $scope.movie.movieTrivia,```:
+
+```js
+app.controller('EditController', ["$scope", '$http', '$routeParams', '$location', function($scope, $http, $routeParams, $location){
+  console.log("Edit controller");
+  $http.get('http://localhost:3000/movies/movies/' + $routeParams.id + '/edit/').then(function(response) { // EDIT
+    $scope.movie = response.data;
+    console.log(response.data);
+  }, function(response) {
+    console.log("Error, no data returned.");
+  });
+
+  $scope.updateMovie = function(movie) {
+    console.log("Updating movie.");
+    var movie = {
+      movieName:  $scope.movie.movieName,
+      moviePerson: $scope.movie.moviePerson,
+      movieYear: $scope.movie.movieYear,
+      movieSummary: $scope.movie.movieSummary,
+      movieTrivia: $scope.movie.movieTrivia,
+      moviePoster: $scope.movie.moviePoster,
+      movieRating: $scope.movie.movieRating
+    }
+    console.log($routeParams.id);
+    $http.put('http://localhost:3000/movies/movies/' + $routeParams.id, movie).then(function(response) { // UPDATE
+      $location.path( "/movies" );
+      console.log("Movie updated.");
+    }, function(response) {
+      console.log("Error, no data returned.");
+    });
+  };
+  $scope.deleteMovie = function(movie) { // DESTROY
+    console.log("Deleting movie.");
+    $http.delete('http://localhost:3000/movies/movies/' + movie._id).then(function(response){
+      console.log("Movie deleted.");
+      $location.path( "/movies" );
+    }, function(response) {
+      console.log("Failed to reload page.");
+    });
+  };
+}]);
+```
+
+Save your work to your GitHub repository:
+
+```
+git add .
+git commit -m "Trivia added."
+git push origin master
+```
+
+## Test App
+
+Test all functions with the console open to show error messages.
+
+## Deploy To Firebase
+
+Firebase requires major changes to your app so make backups:
+
+* Commit to GitHub.
+* Run a Time Machine backup.
+* Make a copy of your project folder.
+
+### Check Back End
+
+Your Firebase front end will connect to your Heroku back end, not to your local back end that we've been using for development. Use Postman to check your Heroku back end. Send a ```GET``` request to retrieve movie data. Put the URL into your ```README.md``` file.
+
+Go through your four controllers and replace the ```http://localhost:3000/movies/movies/``` with your Heroku back end URL. You can do this in Atom using ```Find > Find in Project``` or ```shift-⌘-F```, or you can go through your files by hand (safer). Include a trailing slash ```/``` at the end of the URL.
+
+### Public Folder
+
+To use Firebase your app should be in a public folder. Your directory structure should look like this:
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/firebase_new_app.png)
+
+### Open a Firebase Account and Create a New App
+
+Go to [Firebase](https://www.firebase.com/) and open a free account. In your Dashboard enter an app name and click ```CREATE NEW APP```. Firebase will then assign two URLs:
+
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/firebase_new_app.png)
+
+The ```firebaseio.com``` address is for the database, which we won't be using. We've already made a database back end and deployed it to Heroku.
+
+The ```firebaseapp.com``` address is where we'll access our front end.
+
+Firebase has instructions for [deploying your app](https://www.firebase.com/docs/hosting/guide/deploying.html):
+
+* Install the Node module ```firebase-tools```.
+* Run ```firebase init``` to create a ```firebase.json``` file (similar to a ```package.json``` file on the back end).
+* Run ```firebase deploy```.
+
+### Open Your App
+
+Open your app to the ```firebaseapp.com``` address. You should see your home page with no movies. It's a new database so the movies in your local database won't be there. Add a movie.
+
+### Deploy Again When You Make Changes
+
+When you make changes in your local files you must run ```firebase deploy``` again for the change to take effect in your deployed app.
+
+### Finished!
+
+It should work now from the ```firebaseapp.com``` address.
+
+## Colophon
+
+Lastly, we get to write up what we've accomplished. In ```home.html```:
+
+```html
+<div class="colophon col-sm-2 col-md-2 col-lg-2">
+  <p class="lead">MEAN stack ReSTful CRUD app with Angular front-end and Bootstrap styling.</p>
+
+  <p class="text-justify">This website is two apps, with separate back and front ends. The back end uses Node, Express, and MongoDB and is deployed on Heroku. The data is served to an API as JSON objects. MongoDB is accessed via the lightweight, schemaless Monk and MongoSkin Node modules.</p>
+
+  <p class="text-justify">The front end uses Angular and Bootstrap and is deployed on Firebase. There are four views: INDEX (Home), NEW, SHOW, and EDIT. Comments are an array of objects nested in the movie object. Other features include likes/dislikes. The app is fully responsive. The number of movies displayed per row changes from five in the large view, to four in the medium view, three in the small view, and two on mobile devices.</p>
+
+  <p class="text-justify">The <a ng-href="https://github.com/tdkehoe/CRUDiest-Movies-Database-Node-back-end">back end code</a> and <a ng-href="https://github.com/tdkehoe/CRUDiest-Movies-Database-Angular-Front-End">front end code</a> are on GitHub. Tutorials to make the <a ng-href="">back end</a> and the <a ng-href="">front end</a> are also on GitHub.
+</div>
+```
