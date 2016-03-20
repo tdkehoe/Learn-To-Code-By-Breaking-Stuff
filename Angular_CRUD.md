@@ -1,18 +1,21 @@
 # Building the Angular Front End of the CRUDiest Movies Database
 
-In this section you'll built the front end of the CRUDiest Movies Database. You'll design an attractive web app running in the browser. We'll use the front-end _framework_ Angular. Angular is made by Google and is one of the two most popular front-end frameworks. (The other is React.)
+In this section you'll built the front end of the [CRUDiest Movies Database](https://crudiest-movies.firebaseapp.com/#/movies). You'll design an attractive web app running in the browser. We'll use the front-end framework [AngularJS](https://angularjs.org/) with the styling framework [Bootstrap](http://getbootstrap.com/).
 
-Prerequisites: This section assumes that you've completed the section "Building the Node/Express/MongoDB Back End of the CRUDiest Movies Database".
+AngularJS is made by Google and is one of the two most popular front-end frameworks. (The other is [React](https://facebook.github.io/react/).)
+
+Prerequisites: This section assumes that you've completed the section [Building the Node/Express/MongoDB Back End of the CRUDiest Movies Database](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/Node_and_Express.md).
 
 ## Directory Structure
 
-### Public Folder
-
-Make a directory called ```angular-app```. Don't make it a subdirectory of a directory with a local Git repository. In the ```angular-app``` directory make two files and a subdirectory with one file:
+Make a directory called ```angular-app```. Don't make it a subdirectory of a directory with a local Git repository. In the ```angular-app``` directory make a ```public``` directory with two files:
 
 ```
 mkdir angular-app
+touch .gitignore
 cd angular-app
+mkdir public
+cd public
 touch app.js
 touch index.html
 ls
@@ -34,8 +37,6 @@ git push -u origin master
 ```
 
 Change ```myAccount``` to your account name.
-
-### .gitignore?
 
 ## index.html
 

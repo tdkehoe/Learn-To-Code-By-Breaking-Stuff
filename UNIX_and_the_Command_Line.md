@@ -4,7 +4,7 @@ The Macintosh has two user interfaces. The graphical user interface (GUI) is the
 
 Open your terminal from ```Applications > Utilities > Terminal```. You should see a small black window.
 
-![Terminal](/Users/TDK/playground/LearnCoding/media/terminal.png)
+![Terminal](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/terminal.png)
 
 You can resize it to make it bigger, and make the font bigger with ```command +```. Or, if you want to experience coding in the 1980s, resize your terminal to 80x23 characters. :-)
 
@@ -54,7 +54,7 @@ which should return
 
 ```
 
-### Using Homebrew
+### Advanced Homebrew (you can skip this section now)
 
 Homebrew does more stuff that you don't need to know now. To update to the latest Homebrew:
 
@@ -126,7 +126,7 @@ To install Bower from the CLI run the following command:
 npm install -g bower
 ```
 
-### Using Bower
+### Advanced Bower (you can skip this section now)
 
 To install a software package enter at the CLI:
 
@@ -176,7 +176,7 @@ Next, install _Oh My Zsh_. This is an open-source framework for managing your Z 
 sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 ```
 
-Don't copy the first ```$```.
+> The standard for presenting command line code is the start with a ```$```, sometimes in gray, to indicate the command line. Don't copy the ```$```.
 
 ## UNIX Commands and Cheatsheet
 
@@ -202,7 +202,7 @@ and
 ls
 ```
 
-![Terminal](/Users/TDK/playground/LearnCoding/media/pwd_ls.png)
+![Terminal](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/pwd_ls.png)
 
 You should recognize what directory you're in. The picture shows my top-level user directory.
 
@@ -315,7 +315,7 @@ A double-slash doesn't mean anything and is interpreted as a single slash. Howev
 
 Let's look at an example of a double-dot-slash. Suppose I have two directories, ```front-end``` and ```back-end```. I have a jpeg in ```back-end``` and my JavaScript app is in ```front-end```:
 
-![Terminal](/Users/TDK/playground/LearnCoding/media/directories.png)
+![Terminal](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/directories.png
 
 For my JavaScript app to call my jpeg I would use this path:
 
@@ -326,6 +326,8 @@ For my JavaScript app to call my jpeg I would use this path:
 #### Find Your Path
 
 The command ```pwd``` or "print working directory" prints the absolute path to the directory you're in. If you're getting error messages about missing resources, go to the missing resource and get the absolute path, then put that into your code. If that fixes the problem then figure out the relative path. Don't leave an absolute path in your project because if someone clones or forks your project, the path might not work on their system.
+
+## Advanced UNIX (you can skip this now)
 
 #### Adding New Paths
 
@@ -349,7 +351,7 @@ This should list all your paths, separated by colons. Copy and paste this into A
 
 These three paths show that UNIX will look, in this order, in the directories ```/usr/local/bin```, ```/usr/bin```, and ```/bin```. I.e., UNIX first looks in ```/usr/local/bin```, then looks in ```/usr/bin```, etc.
 
-```bin``` is short for _binary_, i.e., executable files. Paths always end in ```/bin```.
+The directory name ```bin``` is short for _binary_, i.e., executable files. Paths always end in ```/bin```.
 
 A new software package might require adding a package. For example, the MySQL database might require adding the path ```/usr/local/mysql/bin```. To add a path, edit
 
@@ -361,7 +363,9 @@ Permissions can be another headache in UNIX.
 
 To view permissions of the files in a directory:
 
-```ls -l```
+```
+ls -l
+```
 
 You'll see ten-character strings like this: ```drwxr-xr-x``` and ```-rw-r--r--```. The first character is the file type: ```d``` means a directory, ```-``` means a file.
 
@@ -379,7 +383,9 @@ The letters mean:
 
 To change a file or directory's permissions enter
 
-```chmod <octalnumber> <filename>```
+```
+chmod <octalnumber> <filename>
+```
 
 The octal (base 8) number is the sum of three numbers: read (4), write (2), and execute (1). For example, `chmod 777 myfile` gives the world permission to read, write, and execute your file.
 

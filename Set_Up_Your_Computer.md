@@ -56,6 +56,8 @@ At the beginner level IMHO it's better to stick to the simpler apps, as advanced
 
 The Google Chrome browser is the standard for software developers. Chrome includes the Dev Tools for debugging, styling, optimizing, etc.
 
+> There are two other versions of Chrome. [Chrome Canary](https://www.google.com/chrome/browser/canary.html) has the newest Chrome features but is recommended only for developers and early adopters. If your code doesn't run properly in Chrome Canary, run it again in the standard Chrome browser. [Chromium](https://www.chromium.org/Home) is the open-source version of Chrome, It has some differences from Chrome. In particular it lacks RLZ user tracking to profile you for marketing purposes. A Google employee I know uses only Chromium because she doesn't want Google to track her.
+
 You should also have Firefox and Safari available to test if your website works and looks the same ("cross-browser compatibility") but 99% of the time you'll be in Chrome.
 
 ### Terminal
@@ -66,13 +68,15 @@ Some coders prefer terminals with advanced features, such as [iTerm2](https://ww
 
 ### Text Editor
 
-Coders fight holy wars over which text editor is better. At Galvanize we were required to learn [Atom](https://atom.io/), which is free. I still use it.
+Coders fight holy wars over which text editor is better.
+
+I like [Atom](https://atom.io/), which is free.
 
 [Sublime Text](https://www.sublimetext.com/) is another popular choice. It's shareware, i.e., you can download and use it free but you're asked to pay $70 for a license.
 
 [Vim](http://www.vim.org/) is popular among hard-core developers with excellent typing skills, as there are a zillion keyboard shortcuts. It's free.
 
-[WebStorm](https://www.jetbrains.com/webstorm/) is a JavaScript integrated development environment (IDE). It can run and debug your code. It costs $129. WebStorm is arguably the best choice for a professional developer but IMHO it'll just confuse a beginner, and you can get the same functionality free between Atom and Chrome Dev Tools.
+[WebStorm](https://www.jetbrains.com/webstorm/) is a JavaScript integrated development environment (IDE). It can run and debug your code. It costs $129. WebStorm is arguably the best choice for a professional developer but IMHO it'll just confuse a beginner. You can get the same functionality free between Atom and Chrome Dev Tools.
 
 ### f.lux (optional)
 
