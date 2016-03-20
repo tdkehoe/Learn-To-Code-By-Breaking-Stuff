@@ -27,7 +27,7 @@ __Exercise:__ In your ```playground``` folder make a folder called ```atom```.
 
 In Atom, open a new file and save it as ```index.html``` in your ```playground``` directory. Now type in the first line ```html``` and hit the ```TAB``` key. You should see this:
 
-![Atom HTML](/Users/TDK/playground/LearnCoding/media/atom_html.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/atom_html.png)
 
 Pretty neat, huh? You just used a _snippet_. More about snippets later.
 
@@ -37,11 +37,11 @@ Now type between the ```<body``` and ```</body>``` tags:
 Hello, world.
 ```
 
-![Atom HTML](/Users/TDK/playground/LearnCoding/media/helloworld.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/helloworld.png)
 
 Open your Chrome browser and use ```File > Open File``` to open to your file ```index.html```.
 
-![Atom HTML](/Users/TDK/playground/LearnCoding/media/helloworld2.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/helloworld2.png)
 
 You've just created your first web page!
 
@@ -49,7 +49,7 @@ You've just created your first web page!
 
 I'll point out some useful items in the menu bar.
 
-![Atom HTML](/Users/TDK/playground/LearnCoding/media/atom_menu_bar.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/atom_menu_bar.png)
 
 Under ```Atom``` I use:
 
@@ -91,7 +91,7 @@ That will get your started, and you can learn more from your cheatsheet or the m
 
 In code files you'll see, in between the line numbers and your code, little down carets.
 
-![Atom HTML](/Users/TDK/playground/LearnCoding/media/fold_carats.png)
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/fold_carats.png)
 
 Clicking on a down caret _folds_ a block of code into a single line, and changes the down caret into a right carat. Clicking the right caret unfolds your code block.
 
@@ -190,7 +190,7 @@ Now your code will (in the Markdown Preview pane) appear colorcoded and indented
 You can rename a file by selecting it in the directory and file listing in the left column, then right-clicking. You can also delete a file, duplicate a file, etc.
 
 
-![Atom Right-Click Menu](/Users/TDK/playground/LearnCoding/media/atom_right_click.png)
+![Atom Right-Click Menu](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/atom_right_click.png)
 
 
 ## Open Hidden Files

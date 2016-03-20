@@ -6,7 +6,7 @@ Open your terminal from ```Applications > Utilities > Terminal```. You should se
 
 ![Terminal](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/terminal.png)
 
-You can resize it to make it bigger, and make the font bigger with ```command +```. Or, if you want to experience coding in the 1980s, resize your terminal to 80x23 characters. :-)
+You can resize it to make it bigger, and make the font bigger with ```command +```. Or, if you want to experience coding in the 1980s, resize your terminal to monochrome 80x23 characters. :-)
 
 ## UNIX
 
