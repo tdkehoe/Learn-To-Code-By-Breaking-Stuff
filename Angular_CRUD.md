@@ -1321,7 +1321,7 @@ Bootstrap provides three types of features:
 
 * CSS positioning, e.g., putting parts of your website on the left, right, middle, or in the header, footer, sidebar, etc. This is what Bootstrap is famous for. At Galvanize we spent a long week, difficult learning CSS positioning without Bootstrap. I looked for books and articles about CSS positioning but couldn't find any. The reason is that everyone uses a framework for CSS positioning. Bootstrap also helps style forms, buttons, etc.
 * Components such as dropdown menus, nav bars, and button groups. Plus, glyphicons, progress bars, breadcrumbs, etc.
-* JavaScript plugins such as transitions, tooltips, popovers, accordion collapses, scrollspies, prompts and alerts, a carousel, more dropdown menus, etc. JavaScript plugins might not work on mobile devices or all browsers. Bootstrap's JavaScript requires jQuery.
+* JavaScript plugins such as transitions, tooltips, popovers, accordion collapses, scrollspies, prompts and alerts, a carousel, more dropdown menus, etc. Bootstrap's JavaScript uses jQuery, which is [incompatible with Angular](https://scotch.io/tutorials/how-to-correctly-use-bootstrapjs-and-angularjs-together). We will instead use [UI Bootstrap](https://angular-ui.github.io/bootstrap/), which provides similar JavaScript plugins without jQuery.
 
 We'll load Bootstrap via CDN.
 
