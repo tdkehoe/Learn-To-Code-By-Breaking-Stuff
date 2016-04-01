@@ -145,7 +145,7 @@ Save your work to your GitHub repository:
 
 ```
 git add .
-git commit -m "Angular hooked up!"
+git commit -m "Angular hooked up."
 git push origin master
 ```
 
@@ -1094,6 +1094,64 @@ app.controller('ShowController', ['$scope', '$http', '$routeParams', '$location'
 }]);
 ```
 
+This makes the ```Delete Comment``` button too big. Let's change ```btn-block``` to ```btn-small```. Now let's align it to the right of the comment, by setting up a ```row``` and ```columns```:
+
+```html
+<div class="row" ng-hide="showComments">
+  <hr />
+  <div class="col-sm-8 col-md-8 col-lg-8">
+    <div ng-repeat="comment in movie.comments">
+      <span>{{comment.commentText}}</span>
+      <div class="commentAuthor">
+        <span>&#151;{{comment.commentAuthor}}, </span>
+        <span>{{comment.commentTimestamp | date:'mediumDate'}}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-4 col-md-4 col-lg-4">
+    <form ng-submit="deleteComment(movie, comment)">
+      <button type="submit" class="btn btn-warning btn-sm">Delete Comment</button>
+    </form>
+    <br />
+  </div>
+</div>
+```
+
+The comments run together. Let's put a border around each comment. Add the class ```comment``` to the row:
+
+```html
+<div ng-hide="showComments" ng-repeat="comment in movie.comments">
+  <div class="row comment img-rounded">
+    <div class="col-sm-8 col-md-8 col-lg-8">
+      <span class="commentText">{{comment.commentText}}</span>
+      <div class="commentAuthor">
+        <span>&#151;{{comment.commentAuthor}}, </span>
+        <span>{{comment.commentTimestamp | date:'mediumDate'}}</span>
+      </div>
+    </div>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+      <form ng-submit="deleteComment(movie, comment)">
+        <button type="submit" class="btn btn-warning btn-sm">Delete Comment</button>
+      </form>
+    </div>
+  </div>
+</div>
+```
+
+In Bootstrap the corect way to round corners is using the class ```img-rounded``` (not ```border-radius``` in CSS).
+
+In ```style.css``` add:
+
+```css
+.comment {
+  border-style: solid;
+  border-width: thin;
+  padding: 5px;
+  border-color: silver;
+}
+```
+
 ### Show or Hide Comments
 
 What if users don't want to see comments? In ```show.html``` add this code:
@@ -1121,7 +1179,7 @@ The code block uses the Angular directive ```ng-pluralize```. This counts elemen
 Then wrap the comments ```div``` with this ```div```:
 
 ```html
-<div ng-show="showComments">
+<div ng-hide="showComments">
   ...
 </div>
 ```
@@ -1146,7 +1204,7 @@ Rating: {{movie.movieRating}}<br />
 </ng-pluralize><br>
 </span>
 
-<div ng-show="showComments">
+<div ng-hide="showComments">
   <div ng-repeat="comment in movie.comments">
     <span>{{comment.commentText}}</span>
     <span>--{{comment.commentAuthor}}</span>

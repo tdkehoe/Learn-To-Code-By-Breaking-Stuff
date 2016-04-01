@@ -142,7 +142,7 @@ Let's look more closely at the Angular HTML code:
 
 The third line is an input field, type ```text```, as we've used before. It sets a local (```$scope```) variable using ```ng-model```. The local variable is called ```asyncSelected```. It also provides a placeholder in the input form field.
 
-The directive ```uib-typeahead``` does all the work. It looks up a list of addresses using the controller script ```$getLocation```. ```$viewValue``` is the current value in the view, i.e., your string input. You can read more about it in the [ngModel.NgModelController](https://docs.angularjs.org/api/ng/type/ngModel.NgModelController) documentation.
+The directive ```uib-typeahead``` does all the work. ```address for address``` is [select directive](https://docs.angularjs.org/api/ng/directive/select) syntax. The archetypal format is ```label for value in sourceArray.``` ```sourceArray``` must be an array so ```getLocation($viewValue)``` must return an array. ```getLocation``` fires the controller function ```$getLocation``` to look up addresses. ```$viewValue``` is the current value in the view, i.e., your string input. You can read more about it in the [ngModel.NgModelController](https://docs.angularjs.org/api/ng/type/ngModel.NgModelController) documentation.
 
 The rest of line three specifies messages to display while the data is loading, if no results are found, and lastly sets the class for Bootstrap to style the form.
 
@@ -267,6 +267,10 @@ Note that only three lines have changed (not counting the console logs).
 * The fifth line changes from ```results``` to ```Search```. Look at line 2 of the Postman response to see why. ```Search``` is the name of the array with our data, i.e., OMDB calls the array ```Search``` when Google Maps calls the array ```results```.
 * The seventh line specifies that we want the ```Title```, not the ```formatted_address```.
 
+The fifth line includes the ```map()``` method, with both Google Maps and OMDB. ```map()``` has nothing to do with Google Maps. It's a [JavaScript method](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map) that "creates a new array with the results of calling a provided function on every element in this array." In other words, ```map()``` takes the response from OMDB and arranges the results into an array for Angular to use in the view. ```map()``` is related to ```reduce()```, which
+
+
+
 Run ```firebase deploy```, refresh your browser, and it should work. Watch the console to see each letter you type return single responses with multiple items.
 
 Save your work to your GitHub repository:
@@ -276,3 +280,525 @@ git add .
 git commit -m "UI Bootstrap Typeahead working with OMDB."
 git push origin master
 ```
+
+## Typeahead in the View
+
+Here's the view code we copied from the UI Bootstrap example:
+
+```HTML
+<h4>Asynchronous results</h4>
+<pre>Model: {{asyncSelected | json}}</pre>
+<input type="text" ng-model="asyncSelected" placeholder="Locations loaded via $http" uib-typeahead="address for address in getLocation($viewValue)" typeahead-loading="loadingLocations" typeahead-no-results="noResults" class="form-control">
+<i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
+<div ng-show="noResults">
+  <i class="glyphicon glyphicon-remove"></i> No Results Found
+</div>
+```
+
+Let's take off the first two lines, and put in a row to match our other rows:
+
+```HTML
+<div class="addNewMovie row">
+  <form class="form-horizontal" ng-submit="addMovie()" name="newMovie">
+
+    <div class="form-group">
+      <label for="movieTitle" class="col-sm-2 control-label">Add the worst movie you've seen recently: </label>
+      <div class="col-sm-10">
+        ...
+      </div>
+    </div>
+
+  </form>
+</div>
+```
+
+Let's reformat the input form to be more readable:
+
+```html
+<input type="text"
+  ng-model="asyncSelected"
+  placeholder="Locations loaded via $http" uib-typeahead="address for address in getLocation($viewValue)" typeahead-loading="loadingLocations" typeahead-no-results="noResults"
+  class="form-control" />
+<i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
+<div ng-show="noResults">
+  <i class="glyphicon glyphicon-remove"></i> No Results Found
+</div>
+```
+
+The data from the form is the movie title so we want the data to bind to ```movie.movieTitle```. ```ng-model``` binds data from the view to the controller (from the form to the ```$scope```) so change ```ng-model="asyncSelected"``` to ```ng-model="movie.movieName"```.
+
+Our form needs to be tied to its label so add ```name="movieTitle"```.
+
+We can add a directive to not send an HTTP request to OMDB until the user has entered three characters: ```typeahead-min-length="3"```.
+
+Lastly, we can get rid of the big red ```Add Movie``` button. We want to fire a function in the controller when the user selects a movie title in the typeahead. We add the directive ```typeahead-on-select="onSelect($item)"```. This fires the function ```$scope.onSelect``` in the controller. ```$item``` passes through the movie title to the controller.
+
+The complete form is:
+
+```html
+<div class="addNewMovie row">
+  <form class="form-horizontal" ng-submit="addMovie()" name="newMovie">
+
+    <div class="form-group">
+      <label for="movieName" class="col-sm-2 control-label">Add the worst movie you've seen recently: </label>
+      <div class="col-sm-10">
+        <input type="text"
+        class="form-control"
+        name="movieName"
+        ng-model="movie.movieName"
+        uib-typeahead="address for address in getLocation($viewValue)"
+        typeahead-loading="loadingLocations"
+        typeahead-no-results="noResults"
+        typeahead-min-length="3"
+        typeahead-on-select="onSelect($item)" />
+        <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
+        <div ng-show="noResults">
+          <i class="glyphicon glyphicon-remove"></i> No Results Found
+        </div>
+      </div>
+    </div>
+
+  </form>
+</div>
+```
+
+In ```NewController.js``` we'll add the ```$scope.onSelect``` function:
+
+```js
+$scope.onSelect = function ($item) {
+  console.log("Selected!");
+  console.log($item);
+  return $http.get('//www.omdbapi.com/?t=' + $item)
+  .then(function(response){
+    var movie = {
+      movieActors: response.data.Actors,
+      movieAwards: response.data.Awards,
+      movieCountry: response.data.Country,
+      movieDirector: response.data.Director,
+      movieGenre: response.data.Genre,
+      movieLanguage: response.data.Language,
+      movieMetascore: response.data.Metascore,
+      moviePlot: response.data.Plot,
+      moviePoster: response.data.Poster,
+      movieRated: response.data.Rated,
+      movieRuntime: response.data.Runtime,
+      movieTitle: response.data.Title,
+      movieWriter: response.data.Writer,
+      movieYear: response.data.Year,
+      movieImdbID: response.data.imdbID,
+      movieImdbRating: response.data.imdbRating,
+      movieImdbVotes: response.data.imdbVotes,
+      movieLikes: 0
+    };
+    $http.post('https://pure-wave-92261.herokuapp.com/movies/movies/', movie).then(function(response) { // NEW
+      $scope.movies = response.data;
+      console.log("Movie added.");
+    }, function(response) {
+      console.log("Error, no movie added.");
+    });
+  });
+};
+```
+
+The movie title is passed in as ```$item```. We then do an HTTP GET request to OMDB. We specify ```t``` for _title_ instead of ```s``` for _search_.
+
+When the HTTP response comes back asynchronously ```then``` executed a promise function. The function creates a ```movie``` object with many properties. We create a property ```movieActors``` and assign a value from the response, ```response.data.Actors```. We do this for all the fields we want from OMDB, plus we initialize our ```movieLikes``` property at zero.
+
+Next, we make an HTTP POST request to our Heroku back end and pass in the ```movie``` object. Finally we take the HTTP POST response and put it in the ```$scope``` so that it's available to the view.
+
+You should be able to select a movie in your ```NEW``` view and see it appear at end of your ```INDEX``` view.
+
+Save your work to your GitHub repository:
+
+```
+git add .
+git commit -m "Typeahead onSelect saving movies to database."
+git push origin master
+```
+
+## Combining NEW and INDEX Views
+
+With OMDB providing all of our data except the title we no longer need the forms in the ```NEW``` view. Let's move our typeahead form to the home page:
+
+```html
+<<div class="row">
+
+  <div class="colophon col-sm-2 col-md-2 col-lg-2">
+    <p class="lead">MEAN stack ReSTful CRUD app with Angular front-end and Bootstrap styling.</p>
+
+    ...
+
+  </div>
+
+  <div class="col-sm-10 col-md-10 col-lg-10">
+
+    <div class="addNewMovie row">
+      <form class="form-horizontal" ng-submit="addMovie()" name="newMovie">
+
+        <div class="form-group">
+          <label for="movieName" class="col-sm-2 control-label">Add the worst movie you've seen recently: </label>
+          <div class="col-sm-10">
+            <input type="text"
+            class="form-control"
+            name="movieName"
+            ng-model="movie.movieName"
+            uib-typeahead="address for address in getLocation($viewValue)"
+            typeahead-loading="loadingLocations"
+            typeahead-no-results="noResults"
+            typeahead-min-length="3"
+            typeahead-on-select="onSelect($item)" />
+            <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
+            <div ng-show="noResults">
+              <i class="glyphicon glyphicon-remove"></i> No Results Found
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="row visible-xs-block">
+      <div ng-repeat="movie in movies" class="movieIndex">
+        <a ng-href="/#/movies/{{movie._id}}"><img class="extraSmallMoviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieTitle}}"></a>
+      </div>
+    </div>
+
+    <div class="row visible-sm-block">
+      <div ng-repeat="movie in movies" class="movieIndex">
+        <a ng-href="/#/movies/{{movie._id}}"><img class="smallMoviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieTitle}}"></a>
+      </div>
+    </div>
+
+    <div class="row visible-md-block">
+      <div ng-repeat="movie in movies" class="movieIndex">
+        <a ng-href="/#/movies/{{movie._id}}"><img class="mediumMoviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieTitle}}"></a>
+      </div>
+    </div>
+
+    <div class="row visible-lg-block">
+      <div ng-repeat="movie in movies" class="movieIndex">
+        <a ng-href="/#/movies/{{movie._id}}"><img class="largeMoviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieTitle}}"></a>
+      </div>
+    </div>
+
+  </div>
+</div>
+```
+
+You'll need to move the ```$scope.getLocation``` and ```$scope.onSelect``` functions from  ```NewController.js``` to ```HomeController.js```. You should be able to add movies from home page. We'll no longer use ```new.html``` and ```NewController.js```. You can remove this line from ```index.html```:
+
+```html
+  <script type="text/javascript" src="javascript/controllers/EditController.js"></script>
+```
+
+Let's make the "Add Movie" row nicer. We'll put the label inside the input form as a placeholder:
+
+```html
+placeholder="What's the worst movie you've seen?"
+```
+
+A search box should have a search glyphicon. After the ```input``` element put this ```span``` element:
+
+```html
+<span class="glyphicon glyphicon-search form-control-feedback"></span>
+```
+
+The ```form-control-feedback``` class right-aligns the glyphicon in the input data entry form. To get it where I wanted I had to add padding in ```styles.css```:
+
+```css
+.glyphicon-search {
+  padding-right: 40px;
+  color: silver;
+  font-size: larger;
+}
+```
+
+I also changed the color from black to silver, and made the glyphicon larger.
+
+Then change the columns so that the search box is eleven columns wide, and the label is one column. We'll put a glyphicon in the left column to indicate when data is loading. The row should now look like:
+
+```html
+<div class="addNewMovie row">
+  <form class="form-horizontal" ng-submit="addMovie()" name="newMovie">
+
+    <div class="form-group col-sm-1 col-md-1 col-lg-1 text-right addMovie">
+      <i ng-show="loading" class="glyphicon glyphicon-refresh"></i>
+    </div>
+
+    <div class="col-sm-11 col-md-11 col-lg-11">
+      <input type="text"
+      class="form-control addMovie"
+      name="movieTitle"
+      ng-model="movie.movieTitle"
+      uib-typeahead="address for address in getLocation($viewValue)"
+      typeahead-loading="loadingLocations"
+      typeahead-no-results="noResults"
+      typeahead-min-length="3"
+      typeahead-on-select="onSelect($item)"
+      placeholder="What's the worst movie you've seen?"/>
+      <span class="glyphicon glyphicon-search form-control-feedback"></span>
+      <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
+      <div ng-show="noResults">
+        <i class="glyphicon glyphicon-remove"></i> No Results Found
+      </div>
+
+    </div>
+
+  </form>
+</div>
+```
+
+To make the "loading" glyphicon work we put two lines in ```HomeController.js```. We wrote the icon with ```ng-show="loading"``` so we need a variable ```$scope.loading```. We'll set ```$scope.loading = true;``` as soon as the user selects a movie. Then we'll set ```$scope.loading = false;``` when we get the data from OMDB and push it to the ```$scope```. I'll show this complete code in the next section.
+
+### Updating the INDEX View
+
+When a user adds a movie it should appear immediately in the top row. But our movies are displayed in order of entry in our database. We want to reverse this, and show the newest entries first. We'll use Angular's ```orderBy``` filter. The [documentation](https://docs.angularjs.org/api/ng/filter/orderBy) says the syntax is this:
+
+```html
+ng-repeat="movie in movies | orderBy : expression : reverse"
+```
+
+The ```expression``` can be a function, an array, or a string. We'll use a property in the movie object, which is a string. Strings have to be quoted. The ```_id``` property orders our movies by date added so we'll set the ```expression``` as ```'_id'```.
+
+The predicate ```reverse``` is _boolean_ and _optional_. In other words, you don't put ```reverse``` in the third position when you want reverse order. You put ```true``` for reverse and ```false``` or nothing for _not reverse_. (IMHO, it should be ```reverse``` for reverse and nothing for not reverse.)
+
+Now our four responsive views are:
+
+```html
+<div class="row visible-xs-block">
+  <div ng-repeat="movie in movies | orderBy : '_id':true" class="movieIndex">
+    <a ng-href="/#/movies/{{movie._id}}"><img class="extraSmallMoviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieTitle}}"></a>
+  </div>
+</div>
+
+<div class="row visible-sm-block">
+  <div ng-repeat="movie in movies | orderBy : '_id':true" class="movieIndex">
+    <a ng-href="/#/movies/{{movie._id}}"><img class="smallMoviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieTitle}}"></a>
+  </div>
+</div>
+
+<div class="row visible-md-block">
+  <div ng-repeat="movie in movies | orderBy : '_id':true" class="movieIndex">
+    <a ng-href="/#/movies/{{movie._id}}"><img class="mediumMoviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieTitle}}"></a>
+  </div>
+</div>
+
+<div class="row visible-lg-block">
+  <div ng-repeat="movie in movies | orderBy : '_id':true" class="movieIndex">
+    <a ng-href="/#/movies/{{movie._id}}"><img class="largeMoviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieTitle}}"></a>
+  </div>
+</div>
+```
+
+We have another problem. When you add a movie, the poster doesn't appear until you refresh the browser. You can ```console.log($scope.movie)``` in the promise after the HTTP POST request and see that the new movie is in the scope. The issue is that [Angular doesn't always update the view when ```$scope``` is updated](http://jimhoskins.com/2012/12/17/angularjs-and-apply.html). ```$scope.$digest()``` is the Angular function that looks for changes in the ```$scope```. Then ```$scope.$apply``` updates the view. ```$scope.$apply``` calls ```$scope.$digest``` so we only have to call ```$scope.apply```.
+
+But ```$scope.$apply``` can't be called from within a digest cycle. That's pretty much everywhere. HTTP requests call ```$scope.$apply``` so we'll make a useless HTTP GET request to update the view. Here's the finished ```$scope.onSelect``` in ```HomeController.js```:
+
+```js
+$scope.onSelect = function ($item) {
+  console.log("Selected!");
+  console.log($item);
+  return $http.get('//www.omdbapi.com/?t=' + $item)
+  .then(function(response){
+    var movie = {
+      movieActors: response.data.Actors,
+      movieAwards: response.data.Awards,
+      movieCountry: response.data.Country,
+      movieDirector: response.data.Director,
+      movieGenre: response.data.Genre,
+      movieLanguage: response.data.Language,
+      movieMetascore: response.data.Metascore,
+      moviePlot: response.data.Plot,
+      moviePoster: response.data.Poster,
+      movieRated: response.data.Rated,
+      movieRuntime: response.data.Runtime,
+      movieTitle: response.data.Title,
+      movieWriter: response.data.Writer,
+      movieYear: response.data.Year,
+      movieImdbID: response.data.imdbID,
+      movieImdbRating: response.data.imdbRating,
+      movieImdbVotes: response.data.imdbVotes,
+      movieLikes: 0
+    };
+    $http.post('https://pure-wave-92261.herokuapp.com/movies/movies/', movie).then(function(response) { // NEW
+      console.log("Movie added.");
+
+      // This HTTP GET request is needed to run $scope.$apply() and update the movies in the view.
+      $http.get('https://pure-wave-92261.herokuapp.com/movies/movies/').then(function(response) { // INDEX
+        $scope.movies = response.data;
+      }, function(response) {
+        console.log("Error, no data returned.");
+      });
+
+    }, function(response) {
+      console.log("Error, no movie added.");
+    });
+  });
+};
+```
+
+There's a lag between a user selecting a movie and the movie appearing on the page. With slow Internet the lag is substantial. Now we have:
+
+1. GET one movie from OMDB. This is fast.
+2. POST one movie to MongoDB. This is fast.
+3. GET all of our movies from MongoDB. This is slow.
+
+Is there a faster way to do this? How about:
+
+1. GET one movie from OMDB. This is fast.
+2. Push the movie into the Angular array ```$scope.movies```. This is instantaneous. The user thinks sees his or her movie appear in the view.
+3. POST one movie to MongoDB. This is fast, and runs while the user is doing something else.
+4. GET all of our movies from MongoDB. This is slow and unnecessary unless multiple persons are using your web app at the same time. We can run this in the background while the user is doing something else.
+
+Here's the faster code:
+
+```js
+$scope.onSelect = function ($item) {
+  $scope.loading = true;
+  console.log("Selected!");
+  return $http.get('//www.omdbapi.com/?t=' + $item)
+  .then(function(response){
+    var movie = {
+      movieActors: response.data.Actors,
+      movieAwards: response.data.Awards,
+      movieCountry: response.data.Country,
+      movieDirector: response.data.Director,
+      movieGenre: response.data.Genre,
+      movieLanguage: response.data.Language,
+      movieMetascore: response.data.Metascore,
+      moviePlot: response.data.Plot,
+      moviePoster: response.data.Poster,
+      movieRated: response.data.Rated,
+      movieRuntime: response.data.Runtime,
+      movieTitle: response.data.Title,
+      movieWriter: response.data.Writer,
+      movieYear: response.data.Year,
+      movieImdbID: response.data.imdbID,
+      movieImdbRating: response.data.imdbRating,
+      movieImdbVotes: response.data.imdbVotes,
+      movieLikes: 0
+    };
+    $scope.movies.push(movie);
+    $scope.loading = false;
+    $http.post('https://pure-wave-92261.herokuapp.com/movies/movies/', movie).then(function(response) { // NEW
+      console.log("Movie added.");
+
+      // This HTTP GET request is necessary only if multiple users are using the web app at the same time.
+      // $http.get('https://pure-wave-92261.herokuapp.com/movies/movies/').then(function(response) { // INDEX
+      //   $scope.movies = response.data;
+      // }, function(response) {
+      //   console.log("Error, no data returned.");
+      // });
+    }, function(response) {
+      console.log("Error, no movie added.");
+    });
+  });
+};
+```
+
+## Changing the Order in the INDEX View
+
+Now we have the movies displaying in order of most recently added first. This is the default order so that users see their movies appear when they add movies. But what if users want to see the movies ranked in order of worst to best?
+
+We'll add two rows to the INDEX view: a row of six buttons, and above the buttons a row of three labels:
+
+```html
+<!-- orderBy labels row -->
+<div class="row">
+  <div class="col-sm-4 text-center">
+    <h4>Order by Date Added</h4>
+  </div>
+  <div class="col-sm-4 text-center">
+    <h4>Order by Rating</h4>
+  </div>
+  <div class="col-sm-4 text-center">
+    <h4>Order by Year</h4>
+  </div>
+</div>
+
+<!-- orderBy buttons row -->
+<div class="row">
+  <div class="col-sm-2">
+    <button type="button" class="btn btn-primary btn-block" ng-click="order = '_id'; reverse = true">Recent</button>
+  </div>
+  <div class="col-sm-2">
+    <button type="button" class="btn btn-primary btn-block" ng-click="order = '_id'; reverse = false">Oldest</button>
+  </div>
+  <div class="col-sm-2">
+    <button type="button" class="btn btn-warning btn-block" ng-click="order = 'movieImdbRating'; reverse = false">Worst</button>
+  </div>
+  <div class="col-sm-2">
+    <button type="button" class="btn btn-warning btn-block" ng-click="order = 'movieImdbRating'; reverse = true">Best</button>
+  </div>
+  <div class="col-sm-2">
+    <button type="button" class="btn btn-success btn-block" ng-click="order = 'movieYear'; reverse = true">Newest</button>
+  </div>
+  <div class="col-sm-2">
+    <button type="button" class="btn btn-success btn-block" ng-click="order = 'movieYear'; reverse = false">Oldest</button>
+  </div>
+</div>
+```
+
+We'll use ```warning``` as the color for the worst movies. "Date added" is the default so it gets the ```primary``` color.
+
+Ww don't need to write any JavaScript in the controller. We're using ```ng-click``` instead of ```ng-submit``` because no data needs to be passed to the controller. ```ng-click="order..."``` is setting ```$scope.order``` to a value, either ```'_id'``` for data added, ```'movieImdbRating'``` for the rating, etc.
+
+Note that we set a second variable, ```reverse```. This is a Boolean parameter so can only be ```true``` or ```false```.
+
+Now in the four responsive views change ```orderby``` to use these variables: ```orderBy : order : reverse```.
+
+The complete code for the responsive views is:
+
+```html
+<!-- Responsive views -->
+<div class="row visible-xs-block">
+  <div ng-repeat="movie in movies | orderBy : order : reverse" class="movieIndex">
+    <a ng-href="/#/movies/{{movie._id}}"><img class="extraSmallMoviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieTitle}}"></a>
+  </div>
+</div>
+
+<div class="row visible-sm-block">
+  <div ng-repeat="movie in movies | orderBy : order : reverse" class="movieIndex">
+    <a ng-href="/#/movies/{{movie._id}}"><img class="smallMoviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieTitle}}"></a>
+  </div>
+</div>
+
+<div class="row visible-md-block">
+  <div ng-repeat="movie in movies | orderBy : order : reverse" class="movieIndex">
+    <a ng-href="/#/movies/{{movie._id}}"><img class="mediumMoviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieTitle}}"></a>
+  </div>
+</div>
+
+<div class="row visible-lg-block">
+  <div ng-repeat="movie in movies | orderBy : order : reverse" class="movieIndex">
+    <a ng-href="/#/movies/{{movie._id}}"><img class="largeMoviePoster" ng-src="{{movie.moviePoster}}" alt="{{movie.movieTitle}}"></a>
+  </div>
+</div>
+```
+
+## Use a Movie Font
+
+Google "movie fonts" and you'll see
+
+![Atom HTML](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/movie_fonts.jpg)
+
+Pick a free movie font and download a TrueType font ```.ttf``` file. Make a subdirectory of ```css``` for your fonts:
+
+```
+cd public
+cd css
+mkdir fonts
+```
+
+Put the ```.ttf``` files into your ```css/fonts``` folder.
+
+In ```style.css``` add your font:
+
+```css
+@font-face {
+  font-family: "Terminator";
+  src: url("fonts/Terminator.ttf") format("truetype");
+}
+```
+
+The ```src``` is tricky. You can set ```url``` or ```local```. With ```url``` you can specify a URL, such as ```//fonts.googleapis.com/css?family=Nixie+One```. You also use ```url``` if your file is local on your server, with the path (relative to ```style.css```) and the filename. ```local``` somehow searches your computer for the font. I've never gotten that to work.
