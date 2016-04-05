@@ -222,7 +222,7 @@ You can open your browser to view your app but there won't be any movies as it's
 
 An important distinction is made in Firebase between arrays and objects. Different services are used--```$firebaseArray``` vs. ```$firebaseObject```--with different methods. The INDEX page obviously accesses an array--all of our movies. The SHOW page accesses a an object, a single movie. Which service do we use?
 
-We can use either the ```$firebaseArray``` service or the ```$firebaseObject``` service. Perhaps it's possible to use both services in one controller but I haven't figured out how to do that. A better practice is to use one service or the other. Most functions can be set up for either service.
+We can use either the ```$firebaseArray``` service or the ```$firebaseObject``` service. It's possible to use both services in one controller but most functions can be set up for either service so you should only need one service or the other in a controller.
 
 #### $firebaseArray
 
@@ -526,7 +526,7 @@ Let's compare the speed of the MEAN stack web app vs. Firebase web app. In Chrom
 
 Performance times seem to be similar.
 
-## Get Rid of the Update Button
+## Get Rid of the Update Button with ```$watch()```
 
 What if we called ```$save()``` from the view? In ```edit.html``` put in ```ng-change="movies.$save(movie)"```. Change the title of your movie and refresh the browser. The title changed, without clicking the ```Update Movie``` button! Look in your Firebase Dashboard and you'll see the new value in the database.
 
@@ -534,17 +534,393 @@ You could add ```ng-change="movies.$save(movie)"``` to each field in ```edit.htm
 
 The former problem we can address by highlighting fields on focus, i.e., when the user drags a mouse over the field, as we did in the INDEX view to encourage users to click on a movie poster. We could also put in tooltips.
 
-For the latter we can set up a listener that shows an animated pop-up when data is saved. We'll use AngularFire's ```$watch()``` method. Add ```$watch()``` to the ```EditController.js```:
+For the latter we can set up a listener that shows an animated pop-up when data is saved. We'll start by putting the pop-ups in the ```movieTitle``` data input field in ```edit.html```:
 
-```js
-$scope.movies.$watch(function(event) {
-  console.log(event);
-});
+```html
+<div class="form-group">
+  <label for="editTitle" class="col-sm-2 control-label">Edit Title: </label>
+  <div class="col-sm-6">
+    <input type="text" class="form-control" name="editTitle" ng-model="movie.movieTitle" ng-change="movies.$save(movie)" value={{movie.movieTitle}}></label>
+  </div>
+  <div class="col-sm-2">
+    <p ng-show="watchTitle">Movie Title Saved!</p>
+  </div>
+  <div class="col-sm-2">
+    <p ng-show="watchAll">All Saved!</p>
+  </div>
+</div>
 ```
 
-Update a movie title and watch in the console as every keystroke is logged: ```Object {event: "child_changed", key: "-KEIDakifQfpUHWphD62"}```.
+This makes two messages appear. We'll use the first to watch for changes in the movie title, and the second for changes in any field of the movie.
 
-Now we
+![Atom HTML](/Users/TDK/playground/BreakingStuff/media/watch_two_messages.png)
+
+Firebase has two ```$watch()``` methods, one for ```$firebaseArray``` and the other for ```$firebaseObject```. The methods are different:
+
+* With ```$firebaseArray``` the callback function fires whenever the data in the local ```$scope``` updates from the server. The callback receives an object with three properties. ```event``` has four possible values. We'll use ```child_changed``` to indicate that a value has changed in a field. The other possible values are ```child_added```, ```child_moved```, or ```child_removed```. The second property is the ```key``` or ```$id``` of the object that changed. The third property is ```prevChild```, which is only used when the ```event``` was ```child_added``` or ```child_moved```, which we won't be using.
+
+* With ```$firebaseObject``` the callback function fires whenever there is a change in the data. The callback receives an object with two properties: ```event: "value"``` means that a some value has changed; and ```key:``` tells you the field that changes, e.g., ```"movieTitle"```. This is simpler.
+
+To "drill down" from the array of all the movies to a single movie and then a single property ```$watch()``` doesn't use dot notation, e.g. ```$scope.movie.movietitle.$watch()``` doesn't work. Instead it uses this syntax to "drill down":
+
+```js
+var ref = new Firebase("https://crudiest-firebase.firebaseio.com/");
+$scope.movieTitleObject = $firebaseObject(ref.child($routeParams.id).child('movieTitle'));
+```
+
+The first line gets the full arrays of movies and calls the array ```ref```. The second line creates   a Firebase object by "drilling down" from the full array of movies to one movie (an object), identified by the ```$id``` taken from the URL, then "drilling down" again to the ```movieTitle``` property of the movie object.
+
+Let's try out some ways to implement ```$watch```.
+
+```js
+app.controller('EditController', ["$scope", '$routeParams', '$location', '$firebaseArray', '$firebaseObject', function($scope, $routeParams, $location, $firebaseArray, $firebaseObject){
+  console.log("Edit controller.");
+  $scope.watchAll = false; // Initialize value
+  $scope.watchTitle = false; // Initialize value
+  var ref = new Firebase("https://crudiest-firebase.firebaseio.com/"); // Get all movies from the remote database
+  $scope.movies = $firebaseArray(ref); // Put movies onto local $scope
+  $scope.movies.$loaded() // Wait until movies downloaded
+  .then(function(){ // Promise
+
+    $scope.movies.$watch(function(event) { // Watch the array of all movies
+      console.log(event);
+      $scope.watchAll = true;
+      console.log($scope.watchAll);
+    });
+
+    $scope.movie = $scope.movies.$getRecord($routeParams.id); // Get one movie selected by its $id in the URL
+    $scope.movie.$watch(function(event) { // Watch all fields in one movie
+      console.log(event);
+      $scope.watchOneMovieArray = true;
+      console.log($scope.watchOneMovieArray);
+    });
+
+    $scope.watchMovieObject = $firebaseObject(ref.child($routeParams.id)); // Make the movieTitle property into a $firebaseObject
+    $scope.watchMovieObject.$watch(function(event) { // Watch one property of one movie
+      console.log(event);
+      $scope.watchOneMovieObject = true;
+      console.log($scope.watchOneMovieObject);
+    });
+
+    $scope.movieTitleObject = $firebaseObject(ref.child($routeParams.id).child('movieTitle')); // Make the movieTitle property into a $firebaseObject
+    $scope.movieTitleObject.$watch(function(event) { // Watch one property of one movie
+      console.log(event);
+      $scope.watchTitle = true;
+      console.log($scope.watchTitle);
+    });
+
+  });
+}]);
+```
+
+Refresh your browser and you'll see that the second ```$watch()``` doesn't work: ```TypeError: $scope.movie.$watch is not a function```. We got the type error because we selected an object (one movie) from an array (all our movies) and set ```$watch()``` on ```$firebaseArray```.  Delete the ```$watch``` code block, leaving the first line:
+
+```js
+$scope.movie = $scope.movies.$getRecord($routeParams.id); // Get one movie selected by its $id in the URL
+```
+
+Refresh your browser. The next problem is we see the "Movie Title Saved!" before we've edited anything. Look through your console log and you'll see that both the ```watchMovieObject``` and the ```movieTitleObject``` fired when the page loaded. Recall that ```$firebaseObject``` fires its callback on any change in the data, including reloading a page.
+
+Edit the title of a movie and both the "Movie Title Saved!" and "All Saved!" messages should show. Refresh your browser to hide the messages.
+
+Now open a second browser window. Use a second computer if you have one. Open a different movie and edit the title or director. Observe your first browser window and you'll see the "All Saved!" message show. Not good, we don't want the "Saved" message to appear in our browser when another user is editing a different movie! Setting ```$watch()``` on the entire array isn't useful for our project.
+
+Each of our ```$watch()``` functions has a flaw. Let's try nesting the ```$firebaseObject``` watches inside the ```$firebaseArray``` watch. Also move ```$scope.watchAll = true;``` to ```$scope.watchMovieObject.$watch```:
+
+```js
+app.controller('EditController', ["$scope", '$routeParams', '$location', '$firebaseArray', '$firebaseObject', function($scope, $routeParams, $location, $firebaseArray, $firebaseObject){
+  console.log("Edit controller.");
+  $scope.watchAll = false; // Initialize value
+  $scope.watchTitle = false; // Initialize value
+  var ref = new Firebase("https://crudiest-firebase.firebaseio.com/"); // Get all movies from the remote database
+  $scope.movies = $firebaseArray(ref); // Put movies onto local $scope
+  $scope.movies.$loaded() // Wait until movies downloaded
+  .then(function(){ // Promise
+    $scope.movie = $scope.movies.$getRecord($routeParams.id); // Get one movie selected by its $id in the URL
+
+    $scope.movies.$watch(function(event) { // Watch the array of all movies
+      console.log(event);
+
+      $scope.watchMovieObject = $firebaseObject(ref.child($routeParams.id)); // Make the movieTitle property into a $firebaseObject
+      $scope.watchMovieObject.$watch(function(event) { // Watch one property of one movie
+        console.log(event);
+        $scope.watchAll = true;
+        console.log($scope.watchAll);
+      });
+
+      $scope.movieTitleObject = $firebaseObject(ref.child($routeParams.id).child('movieTitle')); // Make the movieTitle property into a $firebaseObject
+      $scope.movieTitleObject.$watch(function(event) { // Watch one property of one movie
+        console.log(event);
+        $scope.watchTitle = true;
+        console.log($scope.watchTitle);
+      });
+    });
+  });
+}]);
+```
+
+This is better. When you refresh the browser, no messages show. When you edit the title, both messages show.
+
+Use your second browser to edit a different movie. We still have the problem that the first browser's messages show when the second browser is edited.
+
+Now add ```ng-change="movies.$save(movie)"``` to the ```movieDirector``` data input form in ```edit.html```:
+
+```html
+<input type="text" class="form-control" name="editDirector" ng-model="movie.movieDirector" ng-change="movies.$save(movie)" value={{movie.movieDirector}}></label>
+```
+
+Now edit the director's name. Both messages show, when only the "All Saved!" should show.
+
+The problem is that we can only have one ```$firebaseObject``` in a controller. All the Firebase objects fire when one fires. We'll delete the other ```$watch``` functions:
+
+```js
+app.controller('EditController', ["$scope", '$routeParams', '$location', '$firebaseArray', '$firebaseObject', function($scope, $routeParams, $location, $firebaseArray, $firebaseObject){
+  console.log("Edit controller.");
+  $scope.watchAll = false; // Initialize value
+  $scope.watchTitle = false; // Initialize value
+  var ref = new Firebase("https://crudiest-firebase.firebaseio.com/"); // Get all movies from the remote database
+  $scope.movies = $firebaseArray(ref); // Put movies onto local $scope
+  $scope.movies.$loaded() // Wait until movies downloaded
+  .then(function(){ // Promise
+    $scope.movie = $scope.movies.$getRecord($routeParams.id); // Get one movie selected by its $id in the URL
+    $scope.movies.$watch(function(event) { // Watch the array of all movies
+      console.log(event);
+      $scope.movieTitleObject = $firebaseObject(ref.child($routeParams.id).child('movieTitle')); // Make the movieTitle property into a $firebaseObject
+      $scope.movieTitleObject.$watch(function(event) { // Watch one property of one movie
+        console.log(event);
+        $scope.watchTitle = true;
+        console.log($scope.watchTitle);
+      });
+    });
+  });
+}]);
+```
+
+Now we see "Movie Title Saved!" when we edit either ```movieTitle``` or ```movieDirector```. Let's move ```$scope.movieTitleObject = $firebaseObject(ref.child($routeParams.id).child('movieTitle'));``` out of the nest:
+
+```js
+app.controller('EditController', ["$scope", '$routeParams', '$location', '$firebaseArray', '$firebaseObject', function($scope, $routeParams, $location, $firebaseArray, $firebaseObject){
+  console.log("Edit controller.");
+  $scope.watchAll = false; // Initialize value
+  $scope.watchTitle = false; // Initialize value
+  var ref = new Firebase("https://crudiest-firebase.firebaseio.com/"); // Get all movies from the remote database
+  $scope.movies = $firebaseArray(ref); // Put movies onto local $scope
+  $scope.movies.$loaded() // Wait until movies downloaded
+  .then(function(){ // Promise
+    $scope.movie = $scope.movies.$getRecord($routeParams.id); // Get one movie selected by its $id in the URL
+    $scope.movieTitleObject = $firebaseObject(ref.child($routeParams.id).child('movieTitle')); // Make the movieTitle property into a $firebaseObject
+    $scope.movies.$watch(function(event) { // Watch the array of all movies
+      console.log(event);
+      $scope.watchAll = true;
+      $scope.movieTitleObject.$watch(function(event) { // Watch one property of one movie
+        console.log(event);
+        $scope.watchTitle = true;
+        console.log($scope.watchTitle);
+      });
+    });
+  });
+}]);
+```
+
+Now when we edit ```movieTitle``` we get "Movie Title Saved!". When we edit ```movieDirector``` we don't get "Movie Title Saved!". "All Saved!" shows when either field is edited. Checking our second browser, "All Saved!" also shows when we edit a different movie in the second browser. We could try to fix this by checking the ```key``` in the event object. Or we could delete this code and make more codes similar to "Movie Title Saved!". The latter is easier and a nicer user experience (UX).
+
+In every field in the view:
+
+* Add ```ng-change="movies.$save(movie)"``` to every field in the view.
+* Make a two-column message.
+* Remove the ```Update Movie``` buttons.
+
+Now ```edit.html``` should look like this:
+
+```HTML
+<h2>Edit Movie</h2>
+
+<form class="form-horizontal" ng-submit="updateMovie()" name="editMovie">
+
+  <div class="form-group">
+    <label for="editTitle" class="col-sm-2 control-label">Edit Title: </label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control" name="editTitle" ng-model="movie.movieTitle" ng-change="movies.$save(movie)"></label>
+    </div>
+    <div class="col-sm-2">
+      <p ng-show="watchTitle">Movie Title Saved!</p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="editPoster" class="col-sm-2 control-label">Edit Poster: </label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control" name="editPoster" ng-model="movie.moviePoster" ng-change="movies.$save(movie)"></label>
+    </div>
+    <div class="col-sm-2">
+      <p ng-show="watchPoster">Movie Poster Saved!</p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="editPlot" class="col-sm-2 control-label">Edit Plot: </label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control" name="editPlot" ng-model="movie.moviePlot" ng-change="movies.$save(movie)"></label>
+    </div>
+    <div class="col-sm-2">
+      <p ng-show="watchPlot">Movie Plot Saved!</p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="editTrivia" class="col-sm-2 control-label">Edit Trivia: </label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control" name="editTrivia" ng-model="movie.movieTrivia" ng-change="movies.$save(movie)"></label>
+    </div>
+    <div class="col-sm-2">
+      <p ng-show="watchTrivia">Movie Trivia Saved!</p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="editDirector" class="col-sm-2 control-label">Edit Director: </label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control" name="editDirector" ng-model="movie.movieDirector" ng-change="movies.$save(movie)" ng-change="movies.$save(movie)"></label>
+    </div>
+    <div class="col-sm-2">
+      <p ng-show="watchDirector">Movie Director Saved!</p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="editWriter" class="col-sm-2 control-label">Edit Writer: </label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control" name="editWriter" ng-model="movie.movieWriter" ng-change="movies.$save(movie)"></label>
+    </div>
+    <div class="col-sm-2">
+      <p ng-show="watchWriter">Movie Writer Saved!</p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="editActors" class="col-sm-2 control-label">Edit Actors: </label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control" name="editActors" ng-model="movie.movieActors" ng-change="movies.$save(movie)"></label>
+    </div>
+    <div class="col-sm-2">
+      <p ng-show="watchActors">Movie Actors Saved!</p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="editYear" class="col-sm-2 control-label">Edit Year: </label>
+    <div class="col-sm-8">
+      <input type="text" class="form-control" name="editYear" ng-model="movie.movieYear" ng-change="movies.$save(movie)"></label>
+    </div>
+    <div class="col-sm-2">
+      <p ng-show="watchYear">Movie Year Saved!</p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="deleteMovie" class="col-sm-2 control-label"></label>
+    <div class="col-sm-8">
+      <button ng-click="deleteMovie(movie)" class="form-control btn btn-danger">Delete Movie</button>
+    </div>
+  </div>
+
+</form>
+```
+
+Now in ```EditController.js``` add three items for each field:
+
+* ```$scope.watchTitle = false;``` to initialize each variable.
+* ```$scope.movieTitleObject = $firebaseObject(ref.child($routeParams.id).child('movieTitle'));``` to create a ```$firebaseObject``` for each property.
+* ```$scope.movieTitleObject.$watch(function(event) {
+        $scope.watchTitle = true;
+      });```
+      to watch the database and show the message in the view.
+
+The ```EditController``` should now look like this:
+
+```js
+app.controller('EditController', ["$scope", '$routeParams', '$location', '$firebaseArray', '$firebaseObject', function($scope, $routeParams, $location, $firebaseArray, $firebaseObject){
+  console.log("Edit controller.");
+  $scope.watchTitle = false; // Initialize value
+  $scope.watchPoster = false; // Initialize value
+  $scope.watchPlot = false; // Initialize value
+  $scope.watchTrivia = false; // Initialize value
+  $scope.watchDirector = false; // Initialize value
+  $scope.watchWriter = false; // Initialize value
+  $scope.watchActors = false; // Initialize value
+  $scope.watchYear = false; // Initialize value
+  var ref = new Firebase("https://crudiest-firebase.firebaseio.com/"); // Get all movies from the remote database
+  $scope.movies = $firebaseArray(ref); // Put movies onto local $scope
+  $scope.movies.$loaded() // Wait until movies downloaded
+  .then(function(){ // Promise
+    $scope.movie = $scope.movies.$getRecord($routeParams.id); // Get one movie selected by its $id in the URL
+    $scope.movieTitleObject = $firebaseObject(ref.child($routeParams.id).child('movieTitle')); // Make the movieTitle property into a $firebaseObject
+    $scope.moviePosterObject = $firebaseObject(ref.child($routeParams.id).child('moviePoster'));
+    $scope.moviePlotObject = $firebaseObject(ref.child($routeParams.id).child('moviePlot'));
+    $scope.movieTriviaObject = $firebaseObject(ref.child($routeParams.id).child('movieTrivia'));
+    $scope.movieDirectorObject = $firebaseObject(ref.child($routeParams.id).child('movieDirector'));
+    $scope.movieWriterObject = $firebaseObject(ref.child($routeParams.id).child('movieWriter'));
+    $scope.movieActorsObject = $firebaseObject(ref.child($routeParams.id).child('movieActors'));
+    $scope.movieYearObject = $firebaseObject(ref.child($routeParams.id).child('movieYear'));
+    $scope.movies.$watch(function(event) { // Watch the array of all movies
+
+      $scope.movieTitleObject.$watch(function(event) { // Watch one property of one movie
+        $scope.watchTitle = true; // Show modal in view
+      });
+
+      $scope.moviePosterObject.$watch(function(event) { // Watch one property of one movie
+        $scope.watchPoster = true; // Show modal in view
+      });
+
+      $scope.moviePlotObject.$watch(function(event) { // Watch one property of one movie
+        $scope.watchPlot = true; // Show modal in view
+      });
+
+      $scope.movieTriviaObject.$watch(function(event) { // Watch one property of one movie
+        $scope.watchTrivia = true; // Show modal in view
+      });
+
+      $scope.movieDirectorObject.$watch(function(event) { // Watch one property of one movie
+        $scope.watchDirector = true; // Show modal in view
+      });
+
+      $scope.movieWriterObject.$watch(function(event) { // Watch one property of one movie
+        $scope.watchWriter = true; // Show modal in view
+      });
+
+      $scope.movieActorsObject.$watch(function(event) { // Watch one property of one movie
+        $scope.watchActors = true; // Show modal in view
+      });
+
+      $scope.movieYearObject.$watch(function(event) { // Watch one property of one movie
+        $scope.watchYear = true; // Show modal in view
+      });
+
+    });
+  });
+
+  $scope.deleteMovie = function(movie) { // DESTROY
+    $scope.movies.$remove(movie).then(function() {
+      console.log("Movie deleted.");
+      $location.path( "/movies" );
+    }, function(error) {
+      console.log("Error, movie not deleted.");
+      console.log(error);
+    });
+  };
+
+}]);
+```
+Test and save your work to your GitHub repository:
+
+```
+git add .
+git commit -m "$watch() messages working."
+git push origin master
+```
+
+
+
 
 
 
