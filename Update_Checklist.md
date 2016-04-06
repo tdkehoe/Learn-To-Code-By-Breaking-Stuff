@@ -14,3 +14,12 @@ Check version:
 
 1. Check your npm version: ```npm -v``` and check the current version listed in the footer of the [npm docs](https://dos.npmjs.com/getting-started/installing-node). Update npm: ```npm install npm@latest -g```.
 2. Check your MongoDB version: ```mongod --version```.
+
+
+Update CDNs:
+
+1. Angular: https://angularjs.org/
+2. Bootstrap CSS: http://getbootstrap.com/
+3. UI Bootstrap: https://angular-ui.github.io/bootstrap/
+4. Firebase: https://www.firebase.com/docs/web/changelog.html
+5. AngularFire: https://www.firebase.com/docs/web/libraries/angular/changelog.html

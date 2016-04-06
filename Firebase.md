@@ -919,6 +919,138 @@ git commit -m "$watch() messages working."
 git push origin master
 ```
 
+### Hide and Show ```Saved!```
+
+First, let's put the ```Saved!``` messages into Bootstrap wells. Add ```class="well well-sm"``` to each ```Saved!``` element in ```edit.html```, e.g.,
+
+```HTML
+<div class="col-sm-2">
+  <div ng-show="watchTitle" class="well well-sm">Movie Title Saved!</div>
+</div>
+```
+
+Now we'll make the ```Saved!``` message hide after two seconds. Add a ```setTimeout()``` function to the ```$watch()``` functions in ```EditController.js```:
+
+```js
+setTimeout(function(){
+  $scope.watchTitle = false;
+}, 2000);
+```
+
+The ```setTimeout()``` function takes two arguments. The first argument is code to execute. Our code is simple, it just hides the message. The second argument is the number of milliseconds before the code is executed. Here we're setting the code to execute after two seconds. The controller now looks like this:
+
+```js
+app.controller('EditController', ["$scope", '$routeParams', '$location', '$firebaseArray', '$firebaseObject', function($scope, $routeParams, $location, $firebaseArray, $firebaseObject){
+  console.log("Edit controller.");
+  $scope.watchTitle = false; // Initialize value
+  $scope.watchPoster = false; // Initialize value
+  $scope.watchPlot = false; // Initialize value
+  $scope.watchTrivia = false; // Initialize value
+  $scope.watchDirector = false; // Initialize value
+  $scope.watchWriter = false; // Initialize value
+  $scope.watchActors = false; // Initialize value
+  $scope.watchYear = false; // Initialize value
+  var ref = new Firebase("https://crudiest-firebase.firebaseio.com/"); // Get all movies from the remote database
+  $scope.movies = $firebaseArray(ref); // Put movies onto local $scope
+  $scope.movies.$loaded() // Wait until movies downloaded
+  .then(function(){ // Promise
+    $scope.movie = $scope.movies.$getRecord($routeParams.id); // Get one movie selected by its $id in the URL
+    $scope.movieTitleObject = $firebaseObject(ref.child($routeParams.id).child('movieTitle')); // Make the movieTitle property into a $firebaseObject
+    $scope.moviePosterObject = $firebaseObject(ref.child($routeParams.id).child('moviePoster'));
+    $scope.moviePlotObject = $firebaseObject(ref.child($routeParams.id).child('moviePlot'));
+    $scope.movieTriviaObject = $firebaseObject(ref.child($routeParams.id).child('movieTrivia'));
+    $scope.movieDirectorObject = $firebaseObject(ref.child($routeParams.id).child('movieDirector'));
+    $scope.movieWriterObject = $firebaseObject(ref.child($routeParams.id).child('movieWriter'));
+    $scope.movieActorsObject = $firebaseObject(ref.child($routeParams.id).child('movieActors'));
+    $scope.movieYearObject = $firebaseObject(ref.child($routeParams.id).child('movieYear'));
+    $scope.movies.$watch(function(event) { // Watch the array of all movies
+
+      $scope.movieTitleObject.$watch(function(event) { // Watch one property of one movie
+        $scope.watchTitle = true;
+        setTimeout(function(){
+          $scope.watchTitle = false;
+        }, 2000);
+      });
+
+      $scope.moviePosterObject.$watch(function(event) {
+        $scope.watchPoster = true;
+        setTimeout(function(){
+          $scope.watchPoster = false;
+        }, 2000);
+      });
+
+      $scope.moviePlotObject.$watch(function(event) {
+        $scope.watchPlot = true;
+        setTimeout(function(){
+          $scope.watchPlot = false;
+        }, 2000);
+      });
+
+      $scope.movieTriviaObject.$watch(function(event) {
+        $scope.watchTrivia = true;
+        setTimeout(function(){
+          $scope.watchTrivia = false;
+        }, 2000);
+      });
+
+      $scope.movieDirectorObject.$watch(function(event) {
+        $scope.watchDirector = true;
+        setTimeout(function(){
+          $scope.watchDirector = false;
+        }, 2000);
+      });
+
+      $scope.movieWriterObject.$watch(function(event) {
+        $scope.watchWriter = true;
+        setTimeout(function(){
+          $scope.watchWriter = false;
+        }, 2000);
+      });
+
+      $scope.movieActorsObject.$watch(function(event) {
+        $scope.watchActors = true;
+        setTimeout(function(){
+          $scope.watchActors = false;
+        }, 2000);
+      });
+
+      $scope.movieYearObject.$watch(function(event) {
+        $scope.watchYear = true;
+        setTimeout(function(){
+          $scope.watchYear = false;
+        }, 2000);
+      });
+
+    });
+  });
+
+  $scope.deleteMovie = function(movie) { // DESTROY
+    $scope.movies.$remove(movie).then(function() {
+      console.log("Movie deleted.");
+      $location.path( "/movies" );
+    }, function(error) {
+      console.log("Error, movie not deleted.");
+      console.log(error);
+    });
+  };
+
+}]);
+```
+
+Refreshing the browser, none of the ```Saved!``` messages show. When we edit the title, ```Movie Title Saved!``` shows quickly. It then shows until we edit another field. Then a new ```Saved!``` message appears and the old message disappears. This isn't what I intended and I don't understand it. Let's examine what's going on.
+
+Changing the ```setTimeout()``` to 1 millisecond makes the message flash on and off, and then hide. This is the behavior I expected. The message hides after the timed period. This "correct" behavior continues up to 36 milliseconds.
+
+Setting the timing period to 37 milliseconds causes the "incorrect" behavior of the message staying visible until the user edits another field.
+
+This has nothing to do with focus because we can click and change focus to another field without a message hiding.
+
+When a field is edited, a space opens below the field, and stays there until another field is edited. This seems to be related to the "incorrect" behavior.
+
+Setting the messages to show for 36 milliseconds is unacceptable. Setting the messages to show until the user edits another field is pretty good user experience (UX). Let's set all the timing periods to 37 milliseconds.
+
+
+
 
 
 
