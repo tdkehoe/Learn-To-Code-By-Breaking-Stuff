@@ -540,7 +540,7 @@ For the latter we can set up a listener that shows an animated pop-up when data 
 <div class="form-group">
   <label for="editTitle" class="col-sm-2 control-label">Edit Title: </label>
   <div class="col-sm-6">
-    <input type="text" class="form-control" name="editTitle" ng-model="movie.movieTitle" ng-change="movies.$save(movie)" value={{movie.movieTitle}}></label>
+    <input type="text" class="form-control" name="editTitle" ng-model="movie.movie.title" ng-change="movies.$save(movie)" value={{movie.movieTitle}}></label>
   </div>
   <div class="col-sm-2">
     <p ng-show="watchTitle">Movie Title Saved!</p>
@@ -575,8 +575,10 @@ Let's try out some ways to implement ```$watch```.
 ```js
 app.controller('EditController', ["$scope", '$routeParams', '$location', '$firebaseArray', '$firebaseObject', function($scope, $routeParams, $location, $firebaseArray, $firebaseObject){
   console.log("Edit controller.");
-  $scope.watchAll = false; // Initialize value
-  $scope.watchTitle = false; // Initialize value
+  $scope.watch = { // Initialize values
+    all: false,
+    title: false
+  };
   var ref = new Firebase("https://crudiest-firebase.firebaseio.com/"); // Get all movies from the remote database
   $scope.movies = $firebaseArray(ref); // Put movies onto local $scope
   $scope.movies.$loaded() // Wait until movies downloaded
@@ -584,8 +586,8 @@ app.controller('EditController', ["$scope", '$routeParams', '$location', '$fireb
 
     $scope.movies.$watch(function(event) { // Watch the array of all movies
       console.log(event);
-      $scope.watchAll = true;
-      console.log($scope.watchAll);
+      $scope.watch.all = true;
+      console.log($scope.watch.all);
     });
 
     $scope.movie = $scope.movies.$getRecord($routeParams.id); // Get one movie selected by its $id in the URL
@@ -605,8 +607,8 @@ app.controller('EditController', ["$scope", '$routeParams', '$location', '$fireb
     $scope.movieTitleObject = $firebaseObject(ref.child($routeParams.id).child('movieTitle')); // Make the movieTitle property into a $firebaseObject
     $scope.movieTitleObject.$watch(function(event) { // Watch one property of one movie
       console.log(event);
-      $scope.watchTitle = true;
-      console.log($scope.watchTitle);
+      $scope.watch.title = true;
+      console.log($scope.watch.title);
     });
 
   });
@@ -630,8 +632,10 @@ Each of our ```$watch()``` functions has a flaw. Let's try nesting the ```$fireb
 ```js
 app.controller('EditController', ["$scope", '$routeParams', '$location', '$firebaseArray', '$firebaseObject', function($scope, $routeParams, $location, $firebaseArray, $firebaseObject){
   console.log("Edit controller.");
-  $scope.watchAll = false; // Initialize value
-  $scope.watchTitle = false; // Initialize value
+  $scope.watch = { // Initialize values
+    all: false,
+    title: false
+  };
   var ref = new Firebase("https://crudiest-firebase.firebaseio.com/"); // Get all movies from the remote database
   $scope.movies = $firebaseArray(ref); // Put movies onto local $scope
   $scope.movies.$loaded() // Wait until movies downloaded
@@ -644,15 +648,15 @@ app.controller('EditController', ["$scope", '$routeParams', '$location', '$fireb
       $scope.watchMovieObject = $firebaseObject(ref.child($routeParams.id)); // Make the movieTitle property into a $firebaseObject
       $scope.watchMovieObject.$watch(function(event) { // Watch one property of one movie
         console.log(event);
-        $scope.watchAll = true;
-        console.log($scope.watchAll);
+        $scope.watch.all = true;
+        console.log($scope.watch.all);
       });
 
       $scope.movieTitleObject = $firebaseObject(ref.child($routeParams.id).child('movieTitle')); // Make the movieTitle property into a $firebaseObject
       $scope.movieTitleObject.$watch(function(event) { // Watch one property of one movie
         console.log(event);
-        $scope.watchTitle = true;
-        console.log($scope.watchTitle);
+        $scope.watch.title = true;
+        console.log($scope.watch.title);
       });
     });
   });
@@ -676,8 +680,10 @@ The problem is that we can only have one ```$firebaseObject``` in a controller. 
 ```js
 app.controller('EditController', ["$scope", '$routeParams', '$location', '$firebaseArray', '$firebaseObject', function($scope, $routeParams, $location, $firebaseArray, $firebaseObject){
   console.log("Edit controller.");
-  $scope.watchAll = false; // Initialize value
-  $scope.watchTitle = false; // Initialize value
+  $scope.watch = { // Initialize values
+    all: false,
+    title: false
+  };
   var ref = new Firebase("https://crudiest-firebase.firebaseio.com/"); // Get all movies from the remote database
   $scope.movies = $firebaseArray(ref); // Put movies onto local $scope
   $scope.movies.$loaded() // Wait until movies downloaded
@@ -688,8 +694,8 @@ app.controller('EditController', ["$scope", '$routeParams', '$location', '$fireb
       $scope.movieTitleObject = $firebaseObject(ref.child($routeParams.id).child('movieTitle')); // Make the movieTitle property into a $firebaseObject
       $scope.movieTitleObject.$watch(function(event) { // Watch one property of one movie
         console.log(event);
-        $scope.watchTitle = true;
-        console.log($scope.watchTitle);
+        $scope.watch.title = true;
+        console.log($scope.watch.title);
       });
     });
   });
@@ -701,8 +707,10 @@ Now we see "Movie Title Saved!" when we edit either ```movieTitle``` or ```movie
 ```js
 app.controller('EditController', ["$scope", '$routeParams', '$location', '$firebaseArray', '$firebaseObject', function($scope, $routeParams, $location, $firebaseArray, $firebaseObject){
   console.log("Edit controller.");
-  $scope.watchAll = false; // Initialize value
-  $scope.watchTitle = false; // Initialize value
+  $scope.watch = { // Initialize values
+    all: false,
+    title: false
+  };
   var ref = new Firebase("https://crudiest-firebase.firebaseio.com/"); // Get all movies from the remote database
   $scope.movies = $firebaseArray(ref); // Put movies onto local $scope
   $scope.movies.$loaded() // Wait until movies downloaded
@@ -711,11 +719,11 @@ app.controller('EditController', ["$scope", '$routeParams', '$location', '$fireb
     $scope.movieTitleObject = $firebaseObject(ref.child($routeParams.id).child('movieTitle')); // Make the movieTitle property into a $firebaseObject
     $scope.movies.$watch(function(event) { // Watch the array of all movies
       console.log(event);
-      $scope.watchAll = true;
+      $scope.watch.all = true;
       $scope.movieTitleObject.$watch(function(event) { // Watch one property of one movie
         console.log(event);
-        $scope.watchTitle = true;
-        console.log($scope.watchTitle);
+        $scope.watch.title = true;
+        console.log($scope.watch.title);
       });
     });
   });
@@ -743,7 +751,7 @@ Now ```edit.html``` should look like this:
       <input type="text" class="form-control" name="editTitle" ng-model="movie.movieTitle" ng-change="movies.$save(movie)"></label>
     </div>
     <div class="col-sm-2">
-      <p ng-show="watchTitle">Movie Title Saved!</p>
+      <p ng-show="watch.title">Movie Title Saved!</p>
     </div>
   </div>
 
@@ -753,7 +761,7 @@ Now ```edit.html``` should look like this:
       <input type="text" class="form-control" name="editPoster" ng-model="movie.moviePoster" ng-change="movies.$save(movie)"></label>
     </div>
     <div class="col-sm-2">
-      <p ng-show="watchPoster">Movie Poster Saved!</p>
+      <p ng-show="watch.poster">Movie Poster Saved!</p>
     </div>
   </div>
 
@@ -763,7 +771,7 @@ Now ```edit.html``` should look like this:
       <input type="text" class="form-control" name="editPlot" ng-model="movie.moviePlot" ng-change="movies.$save(movie)"></label>
     </div>
     <div class="col-sm-2">
-      <p ng-show="watchPlot">Movie Plot Saved!</p>
+      <p ng-show="watch.plot">Movie Plot Saved!</p>
     </div>
   </div>
 
@@ -773,7 +781,7 @@ Now ```edit.html``` should look like this:
       <input type="text" class="form-control" name="editTrivia" ng-model="movie.movieTrivia" ng-change="movies.$save(movie)"></label>
     </div>
     <div class="col-sm-2">
-      <p ng-show="watchTrivia">Movie Trivia Saved!</p>
+      <p ng-show="watch.trivia">Movie Trivia Saved!</p>
     </div>
   </div>
 
@@ -783,7 +791,7 @@ Now ```edit.html``` should look like this:
       <input type="text" class="form-control" name="editDirector" ng-model="movie.movieDirector" ng-change="movies.$save(movie)" ng-change="movies.$save(movie)"></label>
     </div>
     <div class="col-sm-2">
-      <p ng-show="watchDirector">Movie Director Saved!</p>
+      <p ng-show="watch.director">Movie Director Saved!</p>
     </div>
   </div>
 
@@ -793,7 +801,7 @@ Now ```edit.html``` should look like this:
       <input type="text" class="form-control" name="editWriter" ng-model="movie.movieWriter" ng-change="movies.$save(movie)"></label>
     </div>
     <div class="col-sm-2">
-      <p ng-show="watchWriter">Movie Writer Saved!</p>
+      <p ng-show="watch.writer">Movie Writer Saved!</p>
     </div>
   </div>
 
@@ -803,7 +811,7 @@ Now ```edit.html``` should look like this:
       <input type="text" class="form-control" name="editActors" ng-model="movie.movieActors" ng-change="movies.$save(movie)"></label>
     </div>
     <div class="col-sm-2">
-      <p ng-show="watchActors">Movie Actors Saved!</p>
+      <p ng-show="watch.actors">Movie Actors Saved!</p>
     </div>
   </div>
 
@@ -813,7 +821,7 @@ Now ```edit.html``` should look like this:
       <input type="text" class="form-control" name="editYear" ng-model="movie.movieYear" ng-change="movies.$save(movie)"></label>
     </div>
     <div class="col-sm-2">
-      <p ng-show="watchYear">Movie Year Saved!</p>
+      <p ng-show="watch.year">Movie Year Saved!</p>
     </div>
   </div>
 
@@ -829,10 +837,10 @@ Now ```edit.html``` should look like this:
 
 Now in ```EditController.js``` add three items for each field:
 
-* ```$scope.watchTitle = false;``` to initialize each variable.
+* ```$scope.watch.title = false;``` to initialize each variable.
 * ```$scope.movieTitleObject = $firebaseObject(ref.child($routeParams.id).child('movieTitle'));``` to create a ```$firebaseObject``` for each property.
 * ```$scope.movieTitleObject.$watch(function(event) {
-        $scope.watchTitle = true;
+        $scope.watch.title = true;
       });```
       to watch the database and show the message in the view.
 
@@ -841,14 +849,16 @@ The ```EditController``` should now look like this:
 ```js
 app.controller('EditController', ["$scope", '$routeParams', '$location', '$firebaseArray', '$firebaseObject', function($scope, $routeParams, $location, $firebaseArray, $firebaseObject){
   console.log("Edit controller.");
-  $scope.watchTitle = false; // Initialize value
-  $scope.watchPoster = false; // Initialize value
-  $scope.watchPlot = false; // Initialize value
-  $scope.watchTrivia = false; // Initialize value
-  $scope.watchDirector = false; // Initialize value
-  $scope.watchWriter = false; // Initialize value
-  $scope.watchActors = false; // Initialize value
-  $scope.watchYear = false; // Initialize value
+  $scope.watch = { // Initialize values
+    title: false,
+    poster: false,
+    plot: false,
+    trivia: false,
+    director: false,
+    writer: false,
+    actors: false,
+    year: false
+  };
   var ref = new Firebase("https://crudiest-firebase.firebaseio.com/"); // Get all movies from the remote database
   $scope.movies = $firebaseArray(ref); // Put movies onto local $scope
   $scope.movies.$loaded() // Wait until movies downloaded
@@ -865,35 +875,35 @@ app.controller('EditController', ["$scope", '$routeParams', '$location', '$fireb
     $scope.movies.$watch(function(event) { // Watch the array of all movies
 
       $scope.movieTitleObject.$watch(function(event) { // Watch one property of one movie
-        $scope.watchTitle = true; // Show modal in view
+        $scope.watch.title = true; // Show modal in view
       });
 
       $scope.moviePosterObject.$watch(function(event) { // Watch one property of one movie
-        $scope.watchPoster = true; // Show modal in view
+        $scope.watch.poster = true; // Show modal in view
       });
 
       $scope.moviePlotObject.$watch(function(event) { // Watch one property of one movie
-        $scope.watchPlot = true; // Show modal in view
+        $scope.watch.plot = true; // Show modal in view
       });
 
       $scope.movieTriviaObject.$watch(function(event) { // Watch one property of one movie
-        $scope.watchTrivia = true; // Show modal in view
+        $scope.watch.trivia = true; // Show modal in view
       });
 
       $scope.movieDirectorObject.$watch(function(event) { // Watch one property of one movie
-        $scope.watchDirector = true; // Show modal in view
+        $scope.watch.director = true; // Show modal in view
       });
 
       $scope.movieWriterObject.$watch(function(event) { // Watch one property of one movie
-        $scope.watchWriter = true; // Show modal in view
+        $scope.watch.writer = true; // Show modal in view
       });
 
       $scope.movieActorsObject.$watch(function(event) { // Watch one property of one movie
-        $scope.watchActors = true; // Show modal in view
+        $scope.watch.actors = true; // Show modal in view
       });
 
       $scope.movieYearObject.$watch(function(event) { // Watch one property of one movie
-        $scope.watchYear = true; // Show modal in view
+        $scope.watch.year = true; // Show modal in view
       });
 
     });
@@ -911,6 +921,7 @@ app.controller('EditController', ["$scope", '$routeParams', '$location', '$fireb
 
 }]);
 ```
+
 Test and save your work to your GitHub repository:
 
 ```
@@ -925,31 +936,46 @@ First, let's put the ```Saved!``` messages into Bootstrap wells. Add ```class="w
 
 ```HTML
 <div class="col-sm-2">
-  <div ng-show="watchTitle" class="well well-sm">Movie Title Saved!</div>
+  <div ng-show="watch.title" class="well well-sm">Movie Title Saved!</div>
 </div>
 ```
 
-Now we'll make the ```Saved!``` message hide after two seconds. Add a ```setTimeout()``` function to the ```$watch()``` functions in ```EditController.js```:
+Now we'll make the ```Saved!``` message hide after two seconds. In vanilla JavaScript we use the ```setTimeout()``` function but in Angular we have to use the ```$timeout``` service instead. (```setTimeout()``` interferes with two-way data binding.) First add this service to ```EditController.js```:
 
 ```js
-setTimeout(function(){
-  $scope.watchTitle = false;
-}, 2000);
+app.controller('EditController', ["$scope", '$routeParams', '$location', '$firebaseArray', '$firebaseObject', '$timeout', function($scope, $routeParams, $location, $firebaseArray, $firebaseObject, $timeout){
+  ...
+}]);
 ```
 
-The ```setTimeout()``` function takes two arguments. The first argument is code to execute. Our code is simple, it just hides the message. The second argument is the number of milliseconds before the code is executed. Here we're setting the code to execute after two seconds. The controller now looks like this:
+Now we add ```$timeout()``` to the ```$watch``` functions:
 
 ```js
-app.controller('EditController', ["$scope", '$routeParams', '$location', '$firebaseArray', '$firebaseObject', function($scope, $routeParams, $location, $firebaseArray, $firebaseObject){
+$scope.movieTitleObject.$watch(function(event) { // Watch one property of one movie
+  $scope.watch.title = true; // Show message
+  $timeout(function() {
+    $scope.watch.title = false; // Hide message
+  }, 5000);
+});
+```
+
+The function wrapped by ```$timeout()``` executes after the time in milliseconds, which is the second argument. We've set the time at five seconds (5000 milliseconds).
+
+The ```EditController.js``` now looks like this:
+
+```js
+app.controller('EditController', ["$scope", '$routeParams', '$location', '$firebaseArray', '$firebaseObject', '$timeout', function($scope, $routeParams, $location, $firebaseArray, $firebaseObject, $timeout){
   console.log("Edit controller.");
-  $scope.watchTitle = false; // Initialize value
-  $scope.watchPoster = false; // Initialize value
-  $scope.watchPlot = false; // Initialize value
-  $scope.watchTrivia = false; // Initialize value
-  $scope.watchDirector = false; // Initialize value
-  $scope.watchWriter = false; // Initialize value
-  $scope.watchActors = false; // Initialize value
-  $scope.watchYear = false; // Initialize value
+  $scope.watch = { // Initialize values
+    title: false,
+    poster: false,
+    plot: false,
+    trivia: false,
+    director: false,
+    writer: false,
+    actors: false,
+    year: false
+  };
   var ref = new Firebase("https://crudiest-firebase.firebaseio.com/"); // Get all movies from the remote database
   $scope.movies = $firebaseArray(ref); // Put movies onto local $scope
   $scope.movies.$loaded() // Wait until movies downloaded
@@ -966,59 +992,59 @@ app.controller('EditController', ["$scope", '$routeParams', '$location', '$fireb
     $scope.movies.$watch(function(event) { // Watch the array of all movies
 
       $scope.movieTitleObject.$watch(function(event) { // Watch one property of one movie
-        $scope.watchTitle = true;
-        setTimeout(function(){
-          $scope.watchTitle = false;
-        }, 2000);
+        $scope.watch.title = true; // Show message
+        $timeout(function() {
+          $scope.watch.title = false; // Hide message
+        }, 5000);
       });
 
       $scope.moviePosterObject.$watch(function(event) {
-        $scope.watchPoster = true;
-        setTimeout(function(){
-          $scope.watchPoster = false;
-        }, 2000);
+        $scope.watch.poster = true;
+        $timeout(function() {
+          $scope.watch.poster = false;
+        }, 5000);
       });
 
       $scope.moviePlotObject.$watch(function(event) {
-        $scope.watchPlot = true;
-        setTimeout(function(){
-          $scope.watchPlot = false;
-        }, 2000);
+        $scope.watch.plot = true;
+        $timeout(function() {
+          $scope.watch.plot = false;
+        }, 5000);
       });
 
       $scope.movieTriviaObject.$watch(function(event) {
-        $scope.watchTrivia = true;
-        setTimeout(function(){
-          $scope.watchTrivia = false;
-        }, 2000);
+        $scope.watch.trivia = true;
+        $timeout(function() {
+          $scope.watch.trivia = false;
+        }, 5000);
       });
 
       $scope.movieDirectorObject.$watch(function(event) {
-        $scope.watchDirector = true;
-        setTimeout(function(){
-          $scope.watchDirector = false;
-        }, 2000);
+        $scope.watch.director = true;
+        $timeout(function() {
+          $scope.watch.director = false;
+        }, 5000);
       });
 
       $scope.movieWriterObject.$watch(function(event) {
-        $scope.watchWriter = true;
-        setTimeout(function(){
-          $scope.watchWriter = false;
-        }, 2000);
+        $scope.watch.writer = true;
+        $timeout(function() {
+          $scope.watch.writer = false;
+        }, 5000);
       });
 
       $scope.movieActorsObject.$watch(function(event) {
-        $scope.watchActors = true;
-        setTimeout(function(){
-          $scope.watchActors = false;
-        }, 2000);
+        $scope.watch.actors = true;
+        $timeout(function() {
+          $scope.watch.actors = false;
+        }, 5000);
       });
 
       $scope.movieYearObject.$watch(function(event) {
-        $scope.watchYear = true;
-        setTimeout(function(){
-          $scope.watchYear = false;
-        }, 2000);
+        $scope.watch.year = true;
+        $timeout(function() {
+          $scope.watch.year = false;
+        }, 5000);
       });
 
     });
@@ -1037,20 +1063,57 @@ app.controller('EditController', ["$scope", '$routeParams', '$location', '$fireb
 }]);
 ```
 
-Refreshing the browser, none of the ```Saved!``` messages show. When we edit the title, ```Movie Title Saved!``` shows quickly. It then shows until we edit another field. Then a new ```Saved!``` message appears and the old message disappears. This isn't what I intended and I don't understand it. Let's examine what's going on.
+Refreshing the browser, none of the ```Saved!``` messages show. When we edit the title, ```Movie Title Saved!``` shows immediately, then hides after five seconds.
 
-Changing the ```setTimeout()``` to 1 millisecond makes the message flash on and off, and then hide. This is the behavior I expected. The message hides after the timed period. This "correct" behavior continues up to 36 milliseconds.
+### Animate Fade In and Out
 
-Setting the timing period to 37 milliseconds causes the "incorrect" behavior of the message staying visible until the user edits another field.
+We could add an animation to make the ```Saved!``` wells fade in and fade out. Add this code to ```style.css```:
 
-This has nothing to do with focus because we can click and change focus to another field without a message hiding.
+```css
+.well-sm {
+  -webkit-animation: smooth 10s ease-in;
+  -moz-animation: smooth 10s ease-in;
+  -o-animation: smooth 10s ease-in;
+  -ms-animation: smooth 10s ease-in;
+  animation: smooth 10s ease-in;
+}
 
-When a field is edited, a space opens below the field, and stays there until another field is edited. This seems to be related to the "incorrect" behavior.
+@-webkit-keyframes smooth {
+  0% { opacity: 0;}
+  25% { opacity: 1;}
+  50% { opacity: 1;}
+  75% { opacity: 1;}
+  100% { opacity: 0;}
+}
+```
 
-Setting the messages to show for 36 milliseconds is unacceptable. Setting the messages to show until the user edits another field is pretty good user experience (UX). Let's set all the timing periods to 37 milliseconds.
+We're targeting the class ```well-sm```. We've set ```animation``` to ten seconds, with ```smooth``` and ```ease-in```. We've added extra instructions for various browsers:
 
+* ```webkit``` is for Chrome and Safari.
+* ```moz``` is for Firefox.
+* ```o``` is for Opera.
+* ```ms``` is for Internet Explorer.
 
+Then we use _keyframes_ for the timing. The opacity starts at 0 (not visible), increases to 1 (fully visible) at 2.5 seconds, stays there for five seconds, then fades out the last 2.5 seconds.
 
+We also need to shorten the ```$timeout()``` to 9999 milliseconds to prevent the message from flashing at the end:
+
+```js
+$scope.movieTitleObject.$watch(function(event) { // Watch one property of one movie
+  $scope.watch.title = true; // Show message
+  $timeout(function() {
+    $scope.watch.title = false; // Hide message
+  }, 9999);
+});
+```
+
+Test and save your work to your GitHub repository:
+
+```
+git add .
+git commit -m "Messages fade in and out."
+git push origin master
+```
 
 
 
