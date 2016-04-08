@@ -285,16 +285,22 @@ The promise ```.then``` executed after the remote array has downloaded. ```$rout
 Here's the same code using ```$firebaseObject```:
 
 ```js
-app.controller('ShowController', ['$scope', '$routeParams', '$location', '$firebaseObject', function($scope, $routeParams, $location, $firebaseObject) {
+app.controller('ShowController', ['$scope', '$routeParams', '$location', '$firebaseObject', '$firebaseObject', function($scope, $routeParams, $location, $firebaseObject, $firebaseObject) {
   console.log("Show controller.");
   var ref = new Firebase("https://crudiest-firebase.firebaseio.com/");
+  $scope.movies = $firebaseArray(ref);
   $scope.movie = $firebaseObject(ref.child($routeParams.id));
   console.log($scope.movie);
 
 }]);
 ```
 
-Note a big difference: this code is synchronous, and it works. Is this because it's faster to use ```$firebaseObject```?
+Note a big difference: this code is synchronous. Ths code shows the movie but the ```upLike``` and ```downLike``` don't work.
+
+
+
+
+Is this because it's faster to use ```$firebaseObject```?
 
 Let's analyze the performance using the Timeline in Chrome Dev Tools. In the console, click on ```Timeline```, then ```⌘-R``` to refresh the view. I found:
 
@@ -491,6 +497,8 @@ $scope.updateMovie = function() {
 ```
 
 That worked! You can remove the console logs now.
+
+### Comments and Likes
 
 Your web app is now completely functional. Save your work to your GitHub repository:
 
@@ -1114,6 +1122,50 @@ git add .
 git commit -m "Messages fade in and out."
 git push origin master
 ```
+
+### Remove ```updateMovie()```
+
+Remove ```ng-submit="updateMovie()"``` from ```edit.html```. We're no longer using this method.
+
+### Delete Movie with ```RETURN```
+
+Keying ```RETURN``` anywhere in the ```EDIT``` form deletes the movie. This is because keying ```RETURN``` fires the ```submit``` form field. We no longer have a ```Update Movie``` button so the form thinks that the ```Delete Movie``` button is a ```submit``` form. There are several ways to fix this
+
+The simplest is to specify that our button is a button. The default (if you don't specify) is ```type="submit"```.
+
+```html
+<button type="button">
+```
+
+That didn't work for me. Another way is to have the form check every keystroke and ignore ```RETURN``` keys:
+
+```html
+<form onkeypress="return event.keyCode != 13;">
+```
+
+That didn't work for me either. A third way is to move the ```Delete Movie``` out of the ```<form>``` with the data entry fields. That didn't work for me. A fourth way is to add a hidden input field above the ```Delete Movie``` button:
+
+```html
+<div>
+    <input type="hidden" name="hiddenField" />
+</div>
+```
+
+This worked!
+
+## Combine EDIT with SHOW View
+
+Let's combine the ```EDIT``` and ```SHOW``` views.
+
+### Add Tooltips
+
+Users might not realize they can edit the field in the ```SHOW``` view. Let's add tooltips to tell them. Add ```tooltip-placement="top-left" uib-tooltip="You can type in this field"``` to each data entry form:
+
+```HTML
+<input type="text" class="form-control" name="editTitle" ng-model="movie.movieTitle" ng-change="movies.$save(movie)"></label>
+
+```
+
 
 
 
