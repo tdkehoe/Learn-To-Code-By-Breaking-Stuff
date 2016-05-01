@@ -220,13 +220,16 @@ You can open your browser to view your app but there won't be any movies as it's
 
 ### ShowController.js with $getRecord()
 
-An important distinction is made in Firebase between arrays and objects. Different services are used--```$firebaseArray``` vs. ```$firebaseObject```--with different methods. The INDEX page obviously accesses an array--all of our movies. The SHOW page accesses a an object, a single movie. Which service do we use?
+An important distinction is made in Firebase between arrays and objects. Different services are used--```$firebaseArray``` vs. ```$firebaseObject```--with different methods. The INDEX page obviously accesses an array--all of our movies. The SHOW page accesses an object, a single movie. Which service do we use?
 
 We can use either the ```$firebaseArray``` service or the ```$firebaseObject``` service. It's possible to use both services in one controller but most functions can be set up for either service so you should only need one service or the other in a controller.
 
+
+
+
 #### $firebaseArray
 
-We'll build the SHOW view first with ```$firebaseArray```. Here we access the array ```$scope.movies``` containing all of our movies, then select one movie from the array, and set ```$scope.movie``` to equal this selected movies. Pay attention to the pluralization of ```movies``` vs ```movie```!
+We'll build the SHOW view first with ```$firebaseArray```. We access the array ```$scope.movies``` containing all of our movies, then select one movie from the array, and set ```$scope.movie``` to equal this selected movies. Pay attention to the pluralization of ```movies``` vs ```movie```!
 
 Start by making the Firebase reference in ```ShowController.js```. Also, we no longer the ```$http``` service as we're not making HTTP requests from the SHOW view.
 
@@ -393,11 +396,12 @@ The answer seems to be that all three methods are equally fast. In other words, 
 
 ### deleteMovie()
 
-To delete a movie we use ```$remove()```.
+To delete a movie we use ```$firebaseArray $remove(recordOrIndex)```. This requires a record or the index number of the record in the array. We're not using ```$firebaseObject remove()```.
 
 ```js
 $scope.deleteMovie = function(movie) { // DESTROY
-  $scope.movies.$remove(movie).then(function() {
+  var index = $scope.movies.$indexFor(movie.$id); // finds index of the movie in the array of movies
+  $scope.movies.$remove(index).then(function() { // $firebaseArray $remove, not $firebaseObject $remove
     console.log("Movie deleted.");
     $location.path( "/movies" );
   }, function(error) {
@@ -621,34 +625,37 @@ What if we called ```$save()``` from the view? In ```edit.html``` put in ```ng-c
 
 You could add ```ng-change="movies.$save(movie)"``` to each field in ```edit.html``` and remove the ```Update Movie``` button. This changes the user experience (UX). The user may not know that he or she can change a field. After he or she changes a value, he or she needs feedback that the change has updated in the database.
 
-The former problem we can address by highlighting fields on focus, i.e., when the user drags a mouse over the field, as we did in the INDEX view to encourage users to click on a movie poster. We could also put in tooltips.
+The former problem we can address by highlighting fields on focus, i.e., when the user drags a mouse over the field, as we did in the INDEX view to encourage users to click on a movie poster.
 
-For the latter we can set up a listener that shows an animated pop-up when data is saved. We'll start by putting the pop-ups in the ```movieTitle``` data input field in ```edit.html```:
+```css
+.form-control:hover {
+  outline: 2px solid blue;
+}
+```
+
+We could also put in tooltips.
+
+For the latter problem we can set up a listener that shows an animated pop-up when data is saved. We'll start by putting a pop-up in the ```movieTitle``` data input field in ```edit.html```:
 
 ```html
 <div class="form-group">
   <label for="editTitle" class="col-sm-2 control-label">Edit Title: </label>
-  <div class="col-sm-6">
-    <input type="text" class="form-control" name="editTitle" ng-model="movie.movie.title" ng-change="movies.$save(movie)" value={{movie.movieTitle}}></label>
+  <div class="col-sm-8">
+    <input type="text" class="form-control" name="editTitle" ng-model="movie.movie.title" ng-change="movie.$save(movie)" value={{movie.movieTitle}}></label>
   </div>
   <div class="col-sm-2">
     <p ng-show="watchTitle">Movie Title Saved!</p>
   </div>
-  <div class="col-sm-2">
-    <p ng-show="watchAll">All Saved!</p>
-  </div>
 </div>
 ```
 
-This makes two messages appear. We'll use the first to watch for changes in the movie title, and the second for changes in any field of the movie.
+Firebase has two ```$watch()``` methods, one for ```$firebaseArray``` and the other for ```$firebaseObject```. The methods are slightly different:
 
-![Atom HTML](/Users/TDK/playground/BreakingStuff/media/watch_two_messages.png)
+* ```$firebaseArray``` fires whenever the data in the local ```$scope``` updates from the server. The callback returns an object with three properties with info about what changed.
 
-Firebase has two ```$watch()``` methods, one for ```$firebaseArray``` and the other for ```$firebaseObject```. The methods are different:
+* ```$firebaseObject``` is simpler. It fires whenever the data changes. The callback returns an object with two properties: ```event: "value"``` means that a some value has changed; and ```key:``` tells you the ```$id``` of the object that changed, e.g., ```"-KGUSrbRF8_GYUNi_Hpn"```.
 
-* With ```$firebaseArray``` the callback function fires whenever the data in the local ```$scope``` updates from the server. The callback receives an object with three properties. ```event``` has four possible values. We'll use ```child_changed``` to indicate that a value has changed in a field. The other possible values are ```child_added```, ```child_moved```, or ```child_removed```. The second property is the ```key``` or ```$id``` of the object that changed. The third property is ```prevChild```, which is only used when the ```event``` was ```child_added``` or ```child_moved```, which we won't be using.
-
-* With ```$firebaseObject``` the callback function fires whenever there is a change in the data. The callback receives an object with two properties: ```event: "value"``` means that a some value has changed; and ```key:``` tells you the field that changes, e.g., ```"movieTitle"```. This is simpler.
+Neither tells us which property of the object changed, i.e., we can figure out that "Battlefield Earth" was changed but we can't find out that the title was changed. We'll have to write code for every field we want to watch.
 
 To "drill down" from the array of all the movies to a single movie and then a single property ```$watch()``` doesn't use dot notation, e.g. ```$scope.movie.movietitle.$watch()``` doesn't work. Instead it uses this syntax to "drill down":
 
@@ -657,7 +664,7 @@ var ref = new Firebase("https://crudiest-firebase.firebaseio.com/");
 $scope.movieTitleObject = $firebaseObject(ref.child($routeParams.id).child('movieTitle'));
 ```
 
-The first line gets the full arrays of movies and calls the array ```ref```. The second line creates   a Firebase object by "drilling down" from the full array of movies to one movie (an object), identified by the ```$id``` taken from the URL, then "drilling down" again to the ```movieTitle``` property of the movie object.
+The first line gets the full array of movies and calls the array ```ref```. The second line creates a Firebase object by "drilling down" from the full array of movies to one movie (an object), identified by the ```$id``` taken from the URL, then "drilling down" again to the ```movieTitle``` property of the movie object.
 
 Let's try out some ways to implement ```$watch```.
 
