@@ -2,7 +2,7 @@
 
 Typing in a movie name is tedious! Wouldn't it be better if you could type a few letters or the first words of a movie title, and the input form guessed what movie you hated? This is called _typeahead_ or _autofill_.
 
-[UI Bootstrap](https://angular-ui.github.io/bootstrap/) includes a _typeahead_ plugin. We're lucky because UI Bootstrap is the JavaScript plugin library for Angular. Standard Bootstrap JavaScript plugins are [incompatible with Angular](https://scotch.io/tutorials/how-to-correctly-use-bootstrapjs-and-angularjs-together), and don't have a _typeahead_ plugin.
+[UI Bootstrap](https://angular-ui.github.io/bootstrap/) includes a _typeahead_ plugin. UI Bootstrap is the JavaScript plugin library for Angular. Standard Bootstrap JavaScript plugins are [incompatible with Angular](https://scotch.io/tutorials/how-to-correctly-use-bootstrapjs-and-angularjs-together), and don't have a _typeahead_ plugin.
 
 ## Linking to UI Bootstrap
 

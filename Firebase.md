@@ -71,7 +71,7 @@ var app = angular.module("CRUDiestMoviesApp", ['ngRoute', 'ui.bootstrap', 'ui.bo
 
 ## Firebase Arrays vs. Objects
 
-Firebase is a NOSQL database, similar but not the same as MongoDB. It stores an arrays and objects. When you set up a controller you must think about whether your controller will work with arrays or objects. ```HomeController.js``` works with arrays (all the movies). ```ShowController.js``` and ```EditController.js``` works with objects (one movie).
+Firebase is a NoSQL database, similar but not the same as MongoDB. It stores an arrays and objects. When you set up a controller you must think about whether your controller will work with arrays or objects. ```HomeController.js``` works with arrays (all the movies). ```ShowController.js``` and ```EditController.js``` works with objects (one movie).
 
 In ```HomeController.js``` inject the service ```$firebaseArray```:
 
