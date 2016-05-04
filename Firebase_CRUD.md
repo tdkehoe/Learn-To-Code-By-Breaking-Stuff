@@ -44,24 +44,24 @@ Set up this directory structure:
 
 ```
 └── CRUDiest-Movies-Firebase
-    ├── .gitignore
-    └── public
-        ├── app.js
-        ├── css
-        │   ├── fonts
-        │   └── style.css
-        ├── index.html
-        ├── javascript
-        │   ├── controllers
-        │   │   ├── HomeController.js
-        │   │   └── ShowController.js
-        │   ├── routes
-        │   │   └── routes.js
-        │   ├── services
-        │   └── templates
-        │       ├── home.html
-        │       └── show.html
-        ├── resume
+├── .gitignore
+└── public
+├── app.js
+├── css
+│   ├── fonts
+│   └── style.css
+├── index.html
+├── javascript
+│   ├── controllers
+│   │   ├── HomeController.js
+│   │   └── ShowController.js
+│   ├── routes
+│   │   └── routes.js
+│   ├── services
+│   └── templates
+│       ├── home.html
+│       └── show.html
+├── resume
 ```
 
 These commands should create these directories and files:
@@ -157,13 +157,13 @@ Your file should look like this:
 ```html
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+</head>
+<body>
 
-  </body>
+</body>
 </html>
 ```
 
@@ -2045,4 +2045,128 @@ Both handlers then use the Firebase method [$save](https://www.firebase.com/docs
 
 ## Comments
 
-Nested comments are a feature where NoSQL databases shine. 
+Nested comments are a feature where NoSQL databases shine. With SQL you'd make a table for the comments, with a key column in which each comment has a key to the movie it's associated with. If you make a mistake setting up the database, or if the database gets corrupted, you'll have a table of comments and not know which movie each comment goes to. Other columns in the comments table would have comment text, comment author, and date added.
+
+With NoSQL, comments are an array of comment objects. Each comment object has several properties: comment text, comment author, and date added. The comments array is a property of the movie object. The movie objects are in the array of movies. You have nested arrays of objects. It's easy to set up and there's no danger of comments becoming disassociated from their movies.
+
+In ```show.html``` we'll add a comments row with three groups of elements:
+
+```html
+<!-- Comments row -->
+<div class="row">
+  <div class="col-sm-12 col-md-12 col-lg-12">
+    <span ng-click="showComments = !showComments" class="showComments" data-toggle="tooltip" data-placement="top" title="Click to show or hide comments.">
+      <ng-pluralize count="movie.movieComments.length"
+      when="{'0': '',
+      'one': '1 Comment',
+      'other': '{} Comments',
+      'NaN': ''}">
+    </ng-pluralize><br />
+  </span>
+
+  <div ng-hide="showComments" ng-repeat="comment in movie.movieComments">
+    <div class="row comment img-rounded">
+      <div class="col-sm-8 col-md-8 col-lg-8">
+        <span class="commentText">{{comment.commentText}}</span>
+        <div class="commentAuthor">
+          <span>&#151;{{comment.commentAuthor}}, </span>
+          <span>{{comment.commentTimestamp | date:'mediumDate'}}</span>
+        </div>
+      </div>
+      <div class="col-sm-4 col-md-4 col-lg-4">
+        <form ng-submit="deleteComment(movie, comment)">
+          <button type="submit" class="btn btn-danger btn-sm">Delete Comment</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-md-12 col-lg-12">
+    <form class="form-horizontal" ng-submit="newComment(comment)">
+      <div class="form-group">
+        <label for="commentText">Your Comment: </label>
+        <input type="text" name="commentText" ng-model="comment.commentText" class="form-control" >
+      </div>
+      <div class="form-group">
+        <label for="commentAuthor">Your Name: </label>
+        <input type="text" name="commentAuthor" ng-model="comment.commentAuthor" class="form-control" >
+      </div>
+      <div class="form-group">
+        <button type="submit" class="form-control btn btn-info btn-block">Submit Comment</input>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+```
+
+The first element group shows or hides comments. It tells you how many comments there are. ```ng-pluralize``` then either displays nothing if there are no comments, displays "1 comment" if there is one comment, and if there is more than one comment the number of comments is displayed, followed by "comments". A tooltip tells users they can click to show or hide the comments.
+
+The second element group displays the comments. The comment text is displayed first, followed by the author and the date. A ```Delete Comment``` button is on the right side. This button fires the handler ```$scope.deleteComment()```.
+
+The third element group has a form for adding a new comment. It has two fields, for the text and the author. It fires the handler ```$scope.newComment()```.
+
+Let's add the handlers in ```ShowController.js```:
+
+```js
+// Comments section
+$scope.newComment = function(comment) { // full record is passed from the view
+  console.log(comment);
+  console.log($scope.movie.movieComments);
+  var commentObject = {
+    commentText: comment.commentText,
+    commentAuthor: comment.commentAuthor,
+    commentTimestamp: Date.now(),
+  };
+  $scope.movie.movieComments = $scope.movie.movieComments || [];
+  $scope.movie.movieComments.push(commentObject);
+  $scope.comment.commentText = null; // needed to prevent autofilling fields
+  $scope.comment.commentAuthor = null; // needed to prevent autofilling fields
+  $scope.movie.$save().then(function() {
+    console.log("Comment added!");
+  }, function(error) {
+    console.log("Error, comment not added.");
+    console.log(error);
+  });
+};
+```
+
+
+
+
+
+## Delete Comments
+
+The handler ```$scope.deleteComment()``` is more complex than other handlers because it's deleting an object nested at the second level. I.e., the comments are objects in the array ```movieComments```, which is a property of the ```movie``` object, which is an object in the array ```movies```.
+
+We could use JavaScript methods by passing through the movie object and the comment from the view, then we use the JavaScript method [indexOf()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf) to find the index of the comment object in the array of comments. We then use the JavaScript method [splice()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice) to remove the comment object from the array of comments. Next, we call the Firebase method [$save](https://www.firebase.com/docs/web/libraries/angular/api.html#angularfire-firebaseobject-save) to run the three-way data binding:
+
+```js
+$scope.deleteComment = function(movie, comment) {
+  var index = movie.movieComments.indexOf(comment); // find the index of the comment in the array of comments
+  $scope.movie.movieComments.splice(index, 1); // removes the comment from the array
+  $scope.movie.$save(movie).then(function() { // save to Firebase
+    console.log("Comment deleted!");
+  }, function(error) {
+    console.log("Error, comment not deleted.");
+    console.log(error);
+  });
+};
+```
+
+Or we can use the Firebase method [$remove()](https://www.firebase.com/docs/web/libraries/angular/api.html#angularfire-firebaseobject-remove).
+
+```js
+$scope.deleteComment = function(movie, comment) {
+  var index = movie.movieComments.indexOf(comment); // find the index of the comment in the array of comments
+  $firebaseObject(ref.child($routeParams.id).child('movieComments').child(index)).$remove().then(function() {
+    console.log("Movie deleted.");
+    $location.path( "/movies" );
+  }, function(error) {
+    console.log("Error, movie not deleted.");
+    console.log(error);
+  });
+};
+```
+
+The Firebase version still has one line of pure JavaScript, using the ```indexOf()``` method. Firebase doesn't have a ```$indexOf(record)``` method. Firebase has an ```$indexFor(key)``` method but we don't know the key of the comment. Firebase has a ```$keyAt(recordOrIndex)``` method but I can't get it to work (with a record or an index number).
