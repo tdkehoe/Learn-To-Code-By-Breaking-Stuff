@@ -1,6 +1,6 @@
 Add setting up GitHub repo, reminders to save.
 
-#Node and Express
+# Node and Express
 
 Node is a JavaScript _server_. Express is a _framework_ that extends Node and makes it easier to use. Along with a database, usually MongoDB, Node and Express form the _back end_ of a website. MongoDB, Express, and Node are three-quarters of the _MEAN stack_ for building complete web apps. (The fourth part is Angular to build the _front end_ or _client_ of the web app.)
 
