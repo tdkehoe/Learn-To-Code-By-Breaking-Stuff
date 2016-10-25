@@ -7,7 +7,7 @@ Start every week by updating your software.
 3. Next, update your CLI apps installed with Homebrew: `brew upgrade`. This should update Git, Node, Mongod, and others.
 4. Update Atom with `Atom > Check for Update`.
 5. Update your Atom packages in `Atom > Preferences > Updates`.
-6. Update your Node modules by installing the Node module npm-check: `npm install -g npm-check`. Then check your global Node modules by entering: `npm-check -g`. Check your local Node modules from your project directory (where your `package.json` is): `npm-check`. To update your Node modules: `npm-check -u -g` or `npm-check -u`.
+6. Update your Node modules by installing the Node module npm-check: `npm install -g npm-check`. Then check your global Node modules by entering: `npm-check -gu`. Check your local Node modules from your project directory (where your `package.json` is): `npm-check`. To update your Node modules: `npm-check -u -g` or `npm-check -u`.
 7. Oh-my-zsh will tell you when a Z shell update is available.
 8. Microsoft Office will autoupdate if you set this in Help > Check For Updates
 
@@ -18,6 +18,8 @@ Check version:
 
 
 Update CDNs:
+
+Use "^1.1.1" to automatically update CDNs.
 
 1. AngularJS, Firebase, AngularFire: https://github.com/firebase/angularfire#downloading-angularfire
 2. Bootstrap CSS: http://getbootstrap.com/
@@ -31,4 +33,12 @@ or
 
 Update Firebase CLI:
 
-```npm install -g firebase-tools```
+`npm install -g firebase-tools`
+
+Update @angular/modules:
+
+https//github.com/angular/angular/blob/master/CHANGELOG.md
+
+To check what Node modules are installed:
+
+`npm -g list --depth=0`npm unin
