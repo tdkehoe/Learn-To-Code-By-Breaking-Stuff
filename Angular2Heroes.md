@@ -1,6 +1,6 @@
 The Angular 2 [Heroes](https://angular.io/docs/ts/latest/tutorial/) tutorial is a simple CRUD app with two views, some data, routing, etc. Here's the file structure:
 
-![Angular 2 Quickstart](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/angular2heroes.png)
+![Angular 2 Quickstart](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/Angular2-heroes.png)
 
 As you can see the CRUD app is more complex than the "hello world" app, with 23 files. But the basic structure is the same. With the bigger app we can see some patterns in Angular. No matter how complex the app there's only one each `app.module.ts`, `app.routing.ts`, `main.ts`, `index.html`, and `styles.css`.
 

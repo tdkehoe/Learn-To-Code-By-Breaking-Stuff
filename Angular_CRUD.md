@@ -8,7 +8,7 @@ Prerequisites: This section assumes that you've completed the section [Building 
 
 ## Directory Structure
 
-Make a directory called ```angular-app```. Don't make it a subdirectory of a directory with a local Git repository. In the ```angular-app``` directory make a ```public``` directory with two files:
+Make a directory called `angular-app`. Don't make it a subdirectory of a directory with a local Git repository. In the `angular-app` directory make a `public` directory with two files:
 
 ```
 mkdir angular-app
@@ -23,7 +23,7 @@ ls
 
 ### Git Repository
 
-Initialize a Git repository. In your GitHub account, click the ```+``` in the upper right corner to create a new repository. Name it ```CRUDiest Movies Database Angular Front End```.
+Initialize a Git repository. In your GitHub account, click the `+` in the upper right corner to create a new repository. Name it `CRUDiest Movies Database Angular Front End`.
 
 GitHub will give you instructions to run in your CLI:
 
@@ -36,11 +36,11 @@ git remote add origin git@github.com:myAccount/CRUDiest-Movies-Database-Angular-
 git push -u origin master
 ```
 
-Change ```myAccount``` to your account name.
+Change `myAccount` to your account name.
 
 ## index.html
 
-Open the file ```index.html``` in your text editor. Type ```html``` followed by the ```TAB``` key to autofill from a snippet.
+Open the file `index.html` in your text editor. Type `html` followed by the `TAB` key to autofill from a snippet.
 
 Your file should look like this:
 
@@ -57,7 +57,7 @@ Your file should look like this:
 </html>
 ```
 
-Change line 2 from ```<html>``` to
+Change line 2 from `<html>` to
 
 ```html
 <html lang="en" ng-app="CRUDiestMovies">
@@ -72,13 +72,15 @@ After line 4 add a content delivery network (CDN) for Angular:
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular-route.js"></script>
 ```
 
-You can change the version number ```1.5.0``` to the [latest version](https://angularjs.org/). We will use Angular 1. Don't use Angular 2, it's a different framework.
+You can change the version number `1.5.0` to the [latest version](https://angularjs.org/). We will use Angular 1. Don't use Angular 2, it's a different framework.
+
+How do you use + to get the latest Angular?
 
 Alternatively you can [download Angular](https://angularjs.org/) and link to it locally. That's more reliable as you can use your app without an Internet connection. The CDN is easier to install and update. To update it you just change the version number.
 
-Change ```<title></title>``` to ```<title>CRUDiest Movies Database</title>```.
+Change `<title></title>` to `<title>CRUDiest Movies Database</title>`.
 
-In the ```<body``` put two lines:
+In the `<body` put two lines:
 
 ```html
 <h1>CRUDiest Movies Database</h1>
@@ -88,11 +90,11 @@ In the ```<body``` put two lines:
 
 The first line is a text header. The second line links to a JavaScript file.
 
-Your ```index.html``` file should now look like this:
+Your `index.html` file should now look like this:
 
 ```html
 <!DOCTYPE html>
-<html lang="en" ng-app="CRUDiestMovies">
+<html lang="en" ng-app="CRUDiestMoviesApp">
 <head>
   <meta charset="utf-8">
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.js"></script>
@@ -153,7 +155,7 @@ git push origin master
 
 ### Add the Stylesheet
 
-Double-check that you're in the ```angular-app``` project root directory. Make this folder and file:
+Double-check that you're in the ```public``` project  directory. Make this folder and file:
 
 ```
 mkdir css
@@ -192,7 +194,7 @@ git push origin master
 
 ## Angular Directory Structure
 
-Double-check that you're in the ```angular-app``` directory. Make these folders and files:
+Double-check that you're in the ```public``` directory. Make these folders and files:
 
 ```
 mkdir javascript
@@ -209,6 +211,11 @@ cd ..
 mkdir routes
 cd routes
 touch routes.js
+cd ..
+
+mkdir services
+cd services
+touch services.js
 cd ..
 
 mkdir templates
@@ -341,7 +348,7 @@ This creates an Angular _controller_, one of the three legs of a _Model-View-Con
 
 Each controller has one dependency ```$scope```. This is an object that provides local variables. We attached the property ```message``` to this object, with the value ```"Connected"```.
 
-Link your ```index.html``` file to the routes and controllers:
+In the ```<body>``` of your ```index.html``` file link to the routes and controllers:
 
 ```html
 <script type="text/javascript" src="javascript/routes/routes.js"></script>
@@ -402,6 +409,8 @@ In each of these views enter code:
 
 {{message}}
 ```
+
+What's the message?
 
 Change ```Home``` to ```New``` etc.
 
@@ -567,6 +576,8 @@ Open your browser to ```http://127.0.0.1:8080/#/``` and you should see all your 
 Line 1 uses the Angular directive ```ng-repeat```. This binds to the array (JSON object) ```$scope.movies``` that was created in ```HomeController.js```. ```movie``` refers to each element (object) in the array. ```movieName``` etc. are the properties of the objects. Angular then just spins out the data however you set it up.
 
 Line 6 is a little different. We're specifying that we want an image, and using the Angular directive ```ng-src```. The data is a URL for the image. If the image isn't available ```alt="{{movie.movieName}}"``` replaces the image with the name of the movie.
+
+> If you get an error “No 'Access-Control-Allow-Origin' header is present on the requested resource” then the server is missing a CORS library such as a Node Module. This isn't a bug on the client (Angular) side.
 
 ### Add More Movies
 
@@ -1139,7 +1150,7 @@ The comments run together. Let's put a border around each comment. Add the class
 </div>
 ```
 
-In Bootstrap the corect way to round corners is using the class ```img-rounded``` (not ```border-radius``` in CSS).
+In Bootstrap the correct way to round corners is using the class ```img-rounded``` (not ```border-radius``` in CSS).
 
 In ```style.css``` add:
 
@@ -1379,7 +1390,7 @@ Bootstrap provides three types of features:
 
 * CSS positioning, e.g., putting parts of your website on the left, right, middle, or in the header, footer, sidebar, etc. This is what Bootstrap is famous for. At Galvanize we spent a long week, difficult learning CSS positioning without Bootstrap. I looked for books and articles about CSS positioning but couldn't find any. The reason is that everyone uses a framework for CSS positioning. Bootstrap also helps style forms, buttons, etc.
 * Components such as dropdown menus, nav bars, and button groups. Plus, glyphicons, progress bars, breadcrumbs, etc.
-* JavaScript plugins such as transitions, tooltips, popovers, accordion collapses, scrollspies, prompts and alerts, a carousel, more dropdown menus, etc. Bootstrap's JavaScript uses jQuery, which is [incompatible with Angular](https://scotch.io/tutorials/how-to-correctly-use-bootstrapjs-and-angularjs-together). We will instead use [UI Bootstrap](https://angular-ui.github.io/bootstrap/), which provides similar JavaScript plugins without jQuery.
+* JavaScript plugins such as transitions, tooltips, popovers, accordion collapses, scrollspies, prompts and alerts, a carousel, more dropdown menus, etc. Bootstrap's JavaScript uses jQuery, which is [incompatible with Angular](https://scotch.io/tutorials/how-to-correctly-use-bootstrapjs-and-angularjs-together). We will instead use [UI Bootstrap](https://angular-ui.github.io/bootstrap/), which provides similar JavaScript plugins without jQuery, and loads via an Angular module, not via CDN.
 
 We'll load Bootstrap via CDN.
 
@@ -1418,6 +1429,8 @@ Your ```index.html``` should look like this:
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Angular CDNs -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular-route.js"></script>
 

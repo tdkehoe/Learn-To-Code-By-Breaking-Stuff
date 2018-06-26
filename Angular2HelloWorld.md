@@ -1,6 +1,6 @@
 When I don't understand something I draw a picture. I drew a picture of an Angular 2 "hello world" app, similar to the Angular 2 Quickstart app.
 
-![Angular 2 Quickstart](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/angular2helloworld.png)
+![Angular 2 Quickstart](https://github.com/tdkehoe/Learn-To-Code-By-Breaking-Stuff/blob/master/media/Angular2-heroes.png)
 
 You write the rectangular files. You don't write the rounded files.
 
